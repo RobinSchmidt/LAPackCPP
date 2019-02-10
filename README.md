@@ -5,7 +5,7 @@ With this repo, i try to translate the original LAPACK Fortran routines (from he
 - the LinPack port here https://people.sc.fsu.edu/~jburkardt/cpp_src/linpack/linpack.html has the annoying LGPL license
 - i wrote my own simple solver (without pivot-search) which seemed to numerically not-so-good
 - things like Eigen have a - to my taste - too fancy interface
-- projects like http://lapackpp.sourceforge.net/ are not really a translation but rather an interface which requires a Fortran compiler (i cannot bother clients who use my library to install a Fortran compiler)
+- projects like http://lapackpp.sourceforge.net/ are not really a translation but rather an interface which requires a Fortran compiler (i cannot bother clients who use my library to install a Fortran compiler - i can't even bother myself to do that)
 
 i decided that porting the original LAPACK is the way to go. 
 
