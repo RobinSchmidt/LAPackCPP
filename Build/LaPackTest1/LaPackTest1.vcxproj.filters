@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\GeneratedByF2C">
+      <UniqueIdentifier>{28a3e3b0-8229-496e-923d-804ad356e6a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\LibF2C">
+      <UniqueIdentifier>{b19ea29b-904d-4ab3-9d80-8ab32a4b511f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Tests">
+      <UniqueIdentifier>{6bb81012-6f9d-4992-809f-76bc26879478}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\LaPackCPP">
+      <UniqueIdentifier>{6fc650a3-f17c-4fee-b8b6-ce8b61de8a57}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="LaPackTest1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\GeneratedByF2C\daxpy.c">
+      <Filter>Source Files\GeneratedByF2C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Tests\TestUtils.cpp">
+      <Filter>Source Files\Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\LaPackCPP\Blas.cpp">
+      <Filter>Source Files\LaPackCPP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\LaPackCPP\LaPack.cpp">
+      <Filter>Source Files\LaPackCPP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\GeneratedByF2C\dgbsv.c">
+      <Filter>Source Files\GeneratedByF2C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\GeneratedByF2C\dgbtrs.c">
+      <Filter>Source Files\GeneratedByF2C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\GeneratedByF2C\dgbtrf.c">
+      <Filter>Source Files\GeneratedByF2C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\GeneratedByF2C\dgbmv.c">
+      <Filter>Source Files\GeneratedByF2C</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Source\GeneratedByF2C\f2c.h">
+      <Filter>Source Files\GeneratedByF2C</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\LaPackCPP\Blas.hpp">
+      <Filter>Source Files\LaPackCPP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\LaPackCPP\LaPack.hpp">
+      <Filter>Source Files\LaPackCPP</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
