@@ -12,6 +12,8 @@ i decided that porting the original LAPACK routines is the way to go. I hope tha
 
 I just started with this, so at the moment, not very much has been translated yet. But i hope that over time, this repo may evolve to a more and more complete translation of this venerable, classic and awesome library. I don't know, how fast this will go - it will probably depend on what specific functionality from LAPACK i will need for my other projects (RAPT in particular).
 
-For the licensing, i apply the same liberal licensing scheme as applies to the original Fortran code - anything else would be very unfair.
+I'm very indebted to the authors of the original Fortran sources:
+http://www.netlib.org/lapack/contributor-list.html
+for making this library available to the public under such liberal licensing conditions. Of course, i apply the same licensing scheme to this translation - anything else would be very unfair.
 
 ...tbc...
