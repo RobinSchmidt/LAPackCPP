@@ -6,6 +6,7 @@ With this repo, i try to translate the original LAPACK Fortran routines (from he
 - i wrote my own simple solver (without pivot-search) which looks pretty neat: https://github.com/RobinSchmidt/RS-MET/issues/225#issuecomment-462045482 but seemed to be numerically not-so-good
 - projects like http://lapackpp.sourceforge.net/ are not really a translation but rather an interface which still requires the original code and a Fortran compiler (i cannot bother clients who use my library to install a Fortran compiler - i can't even bother myself to do that)
 - more modern linear algebra libraries like Eigen have a - to my taste - too fancy interface. Curiously recurring template pattern? Great but really? I just wanted some raw and straightforward number crunching routines! :-P Others like Armadillo even have a dependency on the original LAPACK (and therefore on the availability of a Fortran compiler)
+- it goes without sayning that commercial, closed source solutions like Intel's MKL are not an option as a dependency for an open source project like my RAPT library (which is part of the RS-MET codebase, by the way)
 
 i decided that porting the original LAPACK routines is the way to go. I hope that, over time, this will grow into a useful library. After all the fiddly setup work is done (which was, in fact, much less fiddly than i feared it to be :-)), i expect the rest to be mostly grunt work. A big pile of grunt work, though. But as a chinese saying goes: the beginning is half of the whole - or something.
 
