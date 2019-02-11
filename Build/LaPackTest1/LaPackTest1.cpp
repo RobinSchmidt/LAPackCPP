@@ -109,6 +109,7 @@ bool gbsvUnitTest()
   // the banded storage format suitable for gbsv looks in this case like below, where column-major 
   // indexing is assumed (as always in LAPACK):
 
+  // ** ** ** ** ** ++ ++ ++ ++
   // ** ** ** ** ++ ++ ++ ++ ++   fields with ++ are used internally by the algorithm, fields
   // ** ** ** ++ ++ ++ ++ ++ ++   with ** are not accessed
   // ** ** 13 24 35 46 57 68 79   upper diagonal 2
@@ -118,8 +119,8 @@ bool gbsvUnitTest()
   // 31 42 53 64 75 86 97 ** **   lower diagonal 2
   // 41 52 63 74 85 96 ** ** **   lower diagonal 3
 
-  static Int kl   = 2;         // number of lower diagonals
-  static Int ku   = 3;         // number of upper diagonals
+  static Int kl   = 3;         // number of lower diagonals
+  static Int ku   = 2;         // number of upper diagonals
   static Int nrhs = 4;         // number of right hand sides
   static Int ldab = 2*kl+ku+1; // leading dimension of ab >= 2*kl+ku+1
   static Int ldb  = N;         // leading dimension of b >= max(1,N). ...is N correct?
@@ -131,15 +132,15 @@ bool gbsvUnitTest()
   // 9 times 2*3+2+1 = 9 times 8 in thsi case - because LAPACK uses in general, column-major 
   // indexing, our matrix looks transposed to the one in the comment above:
   double ab[ldab*N] = 
-  {  _, _, _, _,11,21,31,41,     // 1st column of banded format
-     _, _, _,12,22,32,42,52,     // 2nd column
-     _, _,13,23,33,43,53,63,
-     _, _,24,34,44,54,64,74,
-     _, _,35,45,55,65,75,85,
-     _, _,46,56,66,76,86,96,
-     _, _,57,67,77,87,97, _,
-     _, _,68,78,88,98, _, _,
-     _, _,79,89,99, _, _, _ };  // 9th column
+  {  _,_, _, _, _,11,21,31,41,     // 1st column of banded format
+     _,_, _, _,12,22,32,42,52,     // 2nd column
+     _,_, _,13,23,33,43,53,63,
+     _,_, _,24,34,44,54,64,74,
+     _,_, _,35,45,55,65,75,85,
+     _,_, _,46,56,66,76,86,96,
+     _,_, _,57,67,77,87,97, _,
+     _,_, _,68,78,88,98, _, _,
+     _,_, _,79,89,99, _, _, _ };  // 9th column
 
   // the matrix X in A * X = B:
   double X[ldb*nrhs] = {
@@ -157,6 +158,13 @@ bool gbsvUnitTest()
   double x[ldb] = { 1,2,3,4,5,6,7,8,9 };
   double b[ldb] = { _,_,_,_,_,_,_,_,_ };  // the right hand side in A * x = b
 
+  // to obtain the target values for b:
+  //for(int i = 0; i < N; i++) {
+  //  b[i] = 0;
+  //  for(int j = 0; j < N; j++)
+  //    b[i] += refMat[j][i] * x[j];
+  //}
+  //// b is 74,230,505,931,1489,2179,3001,3055,2930
 
 
 
@@ -184,20 +192,25 @@ bool gbsvUnitTest()
     46,56,66,76,86,96,
     57,67,77,87,97, _,
     68,78,88,98, _, _,
-    79,89,99, _, _, _ };  // 9th column
+    79,89,99, _, _, _ };   // 9th column
 
   //double one = 1, zero = 0;
   long int incX = 1;         // might be wrong
-  long int incY = 1;         // might be wrong but irrelevant: when beta is 0, y is not referenced
+  long int incY = 1;         //
   //double yDummy;             // dummy - not referenced
   ftnlen trans_len = 0;      // ftnlen is typedef'd as "long" in f2c.h - i don't know, what this is
-                             // used for, there's no documentation for that gbmv parameter -> check source
+                             // used for, there's no documentation for that gbmv parameter -> check source 
+                             // -> it's actually not used anywhere
   char trans = 'N';
 
   // gbmv needs pointers to "integer" which is defined as "long int" in f2c.h:
   long int N_ = N, lda_ = lda, kl_ = kl, ku_ = ku;
   gbmv(&trans, &lda_, &N_, &kl_, &ku_, &alpha, a, &lda_, x, &incX, 
     &beta, b, &incY, trans_len);  
+
+  // b should be 74,230,505,931,1489,2179,3001,3055,2930
+  // but is actually 74,230,505,931,1489,2179,_,_,_  ...close, but not quite
+
   // aahh - that's wrong! that will work only if the rhs is a vector, but we want a matrix rhs here
   // ...so we actually need a gbmm - but such a routine doesn't seem to exist in BLAS - maybe i should 
   // write one myself as convenience function? or should we start with a vector rhs first? yes - 

@@ -66,7 +66,7 @@ int axpy(long int* n, T *da, T *dx, long int *incx, T *dy, long int *incy)
 //-------------------------------------------------------------------------------------------------
 
 //  -- Reference BLAS level1 routine (version 3.1) -- 
-logical lsame_(char *ca, char *cb, ftnlen ca_len, ftnlen cb_len)
+logical lsame(char *ca, char *cb, ftnlen ca_len, ftnlen cb_len)
 {
   // System generated locals
   logical ret_val;
@@ -183,20 +183,6 @@ int xerbla(char *srname, integer *info, ftnlen srname_len)
   return 0;
 } // xerbla
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //-------------------------------------------------------------------------------------------------
 
 // Reference BLAS level2 routine (version 3.7.0)
@@ -211,7 +197,7 @@ int gbmv(char *trans, integer *m, integer *n, integer *kl, integer *ku, T *alpha
   static integer i__, j, k, ix, iy, jx, jy, kx, ky, kup1, info;
   static T temp;
   static integer lenx, leny;
-  extern logical lsame_(char *, char *, ftnlen, ftnlen);
+  extern logical lsame(char *, char *, ftnlen, ftnlen);
   extern int xerbla(char *, integer *, ftnlen);
 
   // Parameter adjustments
@@ -223,8 +209,8 @@ int gbmv(char *trans, integer *m, integer *n, integer *kl, integer *ku, T *alpha
 
   // Function Body
   info = 0;
-  if (! lsame_(trans, "N", (ftnlen)1, (ftnlen)1) && ! lsame_(trans, "T", (
-    ftnlen)1, (ftnlen)1) && ! lsame_(trans, "C", (ftnlen)1, (ftnlen)1)
+  if (! lsame(trans, "N", (ftnlen)1, (ftnlen)1) && ! lsame(trans, "T", (
+    ftnlen)1, (ftnlen)1) && ! lsame(trans, "C", (ftnlen)1, (ftnlen)1)
     ) {
     info = 1;
   } else if (*m < 0) {
@@ -254,7 +240,7 @@ int gbmv(char *trans, integer *m, integer *n, integer *kl, integer *ku, T *alpha
 
   // Set  LENX  and  LENY, the lengths of the vectors x and y, and set 
   // up the start points in  X  and  Y.
-  if (lsame_(trans, "N", (ftnlen)1, (ftnlen)1)) {
+  if (lsame(trans, "N", (ftnlen)1, (ftnlen)1)) {
     lenx = *n;
     leny = *m;
   } else {
@@ -314,7 +300,7 @@ int gbmv(char *trans, integer *m, integer *n, integer *kl, integer *ku, T *alpha
     return 0;
   }
   kup1 = *ku + 1;
-  if (lsame_(trans, "N", (ftnlen)1, (ftnlen)1)) {
+  if (lsame(trans, "N", (ftnlen)1, (ftnlen)1)) {
 
     // Form  y := alpha*A*x + y.
     jx = kx;
