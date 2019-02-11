@@ -10,7 +10,7 @@ double c_abs(z) complex *z;
 #else
 extern double f__cabs(double, double);
 
-double c_abs(complex *z)
+double c_abs(f2c_complex *z)
 #endif
 {
 return( f__cabs( z->r, z->i ) );

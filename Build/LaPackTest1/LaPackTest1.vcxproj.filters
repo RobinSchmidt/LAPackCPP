@@ -575,5 +575,8 @@
     <ClInclude Include="..\..\Source\libf2c\arith.h">
       <Filter>Source Files\libf2c</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\libf2c\signal1.h">
+      <Filter>Source Files\libf2c</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

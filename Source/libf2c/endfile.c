@@ -10,7 +10,14 @@
 #endif
 
 #ifndef NO_TRUNCATE
-#include "unistd.h"
+
+//#include "unistd.h" // doesn't work in MSVC - #ifdef added by Robin Schmidt
+#ifdef _WIN32      
+#include <io.h>
+#else
+#include <unistd.h>
+#endif
+
 #endif
 
 #ifdef KR_headers

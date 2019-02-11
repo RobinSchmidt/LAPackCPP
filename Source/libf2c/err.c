@@ -18,7 +18,14 @@ extern char *malloc();
 #ifdef NO_ISATTY
 #define isatty(x) 0
 #else
+
+//#include <unistd.h>  // doesn't work in MSVC - #ifdef added by Robin Schmidt
+#ifdef _WIN32      
+#include <io.h>
+#else
 #include <unistd.h>
+#endif
+
 #endif
 
 #ifdef __cplusplus

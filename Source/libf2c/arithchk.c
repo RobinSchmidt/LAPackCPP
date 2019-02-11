@@ -1,3 +1,7 @@
+// Robin Schmidt: this file has been excluded from build since it 
+// defines a main function - it's probably not meant to be part of
+// the f2c library but instead a test-program
+
 /****************************************************************
 Copyright (C) 1997, 1998, 2000 Lucent Technologies
 All Rights Reserved

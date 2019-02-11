@@ -169,7 +169,10 @@
     <ClCompile Include="..\..\Source\LaPackCPP\Blas.cpp" />
     <ClCompile Include="..\..\Source\LaPackCPP\LaPack.cpp" />
     <ClCompile Include="..\..\Source\libf2c\abort_.c" />
-    <ClCompile Include="..\..\Source\libf2c\arithchk.c" />
+    <ClCompile Include="..\..\Source\libf2c\arithchk.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\Source\libf2c\backspac.c" />
     <ClCompile Include="..\..\Source\libf2c\cabs.c" />
     <ClCompile Include="..\..\Source\libf2c\close.c" />
@@ -343,6 +346,7 @@
     <ClInclude Include="..\..\Source\libf2c\fp.h" />
     <ClInclude Include="..\..\Source\libf2c\lio.h" />
     <ClInclude Include="..\..\Source\libf2c\rawio.h" />
+    <ClInclude Include="..\..\Source\libf2c\signal1.h" />
     <ClInclude Include="..\..\Source\libf2c\sysdep1.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

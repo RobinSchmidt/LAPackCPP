@@ -9,7 +9,7 @@ VOID c_div(c, a, b)
 complex *a, *b, *c;
 #else
 extern void sig_die(const char*,int);
-void c_div(complex *c, complex *a, complex *b)
+void c_div(f2c_complex *c, f2c_complex *a, f2c_complex *b)
 #endif
 {
 	double ratio, den;

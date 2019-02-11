@@ -11,7 +11,7 @@ extern "C" {
 #endif
 extern double f__cabs(double, double);
 
-void c_log(complex *r, complex *z)
+void c_log(f2c_complex *r, f2c_complex *z)
 #endif
 {
 	double zi, zr;

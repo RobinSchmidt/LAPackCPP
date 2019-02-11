@@ -13,7 +13,22 @@
 #define _INCLUDE_POSIX_SOURCE	/* for HP-UX */
 #define _INCLUDE_XOPEN_SOURCE	/* for HP-UX */
 #include "sys/types.h"
-#include "sys/times.h"
+
+//#include "sys/times.h" // Robin Schmidt: this doesn't compile in MSVC, infos here
+// http://pubs.opengroup.org/onlinepubs/7908799/xsh/systimes.h.html
+// so i just added the definition of the tms struct directly here from here:
+// https://code.woboq.org/gcc/include/sys/times.h.html
+// instead of including sys/times.h:
+/* Structure describing CPU time used by a process and its children.  */
+struct tms
+{
+  clock_t tms_utime;                /* User CPU time.  */
+  clock_t tms_stime;                /* System CPU time.  */
+  clock_t tms_cutime;               /* User CPU time of dead children.  */
+  clock_t tms_cstime;               /* System CPU time of dead children.  */
+};
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif
