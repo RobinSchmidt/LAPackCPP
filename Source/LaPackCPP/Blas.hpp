@@ -6,7 +6,7 @@ namespace BlasCPP {
 
 
 // How can we make sure, that client code can use a drop-in replacement for these (unoptimized)
-// reference implementatiosn of the BLAS routines? Not allowing that would go totally against the
+// reference implementations of the BLAS routines? Not allowing that would go totally against the
 // design idea of LAPACK (which is to rely on lower-level linear algebra routines that can be
 // optimized for particular target platform and then dropped in). Maybe the LAPACK routines call
 // a general template function like axpy (not daxpy, saxpy, caxpy or zaxpy)...and then it must be
@@ -15,14 +15,19 @@ namespace BlasCPP {
 // different datatypes and instead just have one axpy function...maybe for some things that are 
 // specific to complex numbers, that may not work out completely - we'll see - but for many of the 
 // BLAS and LAPACK routines, it should be possible to write them in a type independent way as 
-// templates.
+// templates. Maybe an explicit specialization of axpy for double should call daxpy and that daxpy
+// may then be defined somewhere else. If we don't want to use such an explicit specialization, we 
+// just request an explicit instantiation of axpy from the compiler - this can be done by letting
+// the user decide which source files are compiled with the application - whether it's the ones 
+// with explicit instantiations or the ones with explicit specializations...something along those
+// lines...
 // Maybe i should implement my own, very naive, BLAS routines (no loop unrolling, etc.). That stuff
 // might better be left to the compiler anyway - maybe unrolling by 4 (as this reference 
 // implementation does) is not optimal and an optimizing compiler would unroll by some other number 
 // (8,16,..) instead? So maybe a more naive BLAS implementation, in addition to be more readable, 
 // could indeed perfom better? -> try it! With such a "NaiveBlas" in place, we could also try the 
-// replacement mechanism, once it's implemented and swap between the reference implementation maybe
-// "RefBlas" and make some comparison benchmarks.
+// replacement mechanism, once it's implemented, and swap between the reference implementation 
+// maybe "RefBlas" and make some comparison benchmarks. ..also try https://www.netlib.org/atlas/
 
 //=================================================================================================
 

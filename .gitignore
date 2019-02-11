@@ -1,0 +1,5 @@
+Resources/lapack-3.8.0
+Build/LapackTest1/x64
+Build/LapackTest1/.vs
+*.sdf
+*.opensdf

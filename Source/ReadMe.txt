@@ -6,4 +6,4 @@ https://en.wikipedia.org/wiki/LINPACK
 https://en.wikipedia.org/wiki/EISPACK
 https://en.wikipedia.org/wiki/MINPACK
 
-and rename the whole project to NumPackCPP
+and rename the whole project to NumPackCPP or to NumberCrunch++

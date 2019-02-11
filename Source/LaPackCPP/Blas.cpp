@@ -290,6 +290,10 @@ int gbmv(char *trans, integer *m, integer *n, integer *kl, integer *ku, T *alpha
 template int axpy(long int* n, double *da, double *dx, long int *incx, 
   double *dy, long int *incy);
 
+template int gbmv(char *trans, integer *m, integer *n, integer *kl, integer *ku, double *alpha, 
+  double *a, integer *lda, double *x, integer *incx, double *beta, double *y, integer *incy, 
+  ftnlen trans_len);
+
 
 
 
