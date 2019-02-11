@@ -67,10 +67,16 @@ int axpy(long int* n, T *da, T *dx, long int *incx, T *dy, long int *incy)
 // libF2C
 // 
 
-/*
+
 // -- Reference BLAS level1 routine (version 3.7.0) -- 
 int xerbla(char *srname, integer *info, ftnlen srname_len)
 {
+  // Code of the function has been commented out by Robin Schmidt - at the moment, xerbla is just
+  // a dummy function - i should probably set a debug-breakpoint here and re-implement it 
+  // completely - it deals with some weird I/O functions from the f2c library which seems to be 
+  // useless clutter...
+
+  /*
   // Table of constant values
   static integer c__1 = 1;
 
@@ -101,10 +107,11 @@ int xerbla(char *srname, integer *info, ftnlen srname_len)
   s_stop("", (ftnlen)0);
 
   // End of XERBLA
+  */
 
   return 0;
 } // xerbla
-*/
+
 
 
 
@@ -134,7 +141,7 @@ int gbmv(char *trans, integer *m, integer *n, integer *kl, integer *ku, T *alpha
   static T temp;
   static integer lenx, leny;
   extern logical lsame_(char *, char *, ftnlen, ftnlen);
-  extern int xerbla_(char *, integer *, ftnlen);
+  extern int xerbla(char *, integer *, ftnlen);
 
   // Parameter adjustments
   a_dim1 = *lda;
@@ -165,7 +172,7 @@ int gbmv(char *trans, integer *m, integer *n, integer *kl, integer *ku, T *alpha
     info = 13;
   }
   if (info != 0) {
-    xerbla_("DGBMV ", &info, (ftnlen)6);
+    xerbla("DGBMV ", &info, (ftnlen)6);
     return 0;
   }
 
@@ -350,9 +357,9 @@ int gbmv(char *trans, integer *m, integer *n, integer *kl, integer *ku, T *alpha
 template int axpy(long int* n, double *da, double *dx, long int *incx, 
   double *dy, long int *incy);
 
-//template int gbmv(char *trans, integer *m, integer *n, integer *kl, integer *ku, double *alpha, 
-//  double *a, integer *lda, double *x, integer *incx, double *beta, double *y, integer *incy, 
-//  ftnlen trans_len);
+template int gbmv(char *trans, integer *m, integer *n, integer *kl, integer *ku, double *alpha, 
+  double *a, integer *lda, double *x, integer *incx, double *beta, double *y, integer *incy, 
+  ftnlen trans_len);
 // commented out because of linker errors: xerbla, lsame
 
 

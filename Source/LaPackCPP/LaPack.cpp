@@ -545,7 +545,7 @@ int gbtrs(char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, T *a
         char *, char *, integer *, integer *, doublereal *, integer *,
         doublereal *, integer *, ftnlen, ftnlen, ftnlen);
   static logical lnoti;
-  extern int xerbla_(char *, integer *, ftnlen);
+  extern int xerbla(char *, integer *, ftnlen);
   static logical notran;
 
   // Parameter adjustments
@@ -584,7 +584,7 @@ int gbtrs(char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, T *a
   }
   if(*info != 0) {
     i__1 = -(*info);
-    xerbla_("DGBTRS", &i__1, (ftnlen)6);
+    xerbla("DGBTRS", &i__1, (ftnlen)6);
     return 0;
   }
 
