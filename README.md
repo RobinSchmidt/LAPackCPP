@@ -4,7 +4,7 @@ With this repo, i try to translate the original LAPACK Fortran routines (from he
 
 - the LinPack port here https://people.sc.fsu.edu/~jburkardt/cpp_src/linpack/linpack.html looked really good for my purpose but has the annoying LGPL license
 - i wrote my own simple solver (without pivot-search) which looks pretty neat: https://github.com/RobinSchmidt/RS-MET/issues/225#issuecomment-462045482 but seemed to be numerically not-so-good
-- projects like http://lapackpp.sourceforge.net/ are not really a translation but rather an interface which still requires the original code and a Fortran compiler (i cannot bother clients who use my library to install a Fortran compiler - i can't even bother myself to do that)
+- projects like http://lapackpp.sourceforge.net/ are not really a translation but rather an interface which still requires the original code and a Fortran compiler (i cannot bother clients who use my library to install a Fortran compiler - i can't even bother myself to do that)...or, hmm - you can perhaps go without a Fortran compiler, but then you need to link to pre-built libraries - also very undesirable!
 - more modern linear algebra libraries like Eigen have a - to my taste - too fancy interface. Curiously recurring template pattern? Great but really? I just wanted some raw and straightforward number crunching routines! :-P Others like Armadillo even have a dependency on the original LAPACK (and therefore on the availability of a Fortran compiler)
 - it goes without saying that commercial, closed source solutions like Intel's MKL are not an option as a dependency for an open source project like my RAPT library (which is part of the RS-MET codebase, by the way)
 
