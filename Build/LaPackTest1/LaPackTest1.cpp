@@ -104,11 +104,11 @@ bool gbsvUnitTest()
 
 
 
-  // for the banded storage format used by gbsv, we to store the matrix in the form:
+  // the banded storage format suitable for gbsv looks in this case like below, where column-major 
+  // indexing is assumed (as always in LAPACK):
 
-  // ** ** ** ** ** ++ ++ ++ ++   fields with ++ are used internally by the algorithm, fields
-  // ** ** ** ** ++ ++ ++ ++ ++   with ** are not accessed
-  // ** ** ** ++ ++ ++ ++ ++ ++
+  // ** ** ** ** ++ ++ ++ ++ ++   fields with ++ are used internally by the algorithm, fields
+  // ** ** ** ++ ++ ++ ++ ++ ++   with ** are not accessed
   // ** ** 13 24 35 46 57 68 79   upper diagonal 2
   // ** 12 23 34 45 56 67 78 89   upper diagonal 1
   // 11 22 33 44 55 66 77 88 99   main diagonal
@@ -123,27 +123,33 @@ bool gbsvUnitTest()
   static Int ldb  = N;         // leading dimension of b >= max(1,N). ...is N correct?
   long int ipiv[N];            // pivot indices
   int info = 666;              // 0 on exit, if successful
+  double _ = 0.0/sqrt(0.0);    // we init unused storage cells with NaN - why is it -NaN?
 
-  // matrix A in band storage for gbsv:
-  double _ = 0.0/sqrt(0.0);         // we init unused storage cells with NaN - why is it -NaN?
-  //double ab[ldab*N] = 
-  double ab[81] = 
-  {  _, _, _, _, _,11,21,31,41,     // 1st column of banded format
-     _, _, _, _,12,22,32,42,52,     // 2nd column
-     _, _, _,13,23,33,43,53,63,
-     _, _, _,24,34,44,54,64,74,
-     _, _, _,35,45,55,65,75,85,
-     _, _, _,46,56,66,76,86,96,
-     _, _, _,57,67,77,87,97, _,
-     _, _, _,68,78,88,98, _, _,
-     _, _, _,79,89,99, _, _, _ };  // 9th column
-  // btw.: that the banded storage format is also 9x9, like the original matrix, is a coincidence
-  // in this particular case - in general, the banded format is N times 2*kl+ku+1 which is 
-  // 9 times 2*3+2+1 = 9 times 9 in this case...wait, no: ku = 2, so it's 8...what's wrong?
+  // matrix A in band storage for gbsv - the banded format is N times 2*kl+ku+1 which is 
+  // 9 times 2*3+2+1 = 9 times 8 in thsi case - because LAPACK uses in general, column-major 
+  // indexing, our matrix looks transposed to the one in the comment above:
+  double ab[ldab*N] = 
+  {  _, _, _, _,11,21,31,41,     // 1st column of banded format
+     _, _, _,12,22,32,42,52,     // 2nd column
+     _, _,13,23,33,43,53,63,
+     _, _,24,34,44,54,64,74,
+     _, _,35,45,55,65,75,85,
+     _, _,46,56,66,76,86,96,
+     _, _,57,67,77,87,97, _,
+     _, _,68,78,88,98, _, _,
+     _, _,79,89,99, _, _, _ };  // 9th column
 
-  double b[ldb*nrhs];          // right-hand-side and solution matrix
+  // the matrix X in A * X = B:
+  double X[ldb*nrhs] = {
+    1,2,3,4,5,6,7,8,9,
+    9,8,7,6,5,4,3,2,1,
+    1,0,2,0,3,0,4,0,5,
+    0,1,0,2,0,3,0,4,0
+  };
 
-
+  // right-hand-side B in A * X = B, after solving the system, it will comtain the solution, so it
+  // should be equal to X up to roundoff errors:
+  double B[ldb*nrhs];
 
 
 
@@ -160,14 +166,17 @@ bool gbsvUnitTest()
 
 
 
+  // we need gbmv: general banded matrix-vector multiply (blas2)
+
+  static Int lda = kl+ku+1; // leading dimension of a >= kl+ku+1
+  double a[lda*N];           // matrix A in band storage for gbmv
+  int M = N;           // number of rows
+  double alpha = 1.0;  // scaler in gbmv
+  //int gbmv('N', &M, &N, &kl, &ku, &alpha, a, &lda, 
+  // T *x, integer *incx, T *beta, T *y, integer *incy, ftnlen trans_len
+
+
   // can the upper version be passed to gbmv with some trickery, too? ...to avoid storing it twice?
-
-
-
-
-
-
-
 
 
 
@@ -180,18 +189,9 @@ bool gbsvUnitTest()
 
   // todo: 
   // -fill the matrix a for gbmv using lapack's banded storage scheme
-  // -fill the matrix ab for gbsv using lapack's banded storage scheme
+
   //  ...or can we pass the matrix ab also to gbmv...with some offsets, maybe?
-  // -fill the right-hand-sides vectors b
 
-  // we need gbmv: general banded matrix-vector multiply (blas2)
-
-  static Int lda = kl+ku+1; // leading dimension of a >= kl+ku+1
-  double a[lda*N];           // matrix A in band storage for gbmv
-  int M = N;           // number of rows
-  double alpha = 1.0;  // scaler in gbmv
-  //int gbmv('N', &M, &N, &kl, &ku, &alpha, a, &lda, 
-  // T *x, integer *incx, T *beta, T *y, integer *incy, ftnlen trans_len)
 
 
   //int gbsv(long int *n, long int *kl, long int *ku, long int *nrhs, T *ab, long int *ldab, 
