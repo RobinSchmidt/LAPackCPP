@@ -410,14 +410,17 @@ int gbmv(char *trans, integer *m, integer *n, integer *kl, integer *ku, T *alpha
 
 
 // explicit template instantiations - todo: move them into separate files, one file per
-// datatype:
+// datatype - maybe the particular type for which we instantiate the templates can be #defined
+// the i just need to write the instantiation code once and copy/rename the files and just change 
+// the #define - easier to maintain
+
 template int axpy(long int* n, double *da, double *dx, long int *incx, 
   double *dy, long int *incy);
 
 template int gbmv(char *trans, integer *m, integer *n, integer *kl, integer *ku, double *alpha, 
   double *a, integer *lda, double *x, integer *incx, double *beta, double *y, integer *incy, 
   ftnlen trans_len);
-// commented out because of linker errors: xerbla, lsame
+
 
 
 

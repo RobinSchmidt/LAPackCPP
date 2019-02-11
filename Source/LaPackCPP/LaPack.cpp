@@ -672,6 +672,22 @@ int gbtrs(char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, T *a
 
 
 
+// commented because of linker errors - now all these subroutines:
+// dger, scal, dgemm, dcopy, dswap, dtrsm, dgbtf2, idamax, ilaenv, dlaswp, dgemv, dtbsv, gbtrf, 
+// gbtrs
+// have to translated to fix the linker errors
+/*
+template int gbtrf(integer *m, integer *n, integer *kl, integer *ku, double *ab, integer *ldab, 
+  integer *ipiv, integer *info);
+
+template int gbtrs(char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, double *ab,
+    integer *ldab, integer *ipiv, double *b, integer *ldb, integer *info, ftnlen trans_len);
+
+template int gbsv(long int *n, long int *kl, long int *ku, long int *nrhs, double *ab, 
+  long int *ldab, long int *ipiv, double *b, long int *ldb, long int *info);
+*/
+
+
 
 
 
