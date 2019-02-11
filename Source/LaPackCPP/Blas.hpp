@@ -5,6 +5,18 @@
 namespace BlasCPP {
 
 
+// How can we make sure, that client code can use a drop-in replacement for these (unoptimized)
+// reference implementatiosn of the BLAS routines? Not allowing that would go totally against the
+// design idea of LAPACK (which is to rely on lower-level linear algebra routines that can be
+// optimized for particular target platform and then dropped in). Maybe the LAPACK routines call
+// a general template function like axpy (not daxpy, saxpy, caxpy or zaxpy)...and then it must be
+// somehow dispatched at compile-time which of the 4 (d,s,c,z) is chosen depending on the template
+// parameter for axpy. The design goal of this C++ translation is to NOT have separate routines for
+// different datatypes and instead just have one axpy function...maybe for some things that are 
+// specific to complex numbers, that may not work out completely - we'll see - but for many of the 
+// BLAS and LAPACK routines, it should be possible to write them in a type independent way as 
+// templates.
+
 //=================================================================================================
 
 /** \name BLAS level 1 routines (operations involving scalars and vectors) */

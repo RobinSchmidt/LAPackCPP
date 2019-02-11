@@ -12,3 +12,9 @@ http://lapackpp.sourceforge.net/
 
 this is the old one:
 https://math.nist.gov/lapack++/
+
+some of the resources are kept in packed form (with 7zip) because i had 
+problems with uploading the repo in unpacked form - the amount of data was just
+too much, apparently. The contents of these archives is not supposed to change
+anyway - it's just the grab-bag, from which we obtain the original fortran 
+sources.
