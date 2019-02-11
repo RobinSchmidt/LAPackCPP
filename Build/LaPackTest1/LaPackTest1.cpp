@@ -22,6 +22,16 @@ std::vector<double> rangeVector(int N, double start, double inc)
   return v;
 }
 
+/** Compares arrays for equality with optional error tolerance. */
+template<class T>
+bool arraysEqual(T* x, T* y, int N, T tolerance = T(0))
+{
+  for(int i = 0; i < N; i++)
+    if(abs(x[i]-y[i]) > tolerance)
+      return false;
+  return true;
+}
+
 /** Utility class to wrap around an existing flat array of numbers to conveniently access matrix 
 elements via row and column index via the () operator, taking row and column index as arguments. 
 The access operator always takes as first index the row index and as second index the column index, 
@@ -196,10 +206,9 @@ bool gbsvUnitTest()
     68,78,88,98, _, _,
     79,89,99, _, _, _ };   // 9th column
 
-  //double one = 1, zero = 0;
-  long int incX = 1;         // might be wrong
-  long int incY = 1;         //
-  //double yDummy;             // dummy - not referenced
+
+  long int incX = 1;
+  long int incY = 1;
   ftnlen trans_len = 0;      // ftnlen is typedef'd as "long" in f2c.h - i don't know, what this is
                              // used for, there's no documentation for that gbmv parameter -> check source 
                              // -> it's actually not used anywhere
@@ -209,9 +218,9 @@ bool gbsvUnitTest()
   long int N_ = N, M_ = M, lda_ = lda, kl_ = kl, ku_ = ku;
   gbmv(&trans, &M_, &N_, &kl_, &ku_, &alpha, a, &lda_, x, &incX, 
     &beta, b, &incY, trans_len);  
+  double target[N] =  { 74,230,505,931,1489,2179,3001,3055,2930 }; // this is what b should be now
+  r &= arraysEqual(b, target, N);
 
-  // b should be 74,230,505,931,1489,2179,3001,3055,2930
-  // but is actually 74,230,505,931,1489,2179,_,_,_  ...close, but not quite
   // the local variable leny is 6 in the routine - but should be 9 (length of y)
   // it gets leny from m which is the lda input - we should probably pass N_ for lda, leading 
   // dimension may not mean the array size but the logical dimension of the matrix a
