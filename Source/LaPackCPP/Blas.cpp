@@ -496,18 +496,240 @@ int gbmv(char *trans, integer *m, integer *n, integer *kl, integer *ku, T *alpha
 
 } // gbmv
 
+//=================================================================================================
+// BLAS level 3 routines
 
+//  -- Reference BLAS level3 routine (version 3.7.0) -- 
+int gemm(char *transa, char *transb, integer *m, integer *
+  n, integer *k, doublereal *alpha, doublereal *a, integer *lda, 
+  doublereal *b, integer *ldb, doublereal *beta, doublereal *c__, 
+  integer *ldc, ftnlen transa_len, ftnlen transb_len)
+{
+  // System generated locals
+  integer a_dim1, a_offset, b_dim1, b_offset, c_dim1, c_offset, i__1, i__2, 
+    i__3;
 
+  // Local variables
+  static integer i__, j, l, info;
+  static logical nota, notb;
+  static doublereal temp;
+  static integer ncola;
+  extern logical lsame_(char *, char *, ftnlen, ftnlen);
+  static integer nrowa, nrowb;
+  extern int xerbla(char *, integer *, ftnlen);
 
+  // Set  NOTA  and  NOTB  as  true if  A  and  B  respectively are not 
+  // transposed and set  NROWA, NCOLA and  NROWB  as the number of rows 
+  // and  columns of  A  and the  number of  rows  of  B  respectively. 
 
+  // Parameter adjustments
+  a_dim1 = *lda;
+  a_offset = 1 + a_dim1;
+  a -= a_offset;
+  b_dim1 = *ldb;
+  b_offset = 1 + b_dim1;
+  b -= b_offset;
+  c_dim1 = *ldc;
+  c_offset = 1 + c_dim1;
+  c__ -= c_offset;
 
+  // Function Body
+  nota = lsame_(transa, "N", (ftnlen)1, (ftnlen)1);
+  notb = lsame_(transb, "N", (ftnlen)1, (ftnlen)1);
+  if (nota) {
+    nrowa = *m;
+    ncola = *k;
+  } else {
+    nrowa = *k;
+    ncola = *m;
+  }
+  if (notb) {
+    nrowb = *k;
+  } else {
+    nrowb = *n;
+  }
 
+  // Test the input parameters.
+  info = 0;
+  if (! nota && ! lsame_(transa, "C", (ftnlen)1, (ftnlen)1) && ! lsame_(
+    transa, "T", (ftnlen)1, (ftnlen)1)) {
+    info = 1;
+  } else if (! notb && ! lsame_(transb, "C", (ftnlen)1, (ftnlen)1) && ! 
+    lsame_(transb, "T", (ftnlen)1, (ftnlen)1)) {
+    info = 2;
+  } else if (*m < 0) {
+    info = 3;
+  } else if (*n < 0) {
+    info = 4;
+  } else if (*k < 0) {
+    info = 5;
+  } else if (*lda < max(1,nrowa)) {
+    info = 8;
+  } else if (*ldb < max(1,nrowb)) {
+    info = 10;
+  } else if (*ldc < max(1,*m)) {
+    info = 13;
+  }
+  if (info != 0) {
+    xerbla("DGEMM ", &info, (ftnlen)6);
+    return 0;
+  }
 
+  // Quick return if possible.
 
+  if (*m == 0 || *n == 0 || (*alpha == 0. || *k == 0) && *beta == 1.) {
+    return 0;
+  }
 
+  // And if  alpha.eq.zero.
+  if (*alpha == 0.) {
+    if (*beta == 0.) {
+      i__1 = *n;
+      for (j = 1; j <= i__1; ++j) {
+        i__2 = *m;
+        for (i__ = 1; i__ <= i__2; ++i__) {
+          c__[i__ + j * c_dim1] = 0.;
+          // L10: 
+        }
+        // L20: 
+      }
+    } else {
+      i__1 = *n;
+      for (j = 1; j <= i__1; ++j) {
+        i__2 = *m;
+        for (i__ = 1; i__ <= i__2; ++i__) {
+          c__[i__ + j * c_dim1] = *beta * c__[i__ + j * c_dim1];
+          // L30: 
+        }
+        // L40: 
+      }
+    }
+    return 0;
+  }
 
+  // Start the operations.
 
+  if (notb) {
+    if (nota) {
 
+      // Form  C := alpha*A*B + beta*C. 
+
+      i__1 = *n;
+      for (j = 1; j <= i__1; ++j) {
+        if (*beta == 0.) {
+          i__2 = *m;
+          for (i__ = 1; i__ <= i__2; ++i__) {
+            c__[i__ + j * c_dim1] = 0.;
+            // L50: 
+          }
+        } else if (*beta != 1.) {
+          i__2 = *m;
+          for (i__ = 1; i__ <= i__2; ++i__) {
+            c__[i__ + j * c_dim1] = *beta * c__[i__ + j * c_dim1];
+            // L60: 
+          }
+        }
+        i__2 = *k;
+        for (l = 1; l <= i__2; ++l) {
+          temp = *alpha * b[l + j * b_dim1];
+          i__3 = *m;
+          for (i__ = 1; i__ <= i__3; ++i__) {
+            c__[i__ + j * c_dim1] += temp * a[i__ + l * a_dim1];
+            // L70: 
+          }
+          // L80: 
+        }
+        // L90: 
+      }
+    } else {
+
+      // Form  C := alpha*A**T*B + beta*C
+
+      i__1 = *n;
+      for (j = 1; j <= i__1; ++j) {
+        i__2 = *m;
+        for (i__ = 1; i__ <= i__2; ++i__) {
+          temp = 0.;
+          i__3 = *k;
+          for (l = 1; l <= i__3; ++l) {
+            temp += a[l + i__ * a_dim1] * b[l + j * b_dim1];
+            // L100: 
+          }
+          if (*beta == 0.) {
+            c__[i__ + j * c_dim1] = *alpha * temp;
+          } else {
+            c__[i__ + j * c_dim1] = *alpha * temp + *beta * c__[
+              i__ + j * c_dim1];
+          }
+          // L110: 
+        }
+        // L120: 
+      }
+    }
+  } else {
+    if (nota) {
+
+      // Form  C := alpha*A*B**T + beta*C 
+
+      i__1 = *n;
+      for (j = 1; j <= i__1; ++j) {
+        if (*beta == 0.) {
+          i__2 = *m;
+          for (i__ = 1; i__ <= i__2; ++i__) {
+            c__[i__ + j * c_dim1] = 0.;
+            // L130: 
+          }
+        } else if (*beta != 1.) {
+          i__2 = *m;
+          for (i__ = 1; i__ <= i__2; ++i__) {
+            c__[i__ + j * c_dim1] = *beta * c__[i__ + j * c_dim1];
+            // L140: 
+          }
+        }
+        i__2 = *k;
+        for (l = 1; l <= i__2; ++l) {
+          temp = *alpha * b[j + l * b_dim1];
+          i__3 = *m;
+          for (i__ = 1; i__ <= i__3; ++i__) {
+            c__[i__ + j * c_dim1] += temp * a[i__ + l * a_dim1];
+            // L150: 
+          }
+          // L160: 
+        }
+        // L170: 
+      }
+    } else {
+
+      // Form  C := alpha*A**T*B**T + beta*C
+
+      i__1 = *n;
+      for (j = 1; j <= i__1; ++j) {
+        i__2 = *m;
+        for (i__ = 1; i__ <= i__2; ++i__) {
+          temp = 0.;
+          i__3 = *k;
+          for (l = 1; l <= i__3; ++l) {
+            temp += a[l + i__ * a_dim1] * b[j + l * b_dim1];
+            // L180: 
+          }
+          if (*beta == 0.) {
+            c__[i__ + j * c_dim1] = *alpha * temp;
+          } else {
+            c__[i__ + j * c_dim1] = *alpha * temp + *beta * c__[
+              i__ + j * c_dim1];
+          }
+          // L190: 
+        }
+        // L200: 
+      }
+    }
+  }
+
+  return 0;
+
+} // gemm
+
+//=================================================================================================
 
 // explicit template instantiations - todo: move them into separate files, one file per
 // datatype - maybe the particular type for which we instantiate the templates can be #defined

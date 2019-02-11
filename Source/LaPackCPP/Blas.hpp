@@ -90,6 +90,7 @@ LDA:   On entry, LDA specifies the first dimension of A as declared in the calli
        LDA must be at least max( 1, m ). */
 int ger(integer *m, integer *n, doublereal *alpha, doublereal *x, integer *incx, doublereal *y, 
   integer *incy, doublereal *a, integer *lda);
+// templatize!
 
 //-------------------------------------------------------------------------------------------------
 
@@ -202,6 +203,7 @@ LDC:    On entry, LDC specifies the first dimension of C as declared in the call
 int gemm(char *transa, char *transb, integer *m, integer *n, integer *k, doublereal *alpha, 
   doublereal *a, integer *lda, doublereal *b, integer *ldb, doublereal *beta, doublereal *c__, 
   integer *ldc, ftnlen transa_len, ftnlen transb_len);
+// templatize!
 
 
 }
