@@ -112,7 +112,10 @@ BETA:  On entry, BETA specifies the scalar beta. When BETA is supplied as zero t
 Y:     array, dimension at least ( 1 + ( m - 1 )*abs( INCY ) ) when TRANS = 'N' or 'n' and at least 
        ( 1 + ( n - 1 )*abs( INCY ) ) otherwise. Before entry, the incremented array Y must contain the 
        vector y. On exit, Y is overwritten by the updated vector y.   
-INCY:  On entry, INCY specifies the increment for the elements of Y. INCY must not be zero. */
+INCY:  On entry, INCY specifies the increment for the elements of Y. INCY must not be zero. 
+
+Robin's notes: 
+trans_len is not used in the routine and the returned value is always zero (so, it has no meaning). */
 template<class T>
 int gbmv(char *trans, integer *m, integer *n, integer *kl, integer *ku, T *alpha, T *a, 
   integer *lda, T *x, integer *incx, T *beta, T *y, integer *incy, ftnlen trans_len);

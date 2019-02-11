@@ -7,11 +7,13 @@
 #include "../../Source/Tests/TestUtils.cpp"
 
 // todo: make a unity build and include file for all converted c code:
-#include "../../Source/GeneratedByF2C/daxpy.c"
+#include "../../Source/GeneratedByF2C/daxpy.c" // maybe get rid...
 
 #include "../../Source/LaPackCPP/Blas.hpp"
 using namespace BlasCPP;
 
+#include "../../Source/LaPackCPP/LaPack.hpp"
+using namespace LaPackCPP;
 
 
 std::vector<double> rangeVector(int N, double start, double inc)
@@ -137,11 +139,11 @@ bool gbsvUnitTest()
   static Int ldb  = N;         // leading dimension of b >= max(1,N). ...is N correct?
                                // rename to arb - allocated rows for b
   long int ipiv[N];            // pivot indices
-  int info = 666;              // 0 on exit, if successful
+  long int info = 666;         // 0 on exit, if successful
   double _ = 0.0/sqrt(0.0);    // we init unused storage cells with NaN - why is it -NaN?
 
   // matrix A in band storage for gbsv - the banded format is N times 2*kl+ku+1 which is 
-  // 9 times 2*3+2+1 = 9 times 8 in thsi case - because LAPACK uses in general, column-major 
+  // 9 times 2*3+2+1 = 9 times 8 in this case - because LAPACK uses in general, column-major 
   // indexing, our matrix looks transposed to the one in the comment above:
   double ab[ldab*N] = 
   {  _, _, _, _, _,11,21,31,41,     // 1st column of banded format
@@ -220,19 +222,14 @@ bool gbsvUnitTest()
     &beta, b, &incY, trans_len);  
   double target[N] =  { 74,230,505,931,1489,2179,3001,3055,2930 }; // this is what b should be now
   r &= arraysEqual(b, target, N);
+  // can we somehow re-use the ab array to be passed to gbmv with some trickery, too? ...to avoid 
+  // storing the a matrix twice? ...maybe later...
 
-  // the local variable leny is 6 in the routine - but should be 9 (length of y)
-  // it gets leny from m which is the lda input - we should probably pass N_ for lda, leading 
-  // dimension may not mean the array size but the logical dimension of the matrix a
+  // We have computed b = A*x - now we try to retrieve x by solving the linear system for x
+  double x2[N]; // that's where the solver should write the result into
+  long int nrhs1_ = 1, ldab_ = ldab, ldb_ = ldb; // first, we have just one rhs
+  //gbsv(&N_, &kl_, &ku_, &nrhs1_, ab, &ldab_, ipiv, b, &ldb_, &info);
 
-  // aahh - that's wrong! that will work only if the rhs is a vector, but we want a matrix rhs here
-  // ...so we actually need a gbmm - but such a routine doesn't seem to exist in BLAS - maybe i should 
-  // write one myself as convenience function? or should we start with a vector rhs first? yes - 
-  // that's probably better
-
-
-
-  // can the upper version be passed to gbmv with some trickery, too? ...to avoid storing it twice?
 
   //int gbsv(long int *n, long int *kl, long int *ku, long int *nrhs, T *ab, long int *ldab, 
   //long int *ipiv, T *b, long int *ldb, long int *info);
