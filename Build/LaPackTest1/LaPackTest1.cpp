@@ -122,7 +122,8 @@ bool gbsvUnitTest()
   static Int kl   = 3;         // number of lower diagonals
   static Int ku   = 2;         // number of upper diagonals
   static Int nrhs = 4;         // number of right hand sides
-  static Int ldab = 2*kl+ku+1; // leading dimension of ab >= 2*kl+ku+1
+  static Int ldab = 2*kl+ku+1; // leading dimension of ab >= 2*kl+ku+1 - nope, ldab means the ligical 
+                               // dimension of a - this variable here if for the allocated size
   static Int ldb  = N;         // leading dimension of b >= max(1,N). ...is N correct?
   long int ipiv[N];            // pivot indices
   int info = 666;              // 0 on exit, if successful
@@ -177,7 +178,8 @@ bool gbsvUnitTest()
   // 31 42 53 64 75 86 97 ** **   lower diagonal 2
   // 41 52 63 74 85 96 ** ** **   lower diagonal 3
 
-  static Int lda = kl+ku+1; // leading dimension of a >= kl+ku+1
+  static Int lda = kl+ku+1; // leading dimension of a >= kl+ku+1 - rename to something that relates to
+                            // allocated array size, not the logical leading dimension o a
   int M = N;                // number of rows
   double alpha = 1.0;       // scaler in gbmv
   double beta  = 0.0;       // gbmv computes Y = alpha*A*x + beta*y
@@ -210,6 +212,9 @@ bool gbsvUnitTest()
 
   // b should be 74,230,505,931,1489,2179,3001,3055,2930
   // but is actually 74,230,505,931,1489,2179,_,_,_  ...close, but not quite
+  // the local variable leny is 6 in the routine - but should be 9 (length of y)
+  // it gets leny from m which is the lda input - we should probably pass N_ for lda, leading 
+  // dimension may not mean the array size but the logical dimension of the matrix a
 
   // aahh - that's wrong! that will work only if the rhs is a vector, but we want a matrix rhs here
   // ...so we actually need a gbmm - but such a routine doesn't seem to exist in BLAS - maybe i should 
