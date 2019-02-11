@@ -63,7 +63,8 @@ int axpy(long int* n, T *da, T *dx, long int *incx, T *dy, long int *incy)
   return 0;
 }
 
-// todo: fix linker errors for s_wsfe, s_stop, len_trim__, do_fio
+// todo: fix linker errors for s_wsfe, s_stop, len_trim__, do_fio - these seem to be functions from
+// libF2C
 // 
 
 /*
