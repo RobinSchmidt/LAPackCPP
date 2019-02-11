@@ -93,14 +93,16 @@ bool gbsvUnitTest()
   // the matrix itself for reference (lapack uses column-major indexing, so do we here):
   double refMat[N][N] =
   { { 11,21,31,41, 0, 0, 0, 0, 0 },    // 1st column (index 0)
-  { 12,22,32,42,52, 0, 0, 0, 0 },    // 2nd column (index 1)
-  { 13,23,33,43,53,63, 0, 0, 0 },    // etc.
-  {  0,24,34,44,54,64,74, 0, 0 },
-  {  0, 0,35,45,55,65,75,85, 0 },
-  {  0, 0, 0,46,56,66,76,86,96 },
-  {  0, 0, 0, 0,57,67,77,87,97 },
-  {  0, 0, 0, 0, 0,68,78,88,98 },
-  {  0, 0, 0, 0, 0, 0,79,89,99 } };  // 9th column (index 8)
+    { 12,22,32,42,52, 0, 0, 0, 0 },    // 2nd column (index 1)
+    { 13,23,33,43,53,63, 0, 0, 0 },    // etc.
+    {  0,24,34,44,54,64,74, 0, 0 },
+    {  0, 0,35,45,55,65,75,85, 0 },
+    {  0, 0, 0,46,56,66,76,86,96 },
+    {  0, 0, 0, 0,57,67,77,87,97 },
+    {  0, 0, 0, 0, 0,68,78,88,98 },
+    {  0, 0, 0, 0, 0, 0,79,89,99 } };  // 9th column (index 8)
+  // maybe later store the matrix in LAPACK format to compare the general matrix multiply (gemv) 
+  // result with the banded one (gbmv)
 
 
 
@@ -152,9 +154,6 @@ bool gbsvUnitTest()
   double B[ldb*nrhs];
 
 
-
-
-
   // for the banded storage used by gbmv, we need to store the matrix in the format:
 
   // ** ** 13 24 35 46 57 68 79   upper diagonal 2
@@ -164,35 +163,26 @@ bool gbsvUnitTest()
   // 31 42 53 64 75 86 97 ** **   lower diagonal 2
   // 41 52 63 74 85 96 ** ** **   lower diagonal 3
 
-
-
-  // we need gbmv: general banded matrix-vector multiply (blas2)
-
   static Int lda = kl+ku+1; // leading dimension of a >= kl+ku+1
-  double a[lda*N];           // matrix A in band storage for gbmv
-  int M = N;           // number of rows
-  double alpha = 1.0;  // scaler in gbmv
+  int M = N;                // number of rows
+  double alpha = 1.0;       // scaler in gbmv
+
+  // matrix A in band storage for gbmv:
+  double a[lda*N] =
+  {  _, _,11,21,31,41,     // 1st column of banded format
+     _,12,22,32,42,52,     // 2nd column
+    13,23,33,43,53,63,
+    24,34,44,54,64,74,
+    35,45,55,65,75,85,
+    46,56,66,76,86,96,
+    57,67,77,87,97, _,
+    68,78,88,98, _, _,
+    79,89,99, _, _, _ };  // 9th column
+
   //int gbmv('N', &M, &N, &kl, &ku, &alpha, a, &lda, 
   // T *x, integer *incx, T *beta, T *y, integer *incy, ftnlen trans_len
 
-
   // can the upper version be passed to gbmv with some trickery, too? ...to avoid storing it twice?
-
-
-
-
-
-
-
-
-
-
-  // todo: 
-  // -fill the matrix a for gbmv using lapack's banded storage scheme
-
-  //  ...or can we pass the matrix ab also to gbmv...with some offsets, maybe?
-
-
 
   //int gbsv(long int *n, long int *kl, long int *ku, long int *nrhs, T *ab, long int *ldab, 
   //long int *ipiv, T *b, long int *ldb, long int *info);

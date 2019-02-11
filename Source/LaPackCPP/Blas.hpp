@@ -16,6 +16,13 @@ namespace BlasCPP {
 // specific to complex numbers, that may not work out completely - we'll see - but for many of the 
 // BLAS and LAPACK routines, it should be possible to write them in a type independent way as 
 // templates.
+// Maybe i should implement my own, very naive, BLAS routines (no loop unrolling, etc.). That stuff
+// might better be left to the compiler anyway - maybe unrolling by 4 (as this reference 
+// implementation does) is not optimal and an optimizing compiler would unroll by some other number 
+// (8,16,..) instead? So maybe a more naive BLAS implementation, in addition to be more readable, 
+// could indeed perfom better? -> try it! With such a "NaiveBlas" in place, we could also try the 
+// replacement mechanism, once it's implemented and swap between the reference implementation maybe
+// "RefBlas" and make some comparison benchmarks.
 
 //=================================================================================================
 
