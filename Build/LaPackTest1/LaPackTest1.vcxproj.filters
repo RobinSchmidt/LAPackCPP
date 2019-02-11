@@ -60,6 +60,48 @@
     <ClCompile Include="..\..\Source\GeneratedByF2C\lsame.c">
       <Filter>Source Files\GeneratedByF2C</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\GeneratedByF2C\dcopy.c">
+      <Filter>Source Files\GeneratedByF2C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\GeneratedByF2C\dgbrfs.c">
+      <Filter>Source Files\GeneratedByF2C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\GeneratedByF2C\dgbrfsx.c">
+      <Filter>Source Files\GeneratedByF2C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\GeneratedByF2C\dgemm.c">
+      <Filter>Source Files\GeneratedByF2C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\GeneratedByF2C\dgemv.c">
+      <Filter>Source Files\GeneratedByF2C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\GeneratedByF2C\dger.c">
+      <Filter>Source Files\GeneratedByF2C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\GeneratedByF2C\dswap.c">
+      <Filter>Source Files\GeneratedByF2C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\GeneratedByF2C\dtbsv.c">
+      <Filter>Source Files\GeneratedByF2C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\GeneratedByF2C\dtrsm.c">
+      <Filter>Source Files\GeneratedByF2C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\GeneratedByF2C\idamax.c">
+      <Filter>Source Files\GeneratedByF2C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\GeneratedByF2C\ilaenv.c">
+      <Filter>Source Files\GeneratedByF2C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\GeneratedByF2C\zaxpy.c">
+      <Filter>Source Files\GeneratedByF2C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\GeneratedByF2C\dgbtf2.c">
+      <Filter>Source Files\GeneratedByF2C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\GeneratedByF2C\dlaswp.c">
+      <Filter>Source Files\GeneratedByF2C</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\GeneratedByF2C\f2c.h">
