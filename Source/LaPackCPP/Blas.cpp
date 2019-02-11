@@ -63,6 +63,61 @@ int axpy(long int* n, T *da, T *dx, long int *incx, T *dy, long int *incy)
   return 0;
 }
 
+// todo: fix linker errors for s_wsfe, s_stop, len_trim__, do_fio
+// 
+
+/*
+// -- Reference BLAS level1 routine (version 3.7.0) -- 
+int xerbla(char *srname, integer *info, ftnlen srname_len)
+{
+  // Table of constant values
+  static integer c__1 = 1;
+
+  // Format strings 
+  static char fmt_9999[] = "(\002 ** On entry to \002,a,\002 parameter num"
+    "ber \002,i2,\002 had \002,\002an illegal value\002)";
+
+  // Builtin functions 
+  integer s_wsfe(cilist *), do_fio(integer *, char *, ftnlen), e_wsfe(void);
+  int s_stop(char *, ftnlen);
+
+  // Local variables
+  extern integer len_trim__(char *, ftnlen);
+  // Note by Robin Schmidt:
+  // this was declared as an intrinsic function in the original xerbla.f file, but it stumped the 
+  // f2c translator, giving an error about an unknown intrinsic function, so i changed the 
+  // "INTRINSIC" keyword to "EXTERNAL" - that allowed the translation, but i'm not sure, if it 
+  // gives the correct behavior 
+
+  // Fortran I/O blocks
+  static cilist io___1 = { 0, 6, 0, fmt_9999, 0 };
+
+  s_wsfe(&io___1);
+  do_fio(&c__1, srname, len_trim__(srname, srname_len));
+  do_fio(&c__1, (char *)&(*info), (ftnlen)sizeof(integer));
+  e_wsfe();
+
+  s_stop("", (ftnlen)0);
+
+  // End of XERBLA
+
+  return 0;
+} // xerbla
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //-------------------------------------------------------------------------------------------------
 
 // Reference BLAS level2 routine (version 3.7.0)
@@ -285,15 +340,19 @@ int gbmv(char *trans, integer *m, integer *n, integer *kl, integer *ku, T *alpha
 
 
 
+
+
+
+
 // explicit template instantiations - todo: move them into separate files, one file per
 // datatype:
 template int axpy(long int* n, double *da, double *dx, long int *incx, 
   double *dy, long int *incy);
 
-template int gbmv(char *trans, integer *m, integer *n, integer *kl, integer *ku, double *alpha, 
-  double *a, integer *lda, double *x, integer *incx, double *beta, double *y, integer *incy, 
-  ftnlen trans_len);
-
+//template int gbmv(char *trans, integer *m, integer *n, integer *kl, integer *ku, double *alpha, 
+//  double *a, integer *lda, double *x, integer *incx, double *beta, double *y, integer *incy, 
+//  ftnlen trans_len);
+// commented out because of linker errors: xerbla, lsame
 
 
 

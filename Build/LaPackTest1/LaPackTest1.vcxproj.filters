@@ -27,9 +27,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="LaPackTest1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -55,6 +52,9 @@
       <Filter>Source Files\GeneratedByF2C</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\GeneratedByF2C\dgbmv.c">
+      <Filter>Source Files\GeneratedByF2C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\GeneratedByF2C\xerbla.c">
       <Filter>Source Files\GeneratedByF2C</Filter>
     </ClCompile>
   </ItemGroup>
