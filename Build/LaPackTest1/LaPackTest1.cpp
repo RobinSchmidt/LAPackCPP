@@ -87,16 +87,21 @@ bool gbsvUnitTest()
   // 00 00 00 00 85 86 87 88 89     8 2 0 4
   // 00 00 00 00 00 96 97 98 99     9 1 5 0
 
+  typedef const long int Int;  // for convenience
+  static Int N    = 9;         // size of the system: NxN
 
+  // the matrix itself for reference (lapack uses column-major indexing, so do we here):
+  double refMat[N][N] =
+  { { 11,21,31,41, 0, 0, 0, 0, 0 },    // 1st column (index 0)
+  { 12,22,32,42,52, 0, 0, 0, 0 },    // 2nd column (index 1)
+  { 13,23,33,43,53,63, 0, 0, 0 },    // etc.
+  {  0,24,34,44,54,64,74, 0, 0 },
+  {  0, 0,35,45,55,65,75,85, 0 },
+  {  0, 0, 0,46,56,66,76,86,96 },
+  {  0, 0, 0, 0,57,67,77,87,97 },
+  {  0, 0, 0, 0, 0,68,78,88,98 },
+  {  0, 0, 0, 0, 0, 0,79,89,99 } };  // 9th column (index 8)
 
-  // for the banded storage used by gbmv, we need to store the matrix in the format:
-
-  // ** ** 13 24 35 46 57 68 79   upper diagonal 2
-  // ** 12 23 34 45 56 67 78 89   upper diagonal 1
-  // 11 22 33 44 55 66 77 88 99   main diagonal
-  // 21 32 43 54 65 76 87 98 **   lower diagonal 1
-  // 31 42 53 64 75 86 97 ** **   lower diagonal 2
-  // 41 52 63 74 85 96 ** ** **   lower diagonal 3
 
 
   // for the banded storage format used by gbsv, we to store the matrix in the form:
@@ -111,33 +116,64 @@ bool gbsvUnitTest()
   // 31 42 53 64 75 86 97 ** **   lower diagonal 2
   // 41 52 63 74 85 96 ** ** **   lower diagonal 3
 
-  // can the lower version be passed to gbmv with some trickery, too? ...to avoid storing it twice?
-
-
-
-  typedef const long int Int;  // for convenience
-  static Int N    = 9;         // size of the system: NxN
   static Int kl   = 2;         // number of lower diagonals
   static Int ku   = 3;         // number of upper diagonals
   static Int nrhs = 4;         // number of right hand sides
   static Int ldab = 2*kl+ku+1; // leading dimension of ab >= 2*kl+ku+1
   static Int ldb  = N;         // leading dimension of b >= max(1,N). ...is N correct?
   long int ipiv[N];            // pivot indices
-  double ab[ldab*N];           // matrix A in band storage for gbsv
-  double b[ldb*nrhs];          // right-hand-side and solution matrix
   int info = 666;              // 0 on exit, if successful
 
-  // the matrix itself for reference (lapack uses column-major indexing, so do we here):
-  double refMat[N][N] =
-  { { 11,21,31,41, 0, 0, 0, 0, 0 },    // 1st column (index 0)
-    { 12,22,32,42,52, 0, 0, 0, 0 },    // 2nd column (index 1)
-    { 13,23,33,43,53,63, 0, 0, 0 },    // etc.
-    {  0,24,34,44,54,64,74, 0, 0 },
-    {  0, 0,35,45,55,65,75,85, 0 },
-    {  0, 0, 0,46,56,66,76,86,96 },
-    {  0, 0, 0, 0,57,67,77,87,97 },
-    {  0, 0, 0, 0, 0,68,78,88,98 },
-    {  0, 0, 0, 0, 0, 0,79,89,99 } };  // 9th column (index 8)
+  // matrix A in band storage for gbsv:
+  double _ = 0.0/sqrt(0.0);         // we init unused storage cells with NaN - why is it -NaN?
+  //double ab[ldab*N] = 
+  double ab[81] = 
+  {  _, _, _, _, _,11,21,31,41,     // 1st column of banded format
+     _, _, _, _,12,22,32,42,52,     // 2nd column
+     _, _, _,13,23,33,43,53,63,
+     _, _, _,24,34,44,54,64,74,
+     _, _, _,35,45,55,65,75,85,
+     _, _, _,46,56,66,76,86,96,
+     _, _, _,57,67,77,87,97, _,
+     _, _, _,68,78,88,98, _, _,
+     _, _, _,79,89,99, _, _, _ };  // 9th column
+  // btw.: that the banded storage format is also 9x9, like the original matrix, is a coincidence
+  // in this particular case - in general, the banded format is N times 2*kl+ku+1 which is 
+  // 9 times 2*3+2+1 = 9 times 9 in this case...wait, no: ku = 2, so it's 8...what's wrong?
+
+  double b[ldb*nrhs];          // right-hand-side and solution matrix
+
+
+
+
+
+
+
+  // for the banded storage used by gbmv, we need to store the matrix in the format:
+
+  // ** ** 13 24 35 46 57 68 79   upper diagonal 2
+  // ** 12 23 34 45 56 67 78 89   upper diagonal 1
+  // 11 22 33 44 55 66 77 88 99   main diagonal
+  // 21 32 43 54 65 76 87 98 **   lower diagonal 1
+  // 31 42 53 64 75 86 97 ** **   lower diagonal 2
+  // 41 52 63 74 85 96 ** ** **   lower diagonal 3
+
+
+
+  // can the upper version be passed to gbmv with some trickery, too? ...to avoid storing it twice?
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
