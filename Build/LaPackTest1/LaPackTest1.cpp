@@ -153,6 +153,12 @@ bool gbsvUnitTest()
   // should be equal to X up to roundoff errors:
   double B[ldb*nrhs];
 
+  // let's do a vector-rhs first (instead of a matrix rhs):
+  double x[ldb] = { 1,2,3,4,5,6,7,8,9 };
+  double b[ldb] = { _,_,_,_,_,_,_,_,_ };  // the right hand side in A * x = b
+
+
+
 
   // for the banded storage used by gbmv, we need to store the matrix in the format:
 
@@ -166,7 +172,7 @@ bool gbsvUnitTest()
   static Int lda = kl+ku+1; // leading dimension of a >= kl+ku+1
   int M = N;                // number of rows
   double alpha = 1.0;       // scaler in gbmv
-  double beta  = 0.0;
+  double beta  = 0.0;       // gbmv computes Y = alpha*A*x + beta*y
 
   // matrix A in band storage for gbmv:
   double a[lda*N] =
@@ -183,17 +189,20 @@ bool gbsvUnitTest()
   //double one = 1, zero = 0;
   long int incX = 1;         // might be wrong
   long int incY = 1;         // might be wrong but irrelevant: when beta is 0, y is not referenced
-  double yDummy;             // dummy - not referenced
+  //double yDummy;             // dummy - not referenced
   ftnlen trans_len = 0;      // ftnlen is typedef'd as "long" in f2c.h - i don't know, what this is
                              // used for, there's no documentation for that gbmv parameter -> check source
   char trans = 'N';
 
   // gbmv needs pointers to "integer" which is defined as "long int" in f2c.h:
   long int N_ = N, lda_ = lda, kl_ = kl, ku_ = ku;
-  gbmv(&trans, &lda_, &N_, &kl_, &ku_, &alpha, a, &lda_, X, &incX, 
-    &beta, &yDummy, &incY, trans_len);  
-  // todo: make function available by fixing all related liner errors by translating the respective
-  // functions...
+  gbmv(&trans, &lda_, &N_, &kl_, &ku_, &alpha, a, &lda_, x, &incX, 
+    &beta, b, &incY, trans_len);  
+  // aahh - that's wrong! that will work only if the rhs is a vector, but we want a matrix rhs here
+  // ...so we actually need a gbmm - but such a routine doesn't seem to exist in BLAS - maybe i should 
+  // write one myself as convenience function? or should we start with a vector rhs first? yes - 
+  // that's probably better
+
 
 
   // can the upper version be passed to gbmv with some trickery, too? ...to avoid storing it twice?
