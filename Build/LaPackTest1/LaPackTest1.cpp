@@ -166,6 +166,7 @@ bool gbsvUnitTest()
   static Int lda = kl+ku+1; // leading dimension of a >= kl+ku+1
   int M = N;                // number of rows
   double alpha = 1.0;       // scaler in gbmv
+  double beta  = 0.0;
 
   // matrix A in band storage for gbmv:
   double a[lda*N] =
@@ -179,8 +180,20 @@ bool gbsvUnitTest()
     68,78,88,98, _, _,
     79,89,99, _, _, _ };  // 9th column
 
-  //int gbmv('N', &M, &N, &kl, &ku, &alpha, a, &lda, 
-  // T *x, integer *incx, T *beta, T *y, integer *incy, ftnlen trans_len
+  //double one = 1, zero = 0;
+  long int incX = 1;         // might be wrong
+  long int incY = 1;         // might be wrong but irrelevant: when beta is 0, y is not referenced
+  double yDummy;             // dummy - not referenced
+  ftnlen trans_len = 0;      // ftnlen is typedef'd as "long" in f2c.h - i don't know, what this is
+                             // used for, there's no documentation for that gbmv parameter -> check source
+  char trans = 'N';
+
+  // gbmv needs pointers to "integer" which is defined as "long int" in f2c.h:
+  long int N_ = N, lda_ = lda, kl_ = kl, ku_ = ku;
+
+  //gbmv(&trans, &lda_, &N_, &kl_, &ku_, &alpha, a, &lda_, X, &incX, 
+  //  &beta, &yDummy, &incY, trans_len);
+
 
   // can the upper version be passed to gbmv with some trickery, too? ...to avoid storing it twice?
 
