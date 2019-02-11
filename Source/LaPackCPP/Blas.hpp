@@ -43,6 +43,12 @@ incY: storage spacing between elements of y  */
 template<class T>
 int axpy(long int* N, T* a, T* x, long int* incX, T* y, long int* incY);
 
+/** LSAME returns .TRUE. if CA is the same letter as CB regardless of case. CA and CB specify the 
+single characters to be compared. */
+logical lsame(char *ca, char *cb, ftnlen ca_len, ftnlen cb_len);
+
+
+
 /** xerbla is an error handler
 
 Purpose:

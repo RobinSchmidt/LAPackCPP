@@ -57,6 +57,9 @@
     <ClCompile Include="..\..\Source\GeneratedByF2C\xerbla.c">
       <Filter>Source Files\GeneratedByF2C</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\GeneratedByF2C\lsame.c">
+      <Filter>Source Files\GeneratedByF2C</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\GeneratedByF2C\f2c.h">

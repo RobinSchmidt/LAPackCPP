@@ -190,8 +190,8 @@ bool gbsvUnitTest()
 
   // gbmv needs pointers to "integer" which is defined as "long int" in f2c.h:
   long int N_ = N, lda_ = lda, kl_ = kl, ku_ = ku;
-  //gbmv(&trans, &lda_, &N_, &kl_, &ku_, &alpha, a, &lda_, X, &incX, 
-  //  &beta, &yDummy, &incY, trans_len);  
+  gbmv(&trans, &lda_, &N_, &kl_, &ku_, &alpha, a, &lda_, X, &incX, 
+    &beta, &yDummy, &incY, trans_len);  
   // todo: make function available by fixing all related liner errors by translating the respective
   // functions...
 
