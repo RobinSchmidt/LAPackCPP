@@ -12,7 +12,7 @@ extern "C" {
 #endif
 extern double f__cabs(double, double);
 
-void c_sqrt(complex *r, complex *z)
+void c_sqrt(f2c_complex *r, f2c_complex *z)
 #endif
 {
 	double mag, t;

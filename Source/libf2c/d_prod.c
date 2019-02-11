@@ -6,7 +6,7 @@ extern "C" {
 #ifdef KR_headers
 double d_prod(x,y) real *x, *y;
 #else
-double d_prod(real *x, real *y)
+double d_prod(f2c_real *x, f2c_real *y)
 #endif
 {
 return( (*x) * (*y) );

@@ -9,7 +9,7 @@ shortint h_nint(x) real *x;
 #ifdef __cplusplus
 extern "C" {
 #endif
-shortint h_nint(real *x)
+shortint h_nint(f2c_real *x)
 #endif
 {
 return (shortint)(*x >= 0 ? floor(*x + .5) : -floor(.5 - *x));

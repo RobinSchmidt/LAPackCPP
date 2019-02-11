@@ -250,7 +250,7 @@ l_write(ftnint *number, char *ptr, ftnlen len, ftnint type)
 	int i;
 	longint x;
 	double y,z;
-	real *xx;
+  f2c_real *xx;
 	doublereal *yy;
 	for(i=0;i< *number; i++)
 	{

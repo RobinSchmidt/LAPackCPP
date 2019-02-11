@@ -9,7 +9,7 @@ double r_sqrt(x) real *x;
 #ifdef __cplusplus
 extern "C" {
 #endif
-double r_sqrt(real *x)
+double r_sqrt(f2c_real *x)
 #endif
 {
 return( sqrt(*x) );

@@ -9,7 +9,7 @@ double r_tanh(x) real *x;
 #ifdef __cplusplus
 extern "C" {
 #endif
-double r_tanh(real *x)
+double r_tanh(f2c_real *x)
 #endif
 {
 return( tanh(*x) );

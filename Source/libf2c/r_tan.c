@@ -9,7 +9,7 @@ double r_tan(x) real *x;
 #ifdef __cplusplus
 extern "C" {
 #endif
-double r_tan(real *x)
+double r_tan(f2c_real *x)
 #endif
 {
 return( tan(*x) );

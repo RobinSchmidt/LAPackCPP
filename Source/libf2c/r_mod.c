@@ -17,7 +17,7 @@ double drem(double, double);
 extern "C" {
 #endif
 #endif
-double r_mod(real *x, real *y)
+double r_mod(f2c_real *x, f2c_real *y)
 #endif
 {
 #ifdef IEEE_drem

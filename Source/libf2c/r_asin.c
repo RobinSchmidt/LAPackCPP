@@ -9,7 +9,7 @@ double r_asin(x) real *x;
 #ifdef __cplusplus
 extern "C" {
 #endif
-double r_asin(real *x)
+double r_asin(f2c_real *x)
 #endif
 {
 return( asin(*x) );

@@ -40,7 +40,7 @@ struct syl
 #define Z 35
 #define ZM 36
 typedef union
-{	real pf;
+{	f2c_real pf;
 	doublereal pd;
 } ufloat;
 typedef union

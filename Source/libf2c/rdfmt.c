@@ -385,7 +385,7 @@ done:
 		x = atof(s);
 		}
 zero:
-	if (len == sizeof(real))
+	if (len == sizeof(f2c_real))
 		p->pf = x;
 	else
 		p->pd = x;

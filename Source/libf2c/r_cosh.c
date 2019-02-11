@@ -9,7 +9,7 @@ double r_cosh(x) real *x;
 #ifdef __cplusplus
 extern "C" {
 #endif
-double r_cosh(real *x)
+double r_cosh(f2c_real *x)
 #endif
 {
 return( cosh(*x) );

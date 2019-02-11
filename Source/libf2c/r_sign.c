@@ -6,7 +6,7 @@ extern "C" {
 #ifdef KR_headers
 double r_sign(a,b) real *a, *b;
 #else
-double r_sign(real *a, real *b)
+double r_sign(f2c_real *a, f2c_real *b)
 #endif
 {
 double x;

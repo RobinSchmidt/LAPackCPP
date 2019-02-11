@@ -12,7 +12,7 @@ double erfc();
 REAL erfc_(x) real *x;
 #else
 extern double erfc(double);
-REAL erfc_(real *x)
+REAL erfc_(f2c_real *x)
 #endif
 {
 return( erfc((double)*x) );

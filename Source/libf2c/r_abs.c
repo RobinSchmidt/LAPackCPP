@@ -6,7 +6,7 @@ extern "C" {
 #ifdef KR_headers
 double r_abs(x) real *x;
 #else
-double r_abs(real *x)
+double r_abs(f2c_real *x)
 #endif
 {
 if(*x >= 0)

@@ -6,7 +6,7 @@ extern "C" {
 #ifdef KR_headers
 double r_imag(z) complex *z;
 #else
-double r_imag(complex *z)
+double r_imag(f2c_complex *z)
 #endif
 {
 return(z->i);

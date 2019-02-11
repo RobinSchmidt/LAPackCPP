@@ -272,7 +272,7 @@ wrt_G(ufloat *p, int w, int d, int e, ftnlen len)
 #endif
 {	double up = 1,x;
 	int i=0,oldscale,n,j;
-	x = len==sizeof(real)?p->pf:p->pd;
+	x = len==sizeof(f2c_real)?p->pf:p->pd;
 	if(x < 0 ) x = -x;
 	if(x<.1) {
 		if (x != 0.)

@@ -9,7 +9,7 @@ double r_sin(x) real *x;
 #ifdef __cplusplus
 extern "C" {
 #endif
-double r_sin(real *x)
+double r_sin(f2c_real *x)
 #endif
 {
 return( sin(*x) );

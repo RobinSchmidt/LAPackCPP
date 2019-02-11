@@ -9,7 +9,7 @@ double r_sinh(x) real *x;
 #ifdef __cplusplus
 extern "C" {
 #endif
-double r_sinh(real *x)
+double r_sinh(f2c_real *x)
 #endif
 {
 return( sinh(*x) );

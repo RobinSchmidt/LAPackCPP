@@ -11,7 +11,7 @@ double r_lg10(x) real *x;
 #ifdef __cplusplus
 extern "C" {
 #endif
-double r_lg10(real *x)
+double r_lg10(f2c_real *x)
 #endif
 {
 return( log10e * log(*x) );

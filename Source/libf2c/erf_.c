@@ -12,7 +12,7 @@ double erf();
 REAL erf_(x) real *x;
 #else
 extern double erf(double);
-REAL erf_(real *x)
+REAL erf_(f2c_real *x)
 #endif
 {
 return( erf((double)*x) );

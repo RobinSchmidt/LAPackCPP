@@ -654,7 +654,7 @@ l_read(ftnint *number, char *ptr, ftnlen len, ftnint type)
 #define Ptr ((flex *)ptr)
 	int i,n,ch;
 	doublereal *yy;
-	real *xx;
+  f2c_real *xx;
 	for(i=0;i<*number;i++)
 	{
 		if(f__lquit) return(0);
@@ -754,7 +754,7 @@ l_read(ftnint *number, char *ptr, ftnlen len, ftnint type)
 			Ptr->fldouble=f__lx;
 			break;
 		case TYCOMPLEX:
-			xx=(real *)ptr;
+			xx=(f2c_real *)ptr;
 			*xx++ = f__lx;
 			*xx = f__ly;
 			break;

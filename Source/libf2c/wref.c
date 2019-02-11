@@ -43,7 +43,7 @@ wrt_E(ufloat *p, int w, int d, int e, ftnlen len)
 		}
 	if(f__scale <= 0)
 		--d;
-	if (len == sizeof(real))
+	if (len == sizeof(f2c_real))
 		dd = p->pf;
 	else
 		dd = p->pd;
@@ -211,7 +211,7 @@ wrt_F(ufloat *p, int w, int d, ftnlen len)
 	double x;
 	char *b, buf[MAXINTDIGS+MAXFRACDIGS+4], *s;
 
-	x= (len==sizeof(real)?p->pf:p->pd);
+	x= (len==sizeof(f2c_real)?p->pf:p->pd);
 	if (d < MAXFRACDIGS)
 		d1 = 0;
 	else {

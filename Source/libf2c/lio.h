@@ -49,7 +49,7 @@ typedef union
 #ifdef Allow_TYQUAD
 	longint fllongint;
 #endif
-	real	flreal;
+  f2c_real	flreal;
 	doublereal	fldouble;
 } flex;
 #ifdef KR_headers

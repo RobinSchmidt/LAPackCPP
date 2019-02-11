@@ -9,7 +9,7 @@ double r_atan(x) real *x;
 #ifdef __cplusplus
 extern "C" {
 #endif
-double r_atan(real *x)
+double r_atan(f2c_real *x)
 #endif
 {
 return( atan(*x) );

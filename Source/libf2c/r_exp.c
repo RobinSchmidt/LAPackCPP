@@ -9,7 +9,7 @@ double r_exp(x) real *x;
 #ifdef __cplusplus
 extern "C" {
 #endif
-double r_exp(real *x)
+double r_exp(f2c_real *x)
 #endif
 {
 return( exp(*x) );

@@ -9,7 +9,7 @@ double r_nint(x) real *x;
 #ifdef __cplusplus
 extern "C" {
 #endif
-double r_nint(real *x)
+double r_nint(f2c_real *x)
 #endif
 {
 return( (*x)>=0 ?

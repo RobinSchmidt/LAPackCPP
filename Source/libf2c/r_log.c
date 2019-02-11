@@ -9,7 +9,7 @@ double r_log(x) real *x;
 #ifdef __cplusplus
 extern "C" {
 #endif
-double r_log(real *x)
+double r_log(f2c_real *x)
 #endif
 {
 return( log(*x) );

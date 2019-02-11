@@ -9,7 +9,7 @@ double r_cos(x) real *x;
 #ifdef __cplusplus
 extern "C" {
 #endif
-double r_cos(real *x)
+double r_cos(f2c_real *x)
 #endif
 {
 return( cos(*x) );

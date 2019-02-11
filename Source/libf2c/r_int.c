@@ -9,7 +9,7 @@ double r_int(x) real *x;
 #ifdef __cplusplus
 extern "C" {
 #endif
-double r_int(real *x)
+double r_int(f2c_real *x)
 #endif
 {
 return( (*x>0) ? floor(*x) : -floor(- *x) );

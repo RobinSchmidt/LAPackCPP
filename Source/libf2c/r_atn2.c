@@ -9,7 +9,7 @@ double r_atn2(x,y) real *x, *y;
 #ifdef __cplusplus
 extern "C" {
 #endif
-double r_atn2(real *x, real *y)
+double r_atn2(f2c_real *x, f2c_real *y)
 #endif
 {
 return( atan2(*x,*y) );

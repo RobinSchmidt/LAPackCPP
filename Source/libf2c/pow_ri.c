@@ -6,7 +6,7 @@ extern "C" {
 #ifdef KR_headers
 double pow_ri(ap, bp) real *ap; integer *bp;
 #else
-double pow_ri(real *ap, integer *bp)
+double pow_ri(f2c_real *ap, integer *bp)
 #endif
 {
 double pow, x;

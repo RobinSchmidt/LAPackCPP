@@ -9,7 +9,7 @@ double r_acos(x) real *x;
 #ifdef __cplusplus
 extern "C" {
 #endif
-double r_acos(real *x)
+double r_acos(f2c_real *x)
 #endif
 {
 return( acos(*x) );

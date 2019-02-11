@@ -30,6 +30,13 @@ THIS SOFTWARE.
 #include <errno.h>
 #include <sys/types.h>	/* another possible place for ssize_t */
 
+// added by Robin Schmidt according to this: https://github.com/vlm/asn1c/issues/159
+#if defined(_MSC_VER)
+#include <BaseTsd.h>
+typedef SSIZE_T ssize_t;
+#endif
+
+
 #ifdef NO_FPINIT
 #define fpinit_ASL()
 #else
