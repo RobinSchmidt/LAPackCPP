@@ -22,20 +22,45 @@ std::vector<double> rangeVector(int N, double start, double inc)
   return v;
 }
 
-/** Utility class to wrap around an existing flat array of numbers to access elements via
-row and column index. */
+/** Utility class to wrap around an existing flat array of numbers to conveniently access matrix 
+elements via row and column index via the () operator, taking row and column index as arguments. 
+The access operator always takes as first index the row index and as second index the column index, 
+regardless how the matrix is stored internally (column-major, in case of using this class). In math 
+notation, the first index IS the row index and math notation does not care about storage formats 
+and the access operator should just be consistent with math notation and abstract away from the 
+storage format - that's its main purpose, actually */
 template<class T>
 class MatrixViewColumnMajor
 {
 
-  //T& operator()(int i, int j) {  }
+  /** . */
+  //T& operator()(int row, int column) {  }
+  // todo: make a general MatrixView class that supports row-major and column-major element flat
+  // access, access via row-pointers or column-pointers and 0-based and 1-based indexing (numerical 
+  // recipies routines use 1-based (using pointer offset trickery) indexed, row-pointer access (at 
+  // least mostly), LAPack routines use column-major, flat-array, 0-based access - maybe we can 
+  // just do return (rowStride - base)*i + (columnStride - base)*j for generalized 
+  // flat-array access? for row-major indexing, rowStride = numColumns and columnStride = 1, for
+  // column major: rowStride = 1, columnStride = numRows, and base will be 0 for 0-based 
+  // indexing and 1 for 1-based indexing - but we should make performance tests, if supporting all
+  // these ways has an performance hit - the two multiplications can probably be done in parallel
+  // so that may not matter - but the subtraction of 1 or 0 has to be in series, so it may have 
+  // a performance impact - we'll see....- if it does make a difference, make different matrix 
+  // classes for different access modes, so the access mode can be decided at compile time.
+  // actually, it makes no sense anyway to be able to switch the access-mode at runtime - it makes 
+  // sense only at compile time, for example, when we have translated an algorithm from a language 
+  // with 1-based indexing and it is still in 1-based form - before eventually converting all 
+  // accesses into 0-based form, it may be convenient to temporarily just be able to use 1-based
+  // indexing
+
 
 protected:
 
-  int M, N;  // number of rows and colums
+  int numRows, numColumns;
   T *data;
 
 };
+
 
 void mulMatVec(int M, int N, double* A[], double x[], double y[])
 {
@@ -66,7 +91,12 @@ bool gbsvUnitTest()
 
   // for the banded storage used by gbmv, we need to store the matrix in the format:
 
-
+  // ** ** 13 24 35 46 57 68 79   upper diagonal 2
+  // ** 12 23 34 45 56 67 78 89   upper diagonal 1
+  // 11 22 33 44 55 66 77 88 99   main diagonal
+  // 21 32 43 54 65 76 87 98 **   lower diagonal 1
+  // 31 42 53 64 75 86 97 ** **   lower diagonal 2
+  // 41 52 63 74 85 96 ** ** **   lower diagonal 3
 
 
   // for the banded storage format used by gbsv, we to store the matrix in the form:
@@ -80,6 +110,8 @@ bool gbsvUnitTest()
   // 21 32 43 54 65 76 87 98 **   lower diagonal 1
   // 31 42 53 64 75 86 97 ** **   lower diagonal 2
   // 41 52 63 74 85 96 ** ** **   lower diagonal 3
+
+  // can the lower version be passed to gbmv with some trickery, too? ...to avoid storing it twice?
 
 
 
