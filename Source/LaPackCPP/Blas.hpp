@@ -66,6 +66,31 @@ int xerbla(char *srname, integer *info, ftnlen srname_len);
 
 /** \name BLAS level 2 routines (operations involving matrices and vectors) */
 
+/**
+Purpose: 
+ger performs the rank 1 operation 
+A := alpha*x*y**T + A
+where alpha is a scalar, x is an m element vector, y is an n element vector and A is an m by n 
+matrix.
+
+Arguments:
+M:     On entry, M specifies the number of rows of the matrix A. M must be at least zero.
+N:     On entry, N specifies the number of columns of the matrix A. N must be at least zero.
+ALPHA: On entry, ALPHA specifies the scalar alpha.
+X:     array, dimension at least ( 1 + ( m - 1 )*abs( INCX ) ). Before entry, the incremented array
+       X must contain the m element vector x.
+INCX:  On entry, INCX specifies the increment for the elements of X. INCX must not be zero.
+Y:     array, dimension at least ( 1 + ( n - 1 )*abs( INCY ) ). Before entry, the incremented array 
+       Y must contain the n element vector y.
+INCY:  On entry, INCY specifies the increment for the elements of Y. INCY must not be zero.
+A:     array, dimension ( LDA, N ). Before entry, the leading m by n part of the array A must 
+       contain the matrix of coefficients. On exit, A is overwritten by the updated matrix.
+LDA:   On entry, LDA specifies the first dimension of A as declared in the calling (sub) program. 
+       LDA must be at least max( 1, m ). */
+int ger(integer *m, integer *n, doublereal *alpha, doublereal *x, integer *incx, doublereal *y, 
+  integer *incy, doublereal *a, integer *lda);
+
+//-------------------------------------------------------------------------------------------------
 
 /** gbmv performs general banded matrix-vector multiplication
 

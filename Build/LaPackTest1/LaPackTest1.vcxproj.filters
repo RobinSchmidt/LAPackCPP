@@ -102,6 +102,9 @@
     <ClCompile Include="..\..\Source\GeneratedByF2C\dlaswp.c">
       <Filter>Source Files\GeneratedByF2C</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\GeneratedByF2C\dscal.c">
+      <Filter>Source Files\GeneratedByF2C</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\GeneratedByF2C\f2c.h">
