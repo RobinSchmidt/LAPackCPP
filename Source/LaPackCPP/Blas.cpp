@@ -1,6 +1,9 @@
 #include "Blas.hpp"
 namespace BlasCPP {
 
+//=================================================================================================
+// BLAS level 1 routines
+
 // Reference BLAS level1 routine (version 3.8.0)
 template<class T>
 int axpy(long int* n, T *da, T *dx, long int *incx, T *dy, long int *incy)
@@ -183,7 +186,8 @@ int xerbla(char *srname, integer *info, ftnlen srname_len)
   return 0;
 } // xerbla
 
-//-------------------------------------------------------------------------------------------------
+//=================================================================================================
+// BLAS level 2 routines
 
 //  -- Reference BLAS level2 routine (version 3.7.0) -- 
 int ger(integer *m, integer *n, doublereal *alpha, doublereal *x, integer *incx, doublereal *y, 
