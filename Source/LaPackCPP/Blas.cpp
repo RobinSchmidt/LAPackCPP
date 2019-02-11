@@ -185,6 +185,102 @@ int xerbla(char *srname, integer *info, ftnlen srname_len)
 
 //-------------------------------------------------------------------------------------------------
 
+//  -- Reference BLAS level2 routine (version 3.7.0) -- 
+int ger(integer *m, integer *n, doublereal *alpha, doublereal *x, integer *incx, doublereal *y, 
+  integer *incy, doublereal *a, integer *lda)
+{
+  // System generated locals
+  integer a_dim1, a_offset, i__1, i__2;
+
+  // Local variables
+  static integer i__, j, ix, jy, kx, info;
+  static doublereal temp;
+  extern int xerbla(char *, integer *, ftnlen);
+
+
+  // Parameter adjustments
+  --x;
+  --y;
+  a_dim1 = *lda;
+  a_offset = 1 + a_dim1;
+  a -= a_offset;
+
+  /* Function Body */
+  info = 0;
+  if (*m < 0) {
+    info = 1;
+  } else if (*n < 0) {
+    info = 2;
+  } else if (*incx == 0) {
+    info = 5;
+  } else if (*incy == 0) {
+    info = 7;
+  } else if (*lda < max(1,*m)) {
+    info = 9;
+  }
+  if (info != 0) {
+    xerbla("DGER  ", &info, (ftnlen)6);
+    return 0;
+  }
+
+  // Quick return if possible.
+
+  if (*m == 0 || *n == 0 || *alpha == 0.) {
+    return 0;
+  }
+
+  // Start the operations. In this version the elements of A are 
+  // accessed sequentially with one pass through A.
+  if (*incy > 0) {
+    jy = 1;
+  } else {
+    jy = 1 - (*n - 1) * *incy;
+  }
+  if (*incx == 1) {
+    i__1 = *n;
+    for (j = 1; j <= i__1; ++j) {
+      if (y[jy] != 0.) {
+        temp = *alpha * y[jy];
+        i__2 = *m;
+        for (i__ = 1; i__ <= i__2; ++i__) {
+          a[i__ + j * a_dim1] += x[i__] * temp;
+          // L10: 
+        }
+      }
+      jy += *incy;
+      // L20:
+    }
+  } else {
+    if (*incx > 0) {
+      kx = 1;
+    } else {
+      kx = 1 - (*m - 1) * *incx;
+    }
+    i__1 = *n;
+    for (j = 1; j <= i__1; ++j) {
+      if (y[jy] != 0.) {
+        temp = *alpha * y[jy];
+        ix = kx;
+        i__2 = *m;
+        for (i__ = 1; i__ <= i__2; ++i__) {
+          a[i__ + j * a_dim1] += x[ix] * temp;
+          ix += *incx;
+          // L30: 
+        }
+      }
+      jy += *incy;
+      // L40: 
+    }
+  }
+
+  return 0;
+
+  // End of DGER 
+
+} // ger
+
+//-------------------------------------------------------------------------------------------------
+
 // Reference BLAS level2 routine (version 3.7.0)
 template<class T>
 int gbmv(char *trans, integer *m, integer *n, integer *kl, integer *ku, T *alpha, T *a, 

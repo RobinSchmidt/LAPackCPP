@@ -66,7 +66,8 @@ int xerbla(char *srname, integer *info, ftnlen srname_len);
 
 /** \name BLAS level 2 routines (operations involving matrices and vectors) */
 
-/**
+/** ger updates matrix A := alpha*x*y**T + A
+
 Purpose: 
 ger performs the rank 1 operation 
 A := alpha*x*y**T + A
