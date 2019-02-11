@@ -122,9 +122,10 @@ bool gbsvUnitTest()
   static Int kl   = 3;         // number of lower diagonals
   static Int ku   = 2;         // number of upper diagonals
   static Int nrhs = 4;         // number of right hand sides
-  static Int ldab = 2*kl+ku+1; // leading dimension of ab >= 2*kl+ku+1 - nope, ldab means the ligical 
-                               // dimension of a - this variable here if for the allocated size
+  static Int ldab = 2*kl+ku+1; // leading dimension of ab >= 2*kl+ku+1 
+  //static Int arab = 2*kl+ku+1; // allocated rows matrix ab
   static Int ldb  = N;         // leading dimension of b >= max(1,N). ...is N correct?
+                               // rename to arb - allocated rows for b
   long int ipiv[N];            // pivot indices
   int info = 666;              // 0 on exit, if successful
   double _ = 0.0/sqrt(0.0);    // we init unused storage cells with NaN - why is it -NaN?
@@ -133,15 +134,15 @@ bool gbsvUnitTest()
   // 9 times 2*3+2+1 = 9 times 8 in thsi case - because LAPACK uses in general, column-major 
   // indexing, our matrix looks transposed to the one in the comment above:
   double ab[ldab*N] = 
-  {  _,_, _, _, _,11,21,31,41,     // 1st column of banded format
-     _,_, _, _,12,22,32,42,52,     // 2nd column
-     _,_, _,13,23,33,43,53,63,
-     _,_, _,24,34,44,54,64,74,
-     _,_, _,35,45,55,65,75,85,
-     _,_, _,46,56,66,76,86,96,
-     _,_, _,57,67,77,87,97, _,
-     _,_, _,68,78,88,98, _, _,
-     _,_, _,79,89,99, _, _, _ };  // 9th column
+  {  _, _, _, _, _,11,21,31,41,     // 1st column of banded format
+     _, _, _, _,12,22,32,42,52,     // 2nd column
+     _, _, _,13,23,33,43,53,63,
+     _, _, _,24,34,44,54,64,74,
+     _, _, _,35,45,55,65,75,85,
+     _, _, _,46,56,66,76,86,96,
+     _, _, _,57,67,77,87,97, _,
+     _, _, _,68,78,88,98, _, _,
+     _, _, _,79,89,99, _, _, _ };  // 9th column
 
   // the matrix X in A * X = B:
   double X[ldb*nrhs] = {
@@ -178,8 +179,7 @@ bool gbsvUnitTest()
   // 31 42 53 64 75 86 97 ** **   lower diagonal 2
   // 41 52 63 74 85 96 ** ** **   lower diagonal 3
 
-  static Int lda = kl+ku+1; // leading dimension of a >= kl+ku+1 - rename to something that relates to
-                            // allocated array size, not the logical leading dimension o a
+  static Int lda = kl+ku+1; // leading dimension of a >= kl+ku+1 
   int M = N;                // number of rows
   double alpha = 1.0;       // scaler in gbmv
   double beta  = 0.0;       // gbmv computes Y = alpha*A*x + beta*y
@@ -206,8 +206,8 @@ bool gbsvUnitTest()
   char trans = 'N';
 
   // gbmv needs pointers to "integer" which is defined as "long int" in f2c.h:
-  long int N_ = N, lda_ = lda, kl_ = kl, ku_ = ku;
-  gbmv(&trans, &lda_, &N_, &kl_, &ku_, &alpha, a, &lda_, x, &incX, 
+  long int N_ = N, M_ = M, lda_ = lda, kl_ = kl, ku_ = ku;
+  gbmv(&trans, &M_, &N_, &kl_, &ku_, &alpha, a, &lda_, x, &incX, 
     &beta, b, &incY, trans_len);  
 
   // b should be 74,230,505,931,1489,2179,3001,3055,2930
