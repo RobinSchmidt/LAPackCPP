@@ -18,3 +18,7 @@ problems with uploading the repo in unpacked form - the amount of data was just
 too much, apparently. The contents of these archives is not supposed to change
 anyway - it's just the grab-bag, from which we obtain the original fortran 
 sources.
+
+https://www.netlib.org/
+https://www.netlib.org/liblist.html                   list of available libraries
+https://www.netlib.org/master/expanded_liblist.html   list of libraries with short explanations
