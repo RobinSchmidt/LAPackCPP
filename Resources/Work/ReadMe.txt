@@ -39,9 +39,37 @@ course, it means i must provide the missing function "len_trim__" in this case.
 btw. it alsoe works to use Start GIT bash here in Windows explorer and then
 use ./f2c *.f (using the forward slash instead of the backslash)
 
+After a rotuine has been converted, the conversion result goes into
+Source/GeneratedByF2c and the original .f file goes into the Done folder. If 
+an original routine has to be modified to be digestible for the translator, the
+original version will be kept with the appendix _original appended to its 
+filename. 
+
+
 Maybe after a converted file, like "daxpy.c", works, make a templated version 
 "taxpy.cpp" or just "axpy.cpp" ...or combine a lot of these functions into a 
 single file. The comments for how the routine is supposed to be used go into 
 the header file - make them doxygen compliant. Maybe wrap the C++ version into
 a namespace - maybe use namespaces BLAS, LaPack, later maybe also LinPack, 
 EisPack
+
+Notes on real vs complex valued functions: i think, the complex case should be
+used for conversion - it's more general than the real case, because many matrix 
+formulas include a complex conjugation when in the real case it's just 
+transposition - that conjugation just boils down to an identity for real 
+inputs. -> for the already converted "d"-routines, check carefully, if they can
+be used also for the complex case - for new translations, start with the 
+complex version from the start.
+
+already converted functions, that should be safe to complexify:
+daxpy, dcopy, dger (but double-check!), dlaswp, dscal(check!), dswap, idamax
+
+questionable:
+dgbmv, dgbrfs (in contains an optiona to pass 'C' for complex conjugation),
+dgbrfsx, dgbsv (the doc explicitly says a "real" system), dgbtf2, dgbtrf,
+dgbtrs (has TRANS='C' option), dgemm (..has 'C' option - boils down to 'T'),
+dgemv ('C' -> 'T'), dtbsv, dtrsm
+
+not possible:
+
+
