@@ -210,6 +210,79 @@ logical lsame(char *ca, char *cb, ftnlen ca_len, ftnlen cb_len)
 
 //-------------------------------------------------------------------------------------------------
 
+// -- Reference BLAS level1 routine (version 3.8.0) -- 
+template<class T>
+int dswap_(integer *n, T *dx, integer *incx, T *dy, integer *incy)
+{
+  // System generated locals 
+  integer i__1;
+
+  // Local variables 
+  static integer i__, m, ix, iy, mp1;
+  static T dtemp;
+
+  // Parameter adjustments 
+  --dy;
+  --dx;
+
+  // Function Body 
+  if (*n <= 0) {
+    return 0;
+  }
+  if (*incx == 1 && *incy == 1) {
+
+    // code for both increments equal to 1
+    // clean-up loop 
+    m = *n % 3;
+    if (m != 0) {
+      i__1 = m;
+      for (i__ = 1; i__ <= i__1; ++i__) {
+        dtemp = dx[i__];
+        dx[i__] = dy[i__];
+        dy[i__] = dtemp;
+      }
+      if (*n < 3) {
+        return 0;
+      }
+    }
+    mp1 = m + 1;
+    i__1 = *n;
+    for (i__ = mp1; i__ <= i__1; i__ += 3) {
+      dtemp = dx[i__];
+      dx[i__] = dy[i__];
+      dy[i__] = dtemp;
+      dtemp = dx[i__ + 1];
+      dx[i__ + 1] = dy[i__ + 1];
+      dy[i__ + 1] = dtemp;
+      dtemp = dx[i__ + 2];
+      dx[i__ + 2] = dy[i__ + 2];
+      dy[i__ + 2] = dtemp;
+    }
+  } else {
+
+    // code for unequal increments or equal increments not equal to 1
+    ix = 1;
+    iy = 1;
+    if (*incx < 0) {
+      ix = (-(*n) + 1) * *incx + 1;
+    }
+    if (*incy < 0) {
+      iy = (-(*n) + 1) * *incy + 1;
+    }
+    i__1 = *n;
+    for (i__ = 1; i__ <= i__1; ++i__) {
+      dtemp = dx[ix];
+      dx[ix] = dy[iy];
+      dy[iy] = dtemp;
+      ix += *incx;
+      iy += *incy;
+    }
+  }
+  return 0;
+} // swap
+
+//-------------------------------------------------------------------------------------------------
+
 // todo: fix linker errors for s_wsfe, s_stop, len_trim__, do_fio - these seem to be functions from
 // libF2C
 // -- Reference BLAS level1 routine (version 3.7.0) -- 
