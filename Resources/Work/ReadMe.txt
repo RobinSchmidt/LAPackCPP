@@ -15,6 +15,13 @@ http://cci.lbl.gov/cctbx_build/
 ..i didn't try this yet - the installer is HUUUGE - WTF?
 
 
+wait - someone already did it? why did i not find this before?
+https://www.netlib.org/clapack/
+
+see also here:
+https://github.com/NIRALUser/CLAPACK
+
+
 
 in the directory:
 Lapackpp1.1a\include
@@ -102,8 +109,6 @@ newer (Fortran90) function that f2c does not yet know because it supports only F
  RWORK(1:2*N) creates a copy of element 1..2N of the array RWORK ...and that 
  copy shall be reinterpreted as..
 
-
-
 -my guess is that is has to do with promoting an array of real numbers to their
 corresponding complex counterparts, i.e. just the same array with zeros 
 interspersed for the imaginary parts
@@ -112,6 +117,13 @@ interspersed for the imaginary parts
 is in line 710
 
 -dla_.. or zla_gbrfsx_extended__ is an iterative refinement procedure
+
+-commenting out the whole relevant block (lines 646..668) allowed the function 
+ to be translated - of course, we don't want to de-activate the ietrative refinement
+ in the complex case...hmmm...what to do?
+ 
+-how about trying an older version of lapack - one that is still written in F77? 
+ ...or a newer translator like fable? http://cci.lbl.gov/fable/
 
 
 

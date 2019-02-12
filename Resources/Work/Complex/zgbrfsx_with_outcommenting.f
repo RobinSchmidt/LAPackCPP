@@ -498,7 +498,7 @@
       INTRINSIC          MAX, SQRT
 *     ..
 *     .. External Functions ..
-      EXTERNAL           TRANSFERR
+      EXTERNAL           TRANSFER_F90
       EXTERNAL           LSAME, ILAPREC
       EXTERNAL           DLAMCH, ZLANGB, ZLA_GBRCOND_X, ZLA_GBRCOND_C
       DOUBLE PRECISION   DLAMCH, ZLANGB, ZLA_GBRCOND_X, ZLA_GBRCOND_C
@@ -642,28 +642,32 @@
 *
 *     Perform refinement on each right-hand side
 *
-      IF ( REF_TYPE .NE. 0 .AND. INFO .EQ. 0 ) THEN
 
-         PREC_TYPE = ILAPREC( 'E' )
+! commented out by Robin Schmidt due to f2c errors
+!      IF ( REF_TYPE .NE. 0 .AND. INFO .EQ. 0 ) THEN
 
-         IF ( NOTRAN ) THEN
-            CALL ZLA_GBRFSX_EXTENDED( PREC_TYPE, TRANS_TYPE,  N, KL, KU,
-     $           NRHS, AB, LDAB, AFB, LDAFB, IPIV, COLEQU, C, B,
-     $           LDB, X, LDX, BERR, N_NORMS, ERR_BNDS_NORM,
-     $           ERR_BNDS_COMP, WORK, RWORK, WORK(N+1),
-     $           TRANSFER (RWORK(1:2*N), (/ (ZERO, ZERO) /), N),
-     $           RCOND, ITHRESH, RTHRESH, UNSTABLE_THRESH, IGNORE_CWISE,
-     $           INFO )
-         ELSE
-            CALL ZLA_GBRFSX_EXTENDED( PREC_TYPE, TRANS_TYPE,  N, KL, KU,
-     $           NRHS, AB, LDAB, AFB, LDAFB, IPIV, ROWEQU, R, B,
-     $           LDB, X, LDX, BERR, N_NORMS, ERR_BNDS_NORM,
-     $           ERR_BNDS_COMP, WORK, RWORK, WORK(N+1),
-     $           TRANSFER (RWORK(1:2*N), (/ (ZERO, ZERO) /), N),
-     $           RCOND, ITHRESH, RTHRESH, UNSTABLE_THRESH, IGNORE_CWISE,
-     $           INFO )
-         END IF
-      END IF
+!         PREC_TYPE = ILAPREC( 'E' )
+
+!         IF ( NOTRAN ) THEN
+!            CALL ZLA_GBRFSX_EXTENDED( PREC_TYPE, TRANS_TYPE,  N, KL, KU,
+!     $           NRHS, AB, LDAB, AFB, LDAFB, IPIV, COLEQU, C, B,
+!     $           LDB, X, LDX, BERR, N_NORMS, ERR_BNDS_NORM,
+!     $           ERR_BNDS_COMP, WORK, RWORK, WORK(N+1),
+!     $           TRANSFER_F90 (RWORK(1:2*N), (/ (ZERO, ZERO) /), N),
+!     $           RCOND, ITHRESH, RTHRESH, UNSTABLE_THRESH, IGNORE_CWISE,
+!     $           INFO )
+!         ELSE
+!            CALL ZLA_GBRFSX_EXTENDED( PREC_TYPE, TRANS_TYPE,  N, KL, KU,
+!     $           NRHS, AB, LDAB, AFB, LDAFB, IPIV, ROWEQU, R, B,
+!     $           LDB, X, LDX, BERR, N_NORMS, ERR_BNDS_NORM,
+!     $           ERR_BNDS_COMP, WORK, RWORK, WORK(N+1),
+!     $           TRANSFER_F90 (RWORK(1:2*N), (/ (ZERO, ZERO) /), N),
+!     $           RCOND, ITHRESH, RTHRESH, UNSTABLE_THRESH, IGNORE_CWISE,
+!     $           INFO )
+!         END IF
+!      END IF
+      
+      
 
       ERR_LBND = MAX( 10.0D+0, SQRT( DBLE( N ) ) ) * DLAMCH( 'Epsilon' )
       IF (N_ERR_BNDS .GE. 1 .AND. N_NORMS .GE. 1) THEN
