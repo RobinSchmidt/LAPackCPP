@@ -64,11 +64,55 @@ complex version from the start.
 already converted functions, that should be safe to complexify:
 daxpy, dcopy, dger (but double-check!), dlaswp, dscal(check!), dswap, idamax
 
+
+
 questionable:
-dgbmv, dgbrfs (in contains an optiona to pass 'C' for complex conjugation),
-dgbrfsx, dgbsv (the doc explicitly says a "real" system), dgbtf2, dgbtrf,
-dgbtrs (has TRANS='C' option), dgemm (..has 'C' option - boils down to 'T'),
-dgemv ('C' -> 'T'), dtbsv, dtrsm
+
+dgbrfsx vs zgbrsfx: 
+
+-the z-version does not translate - f2c produces an error related to the 
+intrinsic "TRANSFER" function declaration - changing that to external does not 
+fix the problem in this case (well, it fixes the error for the declartion, but 
+there are still syntax errors in lines 650 and 658, where
+ZLA_GBRFSX_EXTENDED is called with TRANSFER in the argument list
+
+-in line 556, there's this assignment: NOTRAN = LSAME( TRANS, 'N' ) which is 
+later used in a conditional to decide wether ZLA_GBRFSX_EXTENDED is called with
+"...,COLEQU, C,..." or with "...,ROWEQU, R,..." - so NOTRAN probably has to with
+matrix-transposition or not (not with "transfer or not" - whatever that means)
+
+-the difference between dgbrfsx and zgbrsfx is that dgbrfsx calls 
+ZLA_GBRFSX_EXTENDED with WORK( 1 ) where zgbrsfx uses 
+TRANSFER (RWORK(1:2*N), (/ (ZERO, ZERO) /), N) as argument
+
+-i need to figure out what that "TRANSFER" means - probably some sort of 
+temporary data buffer or related function...maybe install a fortran compiler 
+and try to compile the .f files
+
+-my guess is that is has to do with promoting an array of real numbers to their
+corresponding complex counterparts, i.e. just the same array with zeros 
+interspersed for the imaginary parts
+
+-in the translated dgbrfsx.c, the corresponding call of dla_gbrfsx_extended__ 
+is in line 710
+
+-dla_.. or zla_gbrfsx_extended__ is an iterative refinement procedure
+
+
+
+
+dgbmv, 
+dgbrfs (in contains an optiona to pass 'C' for complex conjugation),
+dgbsv (the doc explicitly says a "real" system), 
+dgbtf2, 
+dgbtrf,
+dgbtrs (has TRANS='C' option), 
+dgemm (..has 'C' option - boils down to 'T'),
+dgemv ('C' -> 'T'), 
+dtbsv, 
+dtrsm
+
+compare with cooversion results of corresponding complex functions
 
 not possible:
 
