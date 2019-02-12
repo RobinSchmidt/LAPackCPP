@@ -68,6 +68,9 @@ int gbsv(long int *n, long int *kl, long int *ku, long int *nrhs, T *ab, long in
 // comparison with linpack and eispack:
 // http://www.netlib.org/lapack/lug/node147.html
 
+
+
+
 //-------------------------------------------------------------------------------------------------
 
 /** gbtrf computes an LU factorization of a real m-by-n band matrix A.

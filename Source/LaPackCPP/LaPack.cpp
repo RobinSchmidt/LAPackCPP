@@ -673,7 +673,7 @@ int gbtrs(char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, T *a
 
 
 // commented because of linker errors - now all these subroutines:
-// dgemm, dcopy, dswap, dtrsm, idamax, ilaenv, dgemv, dtbsv, dgbtf2, dlaswp,  dscal, 
+// dgemm*, dcopy*, dswap, dtrsm, idamax, ilaenv, dgemv, dtbsv, dgbtf2, dlaswp,  dscal, 
 // have to translated to fix the linker errors
 
 /*

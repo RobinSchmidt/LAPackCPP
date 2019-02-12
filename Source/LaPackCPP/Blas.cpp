@@ -66,6 +66,76 @@ int axpy(long int* n, T *da, T *dx, long int *incx, T *dy, long int *incy)
   return 0;
 }
 
+
+//-------------------------------------------------------------------------------------------------
+
+// -- Reference BLAS level1 routine (version 3.8.0) --
+template<class T>
+int copy(integer *n, T *dx, integer *incx, T *dy, integer *incy)
+{
+  // System generated locals 
+  integer i__1;
+
+  // Local variables 
+  static integer i__, m, ix, iy, mp1;
+
+  // Parameter adjustments 
+  --dy;
+  --dx;
+
+  // Function Body 
+  if (*n <= 0) {
+    return 0;
+  }
+  if (*incx == 1 && *incy == 1) {
+
+    // code for both increments equal to 1
+    // clean-up loop 
+
+    m = *n % 7;
+    if (m != 0) {
+      i__1 = m;
+      for (i__ = 1; i__ <= i__1; ++i__) {
+        dy[i__] = dx[i__];
+      }
+      if (*n < 7) {
+        return 0;
+      }
+    }
+    mp1 = m + 1;
+    i__1 = *n;
+    for (i__ = mp1; i__ <= i__1; i__ += 7) {
+      dy[i__] = dx[i__];
+      dy[i__ + 1] = dx[i__ + 1];
+      dy[i__ + 2] = dx[i__ + 2];
+      dy[i__ + 3] = dx[i__ + 3];
+      dy[i__ + 4] = dx[i__ + 4];
+      dy[i__ + 5] = dx[i__ + 5];
+      dy[i__ + 6] = dx[i__ + 6];
+    }
+  } else {
+
+    // code for unequal increments or equal increments
+    // not equal to 1 
+
+    ix = 1;
+    iy = 1;
+    if (*incx < 0) {
+      ix = (-(*n) + 1) * *incx + 1;
+    }
+    if (*incy < 0) {
+      iy = (-(*n) + 1) * *incy + 1;
+    }
+    i__1 = *n;
+    for (i__ = 1; i__ <= i__1; ++i__) {
+      dy[iy] = dx[ix];
+      ix += *incx;
+      iy += *incy;
+    }
+  }
+  return 0;
+} // copy
+
 //-------------------------------------------------------------------------------------------------
 
 //  -- Reference BLAS level1 routine (version 3.1) -- 
@@ -514,7 +584,7 @@ int gemm(char *transa, char *transb, integer *m, integer *
   static logical nota, notb;
   static doublereal temp;
   static integer ncola;
-  extern logical lsame_(char *, char *, ftnlen, ftnlen);
+  extern logical lsame(char *, char *, ftnlen, ftnlen);
   static integer nrowa, nrowb;
   extern int xerbla(char *, integer *, ftnlen);
 
@@ -534,8 +604,8 @@ int gemm(char *transa, char *transb, integer *m, integer *
   c__ -= c_offset;
 
   // Function Body
-  nota = lsame_(transa, "N", (ftnlen)1, (ftnlen)1);
-  notb = lsame_(transb, "N", (ftnlen)1, (ftnlen)1);
+  nota = lsame(transa, "N", (ftnlen)1, (ftnlen)1);
+  notb = lsame(transb, "N", (ftnlen)1, (ftnlen)1);
   if (nota) {
     nrowa = *m;
     ncola = *k;
@@ -551,11 +621,11 @@ int gemm(char *transa, char *transb, integer *m, integer *
 
   // Test the input parameters.
   info = 0;
-  if (! nota && ! lsame_(transa, "C", (ftnlen)1, (ftnlen)1) && ! lsame_(
+  if (! nota && ! lsame(transa, "C", (ftnlen)1, (ftnlen)1) && ! lsame(
     transa, "T", (ftnlen)1, (ftnlen)1)) {
     info = 1;
-  } else if (! notb && ! lsame_(transb, "C", (ftnlen)1, (ftnlen)1) && ! 
-    lsame_(transb, "T", (ftnlen)1, (ftnlen)1)) {
+  } else if (! notb && ! lsame(transb, "C", (ftnlen)1, (ftnlen)1) && ! 
+    lsame(transb, "T", (ftnlen)1, (ftnlen)1)) {
     info = 2;
   } else if (*m < 0) {
     info = 3;

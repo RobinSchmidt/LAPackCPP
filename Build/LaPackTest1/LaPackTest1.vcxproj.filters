@@ -25,6 +25,9 @@
     <Filter Include="Source Files\libf2c">
       <UniqueIdentifier>{b19ea29b-904d-4ab3-9d80-8ab32a4b511f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\fromCLaPack">
+      <UniqueIdentifier>{26db0fe8-777a-4ec1-a397-32d42ac7e0a2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LaPackTest1.cpp">
@@ -104,6 +107,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\GeneratedByF2C\dscal.c">
       <Filter>Source Files\GeneratedByF2C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\fromCLAPACK\dgbsv.c">
+      <Filter>Source Files\fromCLaPack</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
