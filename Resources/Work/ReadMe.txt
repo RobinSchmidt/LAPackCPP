@@ -88,6 +88,21 @@ TRANSFER (RWORK(1:2*N), (/ (ZERO, ZERO) /), N) as argument
 -i need to figure out what that "TRANSFER" means - probably some sort of 
 temporary data buffer or related function...maybe install a fortran compiler 
 and try to compile the .f files
+it's probably this one:
+http://ergodic.ugr.es/cphysn/LECCIONES/FORTRAN/f77to90/a5.html#section11
+"TRANSFER(SOURCE, MOULD, size) specifies that the physical representation of the first argument 
+SOURCE shall be treated as if it had type and parameters as the second argument MOULD, but without 
+converting it. The purpose is to give a possibility to move a quantity of a certain type via a 
+routine that does not have exactly that data type."
+...so that baiscally seems to be something like a reinterpret_cast? maybe it's because it's a 
+newer (Fortran90) function that f2c does not yet know because it supports only Fortran77
+...but why is it then a syntax error when we decalre it as EXTERNAL function?
+
+-i think, in this statement TRANSFER (RWORK(1:2*N), (/ (ZERO, ZERO) /), N),
+ RWORK(1:2*N) creates a copy of element 1..2N of the array RWORK ...and that 
+ copy shall be reinterpreted as..
+
+
 
 -my guess is that is has to do with promoting an array of real numbers to their
 corresponding complex counterparts, i.e. just the same array with zeros 
