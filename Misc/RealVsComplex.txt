@@ -30,7 +30,7 @@ if(noconj) {
   c.i = a.i + b.i;
 }
 else {
-  c.r = a.r - b.r; 
+  c.r = a.r + b.r; 
   c.i = a.i - b.i;
 }
 
@@ -38,9 +38,9 @@ when complex numbers are involved. I'm not sure, how deal with this best.
 Perhaps the only practical solution is to use the real valued routines for 
 translation and add the complex conjugation instructions manually, where it 
 makes sense (refer to the original .f files for the complex case to figure
-this out). This needs some unit tests to make sure that this has been done
-correctly. And it should be stated explictly in the documentation whether or 
-not a routine is suitable for use with complex numbers.
+out where this is the case). This needs some unit tests to make sure that this 
+has been done correctly. And it should be stated explictly in the documentation
+whether or not a routine is suitable for use with complex numbers.
 
 
 
@@ -59,9 +59,21 @@ not a routine is suitable for use with complex numbers.
 
 //=============================================================================
 
-...or maybe for Blas-routines use d-versions and lapack routines use 
-z-versions? Maybe all the complex-cojugation stuff, if necessarry is delegated
-to blas by lapack anyway?
+Notes:
+
+-maybe instead of inserting "conj" into the routines, we may need a sort of
+conjIf(double x, bool doConj) - but that will not play well with optimzation
+
+-maybe that decision/conditional only occurs in blas routines and we may get 
+away with doing all these manual additions only in blas, not in lapack?
+
+-maybe for Blas-routines use d-versions and lapack routines use z-versions? 
+Maybe all the complex-cojugation stuff, if necessarry is delegatedto blas by 
+lapack anyway?
+
+
+
+
 
 //-----------------------------------------------------------------------------
 from dgemv.f:
