@@ -2,7 +2,7 @@
 
 Functions that have to be translated next:
 
-dtrsm 
+
 -no: use ztrsm, complex conjugation may be involved, hmm - but the translation
  explicityl refers to real and imag parts - so that doesn'k work
  -use dtrsm and add a note that this may have to be complex-enabled later
@@ -16,7 +16,7 @@ idamax, ilaenv, dgemv, dtbsv, dgbtf2, dlaswp,  dscal,
 Functions that heve been translated:
 
 Blas:
-daxpy, dcopy, lsame, dswap, xerbla, dgbmv, dgemm,
+daxpy, dcopy, lsame, dswap, xerbla, dgbmv, dgemm, dtrsm 
 
 Lapack:
 dgbsv, dgbtrf, dgbtrs

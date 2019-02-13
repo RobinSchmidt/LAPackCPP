@@ -172,6 +172,50 @@ template<class T>
 int gbmv(char *trans, integer *m, integer *n, integer *kl, integer *ku, T *alpha, T *a, 
   integer *lda, T *x, integer *incx, T *beta, T *y, integer *incy, ftnlen trans_len);
 
+//-------------------------------------------------------------------------------------------------
+
+/**
+Purpose: gemv  performs one of the matrix-vector operations
+  y := alpha*A*x + beta*y,   or   y := alpha*A**T*x + beta*y,
+where alpha and beta are scalars, x and y are vectors and A is an m by n matrix.
+
+Arguments:
+TRANS: On entry, TRANS specifies the operation to be performed as follows:
+       TRANS = 'N' or 'n'   y := alpha*A*x + beta*y.
+       TRANS = 'T' or 't'   y := alpha*A**T*x + beta*y.
+       TRANS = 'C' or 'c'   y := alpha*A**T*x + beta*y.
+M:     On entry, M specifies the number of rows of the matrix A. M must be at least zero.
+N:     On entry, N specifies the number of columns of the matrix A. N must be at least zero.
+ALPHA: On entry, ALPHA specifies the scalar alpha.
+A:     array, dimension ( LDA, N ). Before entry, the leading m by n part of the array A must 
+       contain the matrix of coefficients.
+LDA:   On entry, LDA specifies the first dimension of A as declared in the calling (sub) program. 
+       LDA must be at least max( 1, m ).
+X:     array, dimension at least ( 1 + ( n - 1 )*abs( INCX ) ) when TRANS = 'N' or 'n' and at 
+       least ( 1 + ( m - 1 )*abs( INCX ) ) otherwise. Before entry, the incremented array X must 
+       contain the vector x.
+INCX:  On entry, INCX specifies the increment for the elements of X. INCX must not be zero.
+BETA:  On entry, BETA specifies the scalar beta. When BETA is supplied as zero then Y need not be 
+       set on input.
+Y:     array, dimension at least ( 1 + ( m - 1 )*abs( INCY ) ) when TRANS = 'N' or 'n' and at 
+       least ( 1 + ( n - 1 )*abs( INCY ) ) otherwise. Before entry with BETA non-zero, the 
+       incremented array Y must contain the vector y. On exit, Y is overwritten by the updated 
+       vector y.
+INCY:  On entry, INCY specifies the increment for the elements of Y. INCY must not be zero.
+
+Further Details:
+The vector and matrix arguments are not referenced when N = 0, or M = 0 */
+template<class T>
+int gemv(char *trans, integer *m, integer *n, T *alpha, T *a, integer *lda, T *x, integer *incx, 
+  T *beta, T *y, integer *incy, ftnlen trans_len);
+
+
+
+
+
+
+
+
 
 //=================================================================================================
 
@@ -180,7 +224,7 @@ int gbmv(char *trans, integer *m, integer *n, integer *kl, integer *ku, T *alpha
 
 
 
-//-------------------------------------------------------------------------------------------------
+
 
 /**
 
@@ -230,9 +274,10 @@ C:      array, dimension ( LDC, N ) Before entry, the leading  m by n  part of t
         ( alpha*op( A )*op( B ) + beta*C ).
 LDC:    On entry, LDC specifies the first dimension of C as declared in the calling (sub) program.   
         LDC must be at least max( 1, m ). */
-int gemm(char *transa, char *transb, integer *m, integer *n, integer *k, doublereal *alpha, 
-  doublereal *a, integer *lda, doublereal *b, integer *ldb, doublereal *beta, doublereal *c__, 
-  integer *ldc, ftnlen transa_len, ftnlen transb_len);
+template<class T>
+int gemm(char *transa, char *transb, integer *m, integer *n, integer *k, T *alpha, T *a, 
+  integer *lda, T *b, integer *ldb, T *beta, T *c__, integer *ldc, ftnlen transa_len, 
+  ftnlen transb_len);
 // templatize!
 
 //-------------------------------------------------------------------------------------------------
