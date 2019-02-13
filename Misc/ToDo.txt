@@ -1,6 +1,9 @@
+
+
 Functions that have to be translated next:
 
-dtrsm, idamax, ilaenv, dgemv, dtbsv, dgbtf2, dlaswp,  dscal, 
+dtrsm - no: use ztrsm, complex conjugation may be involved, 
+idamax, ilaenv, dgemv, dtbsv, dgbtf2, dlaswp,  dscal, 
 
 
 
@@ -8,9 +11,20 @@ dtrsm, idamax, ilaenv, dgemv, dtbsv, dgbtf2, dlaswp,  dscal,
 Functions that heve been translated:
 
 Blas:
-daxpy, dcopy, lsame, dswap, dgemm,
+daxpy, dcopy, lsame, dswap, xerbla, dgbmv, dgemm,
 
 Lapack:
 dgbsv, dgbtrf, dgbtrs
+
+
+
+
+
+
+
+
+
+
+
 
 

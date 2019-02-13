@@ -1,0 +1,73 @@
+I want to avoid code duplication as much as possible, so ideally, whenever 
+possible, the same template should be used, regardless of whether the matrices
+are real or complex valued. This is especially true for the driver routines 
+like _gesv, _geev, etc. Whenever i translate a new routine, i have to decide, 
+whether i should use the real or complex valued version for translation, i.e. 
+dgsev vs zgsev or dgeev vs zgeev. In some matrix formulas, the correct 
+generalization for matrix-transposition from the real to the complex case is
+to do an additional complex conjugation (the combined operation is often called
+Hermitian transpose denoted by **H instead of **T for the regular transpose), 
+so for the lower level computational routines, we probably want to use **H 
+whenever **T is used in the real case. The ideal solution would be, if the 
+code for the routine contains an instruction for complex conjugation wherever 
+this is the case, and that isntruction would just boil down to an inlined 
+identity operation or no-op in case of real arguments. Something like:
+
+w = conj(z);
+
+should occur in the code of the routines, and we should have explicit 
+template specializations for real number types like:
+
+template double conj(double z) 
+{ 
+  return z; // identity - can be optimized out
+}
+
+
+
+
+
+
+
+
+In general, the complex case the more general 
+one, so it seems to be best to choose the complex one
+
+
+
+
+
+Translate real or complex versions?
+
+The goal is that the driver routines can be instantiated for real or complex
+numbers, i.e. the same driver template like gbsv should be used, regardless 
+whether the datatype is real or complex. In matrix formulas, the correct 
+generalization for transposition is (in some contexts) transposition and 
+complex conjugation. The blas/lapack routines for real numbers do not make 
+such a distinction because if a number is real, complex conjugation is an 
+identity operation.
+
+Sometimes, it makes a difference in
+formulas
+
+
+
+ToDo: for all functions that have been translated from "d" versions (and not 
+from "z" versions), check, if it makes a difference, i.e. if the z-versions of
+them involve complex conjugations - if so, re-translate from the z-versions
+
+...generally, in the future, always take the z-versions for translation and 
+provide a suitable implementation for complex conjugation of real numbers that 
+boils down to an inlined no-op (for arrays) or identity (for numbers passed by 
+value) that can be optimized out by the compiler.
+...oh no - unfortunately that will not work, because the z-versions explicity
+access the real and imaginary parts - they dont do things like:
+c = a + b where c,a,b are just the complex struct - instead, they do
+c.r = a.r + b.r; c.i  = a.i + b.i ...hmm...looking at the code in ztrsm.f, it 
+also looks like the original implementation uses an if-conditional to either
+conjugate or not for each matrix element that is accessed. Perhaps, it's more 
+practical, to use the "d" versions for translations
+
+...or maybe for Blas-routines use d-versions and lapack routines use 
+z-versions? Maybe all the complex-cojugation stuff, if necessarry is delegated
+to blas by lapack anyway?

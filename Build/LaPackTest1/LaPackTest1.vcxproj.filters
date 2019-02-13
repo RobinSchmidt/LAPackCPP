@@ -111,6 +111,9 @@
     <ClCompile Include="..\..\Source\fromCLAPACK\dgbsv.c">
       <Filter>Source Files\fromCLaPack</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\GeneratedByF2C\ztrsm.c">
+      <Filter>Source Files\GeneratedByF2C</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\GeneratedByF2C\f2c.h">
