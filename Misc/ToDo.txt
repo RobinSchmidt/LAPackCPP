@@ -2,7 +2,7 @@
 
 Functions that have to be translated next:
 
- ilaenv, dtbsv, dgbtf2, dlaswp,  dscal, 
+dtbsv, dgbtf2, dlaswp,  dscal, 
 
  
  
@@ -27,4 +27,5 @@ dgbsv
 Lapack-Computational:
 dgbtrf, dgbtrs
 
-Lapack-Auxiliary:
+Lapack-Auxiliary: 
+ilaenv,
