@@ -55,6 +55,14 @@ template<class T>
 int copy(integer *n, T *dx, integer *incx, T *dy, integer *incy);
 
 
+/** iamax finds the index of the first element having maximum absolute value.
+
+Arguments:
+N:    number of elements in input vector(s)
+DX:   array, dimension ( 1 + ( N - 1 )*abs( INCX ) )
+INCX: storage spacing between elements of DX  */
+template<class T>
+integer iamax(integer *n, T *dx, integer *incx);
 
 
 /** LSAME returns .TRUE. if CA is the same letter as CB regardless of case. CA and CB specify the 
@@ -209,7 +217,7 @@ template<class T>
 int gemv(char *trans, integer *m, integer *n, T *alpha, T *a, integer *lda, T *x, integer *incx, 
   T *beta, T *y, integer *incy, ftnlen trans_len);
 
-
+//-------------------------------------------------------------------------------------------------
 
 
 

@@ -138,6 +138,64 @@ int copy(integer *n, T *dx, integer *incx, T *dy, integer *incy)
 
 //-------------------------------------------------------------------------------------------------
 
+// translated from idamax, Reference BLAS level1 routine (version 3.8.0)
+template<class T>
+integer iamax(integer *n, T *dx, integer *incx)
+{
+  /* System generated locals */
+  integer ret_val, i__1;
+  T d__1;
+
+  /* Local variables */
+  static integer i__, ix;
+  static T dmax__;
+
+
+  /* Parameter adjustments */
+  --dx;
+
+  /* Function Body */
+  ret_val = 0;
+  if (*n < 1 || *incx <= 0) {
+    return ret_val;
+  }
+  ret_val = 1;
+  if (*n == 1) {
+    return ret_val;
+  }
+  if (*incx == 1) {
+
+    /*        code for increment equal to 1 */
+
+    dmax__ = abs(dx[1]);
+    i__1 = *n;
+    for (i__ = 2; i__ <= i__1; ++i__) {
+      if ((d__1 = dx[i__], abs(d__1)) > dmax__) {
+        ret_val = i__;
+        dmax__ = (d__1 = dx[i__], abs(d__1));
+      }
+    }
+  } else {
+
+    /*        code for increment not equal to 1 */
+
+    ix = 1;
+    dmax__ = abs(dx[1]);
+    ix += *incx;
+    i__1 = *n;
+    for (i__ = 2; i__ <= i__1; ++i__) {
+      if ((d__1 = dx[ix], abs(d__1)) > dmax__) {
+        ret_val = i__;
+        dmax__ = (d__1 = dx[ix], abs(d__1));
+      }
+      ix += *incx;
+    }
+  }
+  return ret_val;
+} /* idamax_ */
+
+//-------------------------------------------------------------------------------------------------
+
 // translated from lsame, Reference BLAS level1 routine (version 3.1)
 logical lsame(char *ca, char *cb, ftnlen ca_len, ftnlen cb_len)
 {
