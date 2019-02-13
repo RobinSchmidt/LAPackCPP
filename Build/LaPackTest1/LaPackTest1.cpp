@@ -64,6 +64,13 @@ class MatrixViewColumnMajor
   // with 1-based indexing and it is still in 1-based form - before eventually converting all 
   // accesses into 0-based form, it may be convenient to temporarily just be able to use 1-based
   // indexing
+  // maybe an even more general formula  like:
+  // return rowStart + (rowStride + rowFirst)*i + columnStart + (columnStride - columnFirst)*j
+  // would allow for arbitrary indexing (this is possible in fortran, too), like having an index
+  // range -10..+10 - that could be convenient sometimes, for example for FFT-buffers. the 
+  // additional "start" offsets may allow access of submatrices -> work out the math for a general
+  // indexing formula that allows for all these things - it may introduce a performance hit, but 
+  // for high-level prototype code, that's OK
 
 
 protected:

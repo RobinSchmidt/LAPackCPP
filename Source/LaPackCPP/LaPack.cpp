@@ -1,7 +1,7 @@
 #include "LaPack.hpp"
 namespace LaPackCPP {
 
-//  -- LAPACK driver routine (version 3.7.0) -- 
+// translated from dgbsv, LAPACK driver routine (version 3.7.0) -- 
 template<class T>
 int gbsv(long int *n, long int *kl, long int *ku, long int *nrhs, T *ab, long int *ldab,
   long int *ipiv, T *b, long int *ldb, long int *info)
@@ -66,7 +66,7 @@ int gbsv(long int *n, long int *kl, long int *ku, long int *nrhs, T *ab, long in
 
 //-------------------------------------------------------------------------------------------------
 
-//  -- LAPACK computational routine (version 3.7.0) -- 
+// translated from dgbtrf,LAPACK computational routine (version 3.7.0)
 template<class T>
 int gbtrf(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab, integer *ipiv,
   integer *info)
@@ -519,7 +519,7 @@ int gbtrf(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab
 
 //-------------------------------------------------------------------------------------------------
 
-// -- LAPACK computational routine (version 3.7.0) --
+// translated from dgbtrs, LAPACK computational routine (version 3.7.0)
 template<class T>
 int gbtrs(char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, T *ab,
   integer *ldab, integer *ipiv, T *b, integer *ldb, integer *info, ftnlen trans_len)

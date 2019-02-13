@@ -1,0 +1,16 @@
+Functions that have to be translated next:
+
+dtrsm, idamax, ilaenv, dgemv, dtbsv, dgbtf2, dlaswp,  dscal, 
+
+
+
+
+Functions that heve been translated:
+
+Blas:
+daxpy, dcopy, lsame, dswap, dgemm,
+
+Lapack:
+dgbsv, dgbtrf, dgbtrs
+
+

@@ -4,7 +4,7 @@ namespace BlasCPP {
 //=================================================================================================
 // BLAS level 1 routines
 
-// Reference BLAS level1 routine (version 3.8.0)
+// translated from daxpy, Reference BLAS level1 routine (version 3.8.0)
 template<class T>
 int axpy(long int* n, T *da, T *dx, long int *incx, T *dy, long int *incy)
 {
@@ -69,7 +69,7 @@ int axpy(long int* n, T *da, T *dx, long int *incx, T *dy, long int *incy)
 
 //-------------------------------------------------------------------------------------------------
 
-// -- Reference BLAS level1 routine (version 3.8.0) --
+// translated from dcopy,  Reference BLAS level1 routine (version 3.8.0)
 template<class T>
 int copy(integer *n, T *dx, integer *incx, T *dy, integer *incy)
 {
@@ -138,7 +138,7 @@ int copy(integer *n, T *dx, integer *incx, T *dy, integer *incy)
 
 //-------------------------------------------------------------------------------------------------
 
-//  -- Reference BLAS level1 routine (version 3.1) -- 
+// translated from lsame, Reference BLAS level1 routine (version 3.1)
 logical lsame(char *ca, char *cb, ftnlen ca_len, ftnlen cb_len)
 {
   // System generated locals
@@ -210,9 +210,9 @@ logical lsame(char *ca, char *cb, ftnlen ca_len, ftnlen cb_len)
 
 //-------------------------------------------------------------------------------------------------
 
-// -- Reference BLAS level1 routine (version 3.8.0) -- 
+// translated from dswap, Reference BLAS level1 routine (version 3.8.0)
 template<class T>
-int dswap_(integer *n, T *dx, integer *incx, T *dy, integer *incy)
+int swap(integer *n, T *dx, integer *incx, T *dy, integer *incy)
 {
   // System generated locals 
   integer i__1;
@@ -285,7 +285,7 @@ int dswap_(integer *n, T *dx, integer *incx, T *dy, integer *incy)
 
 // todo: fix linker errors for s_wsfe, s_stop, len_trim__, do_fio - these seem to be functions from
 // libF2C
-// -- Reference BLAS level1 routine (version 3.7.0) -- 
+// translated from xerbla, Reference BLAS level1 routine (version 3.7.0)
 int xerbla(char *srname, integer *info, ftnlen srname_len)
 {
   // Code of the function has been commented out by Robin Schmidt - at the moment, xerbla is just
@@ -332,7 +332,7 @@ int xerbla(char *srname, integer *info, ftnlen srname_len)
 //=================================================================================================
 // BLAS level 2 routines
 
-//  -- Reference BLAS level2 routine (version 3.7.0) -- 
+// translated from dger, Reference BLAS level2 routine (version 3.7.0) -- 
 int ger(integer *m, integer *n, doublereal *alpha, doublereal *x, integer *incx, doublereal *y, 
   integer *incy, doublereal *a, integer *lda)
 {
@@ -428,7 +428,7 @@ int ger(integer *m, integer *n, doublereal *alpha, doublereal *x, integer *incx,
 
 //-------------------------------------------------------------------------------------------------
 
-// Reference BLAS level2 routine (version 3.7.0)
+// translated from dgbmv, Reference BLAS level2 routine (version 3.7.0)
 template<class T>
 int gbmv(char *trans, integer *m, integer *n, integer *kl, integer *ku, T *alpha, T *a, 
   integer *lda, T *x, integer *incx, T *beta, T *y, integer *incy, ftnlen trans_len)
@@ -642,10 +642,10 @@ int gbmv(char *trans, integer *m, integer *n, integer *kl, integer *ku, T *alpha
 //=================================================================================================
 // BLAS level 3 routines
 
-//  -- Reference BLAS level3 routine (version 3.7.0) -- 
-int gemm(char *transa, char *transb, integer *m, integer *
-  n, integer *k, doublereal *alpha, doublereal *a, integer *lda, 
-  doublereal *b, integer *ldb, doublereal *beta, doublereal *c__, 
+// translated from dgemm, Reference BLAS level3 routine (version 3.7.0)
+template<class T>
+int gemm(char *transa, char *transb, integer *m, integer *n, integer *k, T *alpha, T *a, 
+  integer *lda, T *b, integer *ldb, T *beta, T *c__, 
   integer *ldc, ftnlen transa_len, ftnlen transb_len)
 {
   // System generated locals
@@ -655,7 +655,7 @@ int gemm(char *transa, char *transb, integer *m, integer *
   // Local variables
   static integer i__, j, l, info;
   static logical nota, notb;
-  static doublereal temp;
+  static T temp;
   static integer ncola;
   extern logical lsame(char *, char *, ftnlen, ftnlen);
   static integer nrowa, nrowb;
