@@ -23,6 +23,24 @@ template double conj(double z)
   return z; // identity - can be optimized out
 }
 
+The problem is that f2c may produce c-code like:
+
+if(noconj) {
+  c.r = a.r + b.r; 
+  c.i = a.i + b.i;
+}
+else {
+  c.r = a.r - b.r; 
+  c.i = a.i - b.i;
+}
+
+when complex numbers are involved. I'm not sure, how deal with this best. 
+Perhaps the only practical solution is to use the real valued routines for 
+translation and add the complex conjugation instructions manually, where it 
+makes sense (refer to the original .f files for the complex case to figure
+this out). This needs some unit tests to make sure that this has been done
+correctly. And it should be stated explictly in the documentation whether or 
+not a routine is suitable for use with complex numbers.
 
 
 
@@ -30,44 +48,78 @@ template double conj(double z)
 
 
 
-In general, the complex case the more general 
-one, so it seems to be best to choose the complex one
 
 
 
 
 
-Translate real or complex versions?
-
-The goal is that the driver routines can be instantiated for real or complex
-numbers, i.e. the same driver template like gbsv should be used, regardless 
-whether the datatype is real or complex. In matrix formulas, the correct 
-generalization for transposition is (in some contexts) transposition and 
-complex conjugation. The blas/lapack routines for real numbers do not make 
-such a distinction because if a number is real, complex conjugation is an 
-identity operation.
-
-Sometimes, it makes a difference in
-formulas
 
 
 
-ToDo: for all functions that have been translated from "d" versions (and not 
-from "z" versions), check, if it makes a difference, i.e. if the z-versions of
-them involve complex conjugations - if so, re-translate from the z-versions
 
-...generally, in the future, always take the z-versions for translation and 
-provide a suitable implementation for complex conjugation of real numbers that 
-boils down to an inlined no-op (for arrays) or identity (for numbers passed by 
-value) that can be optimized out by the compiler.
-...oh no - unfortunately that will not work, because the z-versions explicity
-access the real and imaginary parts - they dont do things like:
-c = a + b where c,a,b are just the complex struct - instead, they do
-c.r = a.r + b.r; c.i  = a.i + b.i ...hmm...looking at the code in ztrsm.f, it 
-also looks like the original implementation uses an if-conditional to either
-conjugate or not for each matrix element that is accessed. Perhaps, it's more 
-practical, to use the "d" versions for translations
+//=============================================================================
 
 ...or maybe for Blas-routines use d-versions and lapack routines use 
 z-versions? Maybe all the complex-cojugation stuff, if necessarry is delegated
 to blas by lapack anyway?
+
+//-----------------------------------------------------------------------------
+from dgemv.f:
+
+On entry, TRANS specifies the operation to be performed as follows:
+TRANS = 'N' or 'n'   y := alpha*A*x + beta*y.
+TRANS = 'T' or 't'   y := alpha*A**T*x + beta*y.
+TRANS = 'C' or 'c'   y := alpha*A**T*x + beta*y.
+
+*        Form  y := alpha*A**T*x + y.
+*
+          JY = KY
+          IF (INCX.EQ.1) THEN
+              DO 100 J = 1,N
+                  TEMP = ZERO
+                  DO 90 I = 1,M
+                      TEMP = TEMP + A(I,J)*X(I)
+   90             CONTINUE
+                  Y(JY) = Y(JY) + ALPHA*TEMP
+                  JY = JY + INCY
+  100         CONTINUE
+          ELSE
+              DO 120 J = 1,N
+                  TEMP = ZERO
+                  IX = KX
+                  DO 110 I = 1,M
+                      TEMP = TEMP + A(I,J)*X(IX)
+                      IX = IX + INCX
+  110             CONTINUE
+                  Y(JY) = Y(JY) + ALPHA*TEMP
+                  JY = JY + INCY
+  120         CONTINUE
+          END IF
+
+//-----------------------------------------------------------------------------
+from zgemv.f:
+
+On entry, TRANS specifies the operation to be performed as follows:
+TRANS = 'N' or 'n'   y := alpha*A*x + beta*y.
+TRANS = 'T' or 't'   y := alpha*A**T*x + beta*y.
+TRANS = 'C' or 'c'   y := alpha*A**H*x + beta*y.
+
+*
+*        Form  y := alpha*A**T*x + y  or  y := alpha*A**H*x + y.
+*
+          JY = KY
+          IF (INCX.EQ.1) THEN
+              DO 110 J = 1,N
+                  TEMP = ZERO
+                  IF (NOCONJ) THEN
+                      DO 90 I = 1,M
+                          TEMP = TEMP + A(I,J)*X(I)
+   90                 CONTINUE
+                  ELSE
+                      DO 100 I = 1,M
+                          TEMP = TEMP + DCONJG(A(I,J))*X(I)
+  100                 CONTINUE
+                  END IF
+                  Y(JY) = Y(JY) + ALPHA*TEMP
+                  JY = JY + INCY
+  110         CONTINUE
