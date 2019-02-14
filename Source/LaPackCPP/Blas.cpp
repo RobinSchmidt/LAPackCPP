@@ -1833,6 +1833,10 @@ template int gbmv(char *trans, integer *m, integer *n, integer *kl, integer *ku,
 
 // Level 3:
 
+template int gemm(char *transa, char *transb, integer *m, integer *n, integer *k, double *alpha, 
+  double *a, integer *lda, double *b, integer *ldb, double *beta, double *c__, integer *ldc, 
+  ftnlen transa_len, ftnlen transb_len);
+
 template int trsm(char *side, char *uplo, char *transa, char *diag, integer *m, integer *n, 
   double *alpha, double *a, integer *lda, double *b, integer *ldb, ftnlen side_len, 
   ftnlen uplo_len, ftnlen transa_len,  ftnlen diag_len);

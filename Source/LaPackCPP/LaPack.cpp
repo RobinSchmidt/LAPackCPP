@@ -116,13 +116,13 @@ int gbtf2(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab
 
   /* Local variables */
   static integer i__, j, km, jp, ju, kv;
-  extern /* Subroutine */ int dger_(integer *, integer *, T *, 
-    T *, integer *, T *, integer *, T *, 
-    integer *), dscal_(integer *, T *, T *, integer 
-      *), dswap_(integer *, T *, integer *, T *, 
-        integer *);
-  extern integer idamax_(integer *, T *, integer *);
-  extern /* Subroutine */ int xerbla_(char *, integer *, ftnlen);
+  //extern /* Subroutine */ int dger_(integer *, integer *, T *, 
+  //  T *, integer *, T *, integer *, T *, 
+  //  integer *), dscal_(integer *, T *, T *, integer 
+  //    *), dswap_(integer *, T *, integer *, T *, 
+  //      integer *);
+  //extern integer idamax_(integer *, T *, integer *);
+  //extern /* Subroutine */ int xerbla_(char *, integer *, ftnlen);
 
   /*     KV is the number of superdiagonals in the factor U, allowing for */
   /*     fill-in. */
@@ -152,7 +152,7 @@ int gbtf2(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab
   }
   if (*info != 0) {
     i__1 = -(*info);
-    xerbla_("DGBTF2", &i__1, (ftnlen)6);
+    xerbla("DGBTF2", &i__1, (ftnlen)6);
     return 0;
   }
 
@@ -201,7 +201,7 @@ int gbtf2(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab
     i__2 = *kl, i__3 = *m - j;
     km = min(i__2,i__3);
     i__2 = km + 1;
-    jp = idamax_(&i__2, &ab[kv + 1 + j * ab_dim1], &c__1);
+    jp = iamax(&i__2, &ab[kv + 1 + j * ab_dim1], &c__1);
     ipiv[j] = jp + j - 1;
     if (ab[kv + jp + j * ab_dim1] != 0.) {
       /* Computing MAX */
@@ -216,7 +216,7 @@ int gbtf2(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab
         i__2 = ju - j + 1;
         i__3 = *ldab - 1;
         i__4 = *ldab - 1;
-        dswap_(&i__2, &ab[kv + jp + j * ab_dim1], &i__3, &ab[kv + 1 + 
+        swap(&i__2, &ab[kv + jp + j * ab_dim1], &i__3, &ab[kv + 1 + 
           j * ab_dim1], &i__4);
       }
 
@@ -225,7 +225,7 @@ int gbtf2(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab
         /*              Compute multipliers. */
 
         d__1 = 1. / ab[kv + 1 + j * ab_dim1];
-        dscal_(&km, &d__1, &ab[kv + 2 + j * ab_dim1], &c__1);
+        scal(&km, &d__1, &ab[kv + 2 + j * ab_dim1], &c__1);
 
         /*              Update trailing submatrix within the band. */
 
@@ -233,7 +233,7 @@ int gbtf2(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab
           i__2 = ju - j;
           i__3 = *ldab - 1;
           i__4 = *ldab - 1;
-          dger_(&km, &i__2, &c_b9, &ab[kv + 2 + j * ab_dim1], &c__1,
+          ger(&km, &i__2, &c_b9, &ab[kv + 2 + j * ab_dim1], &c__1,
             &ab[kv + (j + 1) * ab_dim1], &i__3, &ab[kv + 1 + 
             (j + 1) * ab_dim1], &i__4);
         }

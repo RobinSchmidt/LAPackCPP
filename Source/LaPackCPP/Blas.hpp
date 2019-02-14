@@ -353,7 +353,6 @@ template<class T>
 int gemm(char *transa, char *transb, integer *m, integer *n, integer *k, T *alpha, T *a, 
   integer *lda, T *b, integer *ldb, T *beta, T *c__, integer *ldc, ftnlen transa_len, 
   ftnlen transb_len);
-// templatize!
 
 //-------------------------------------------------------------------------------------------------
 
