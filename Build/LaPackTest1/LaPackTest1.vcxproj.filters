@@ -114,6 +114,12 @@
     <ClCompile Include="..\..\Source\GeneratedByF2C\ztrsm.c">
       <Filter>Source Files\GeneratedByF2C</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\GeneratedByF2C\ieeeck.c">
+      <Filter>Source Files\GeneratedByF2C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\GeneratedByF2C\iparmq.c">
+      <Filter>Source Files\GeneratedByF2C</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\GeneratedByF2C\f2c.h">
