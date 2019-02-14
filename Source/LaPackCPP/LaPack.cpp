@@ -66,6 +66,158 @@ int gbsv(long int *n, long int *kl, long int *ku, long int *nrhs, T *ab, long in
 
 //-------------------------------------------------------------------------------------------------
 
+// translated from dgbtf2, LAPACK computational routine (version 3.7.0)
+template<class T>
+int gbtf2(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab, integer *ipiv, 
+  integer *info)
+{
+  /* System generated locals */
+  integer ab_dim1, ab_offset, i__1, i__2, i__3, i__4;
+  T d__1;
+
+  /* Local variables */
+  static integer i__, j, km, jp, ju, kv;
+  extern /* Subroutine */ int dger_(integer *, integer *, T *, 
+    T *, integer *, T *, integer *, T *, 
+    integer *), dscal_(integer *, T *, T *, integer 
+      *), dswap_(integer *, T *, integer *, T *, 
+        integer *);
+  extern integer idamax_(integer *, T *, integer *);
+  extern /* Subroutine */ int xerbla_(char *, integer *, ftnlen);
+
+  /*     KV is the number of superdiagonals in the factor U, allowing for */
+  /*     fill-in. */
+
+  /* Parameter adjustments */
+  ab_dim1 = *ldab;
+  ab_offset = 1 + ab_dim1;
+  ab -= ab_offset;
+  --ipiv;
+
+  /* Function Body */
+  kv = *ku + *kl;
+
+  /*     Test the input parameters. */
+
+  *info = 0;
+  if (*m < 0) {
+    *info = -1;
+  } else if (*n < 0) {
+    *info = -2;
+  } else if (*kl < 0) {
+    *info = -3;
+  } else if (*ku < 0) {
+    *info = -4;
+  } else if (*ldab < *kl + kv + 1) {
+    *info = -6;
+  }
+  if (*info != 0) {
+    i__1 = -(*info);
+    xerbla_("DGBTF2", &i__1, (ftnlen)6);
+    return 0;
+  }
+
+  /*     Quick return if possible */
+
+  if (*m == 0 || *n == 0) {
+    return 0;
+  }
+
+  /*     Gaussian elimination with partial pivoting */
+
+  /*     Set fill-in elements in columns KU+2 to KV to zero. */
+
+  i__1 = min(kv,*n);
+  for (j = *ku + 2; j <= i__1; ++j) {
+    i__2 = *kl;
+    for (i__ = kv - j + 2; i__ <= i__2; ++i__) {
+      ab[i__ + j * ab_dim1] = 0.;
+      /* L10: */
+    }
+    /* L20: */
+  }
+
+  /*     JU is the index of the last column affected by the current stage */
+  /*     of the factorization. */
+
+  ju = 1;
+
+  i__1 = min(*m,*n);
+  for (j = 1; j <= i__1; ++j) {
+
+    /*        Set fill-in elements in column J+KV to zero. */
+
+    if (j + kv <= *n) {
+      i__2 = *kl;
+      for (i__ = 1; i__ <= i__2; ++i__) {
+        ab[i__ + (j + kv) * ab_dim1] = 0.;
+        /* L30: */
+      }
+    }
+
+    /*        Find pivot and test for singularity. KM is the number of */
+    /*        subdiagonal elements in the current column. */
+
+    /* Computing MIN */
+    i__2 = *kl, i__3 = *m - j;
+    km = min(i__2,i__3);
+    i__2 = km + 1;
+    jp = idamax_(&i__2, &ab[kv + 1 + j * ab_dim1], &c__1);
+    ipiv[j] = jp + j - 1;
+    if (ab[kv + jp + j * ab_dim1] != 0.) {
+      /* Computing MAX */
+      /* Computing MIN */
+      i__4 = j + *ku + jp - 1;
+      i__2 = ju, i__3 = min(i__4,*n);
+      ju = max(i__2,i__3);
+
+      /*           Apply interchange to columns J to JU. */
+
+      if (jp != 1) {
+        i__2 = ju - j + 1;
+        i__3 = *ldab - 1;
+        i__4 = *ldab - 1;
+        dswap_(&i__2, &ab[kv + jp + j * ab_dim1], &i__3, &ab[kv + 1 + 
+          j * ab_dim1], &i__4);
+      }
+
+      if (km > 0) {
+
+        /*              Compute multipliers. */
+
+        d__1 = 1. / ab[kv + 1 + j * ab_dim1];
+        dscal_(&km, &d__1, &ab[kv + 2 + j * ab_dim1], &c__1);
+
+        /*              Update trailing submatrix within the band. */
+
+        if (ju > j) {
+          i__2 = ju - j;
+          i__3 = *ldab - 1;
+          i__4 = *ldab - 1;
+          dger_(&km, &i__2, &c_b9, &ab[kv + 2 + j * ab_dim1], &c__1,
+            &ab[kv + (j + 1) * ab_dim1], &i__3, &ab[kv + 1 + 
+            (j + 1) * ab_dim1], &i__4);
+        }
+      }
+    } else {
+
+      /*           If pivot is zero, set INFO to the index of the pivot */
+      /*           unless a zero pivot has already been found. */
+
+      if (*info == 0) {
+        *info = j;
+      }
+    }
+    /* L40: */
+  }
+  return 0;
+
+  /*     End of DGBTF2 */
+
+} /* gbtf2 */
+
+//-------------------------------------------------------------------------------------------------
+
 // translated from dgbtrf,LAPACK computational routine (version 3.7.0)
 template<class T>
 int gbtrf(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab, integer *ipiv,

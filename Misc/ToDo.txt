@@ -2,7 +2,7 @@
 
 Functions that have to be translated next:
 
-dgbtf2, dlaswp, dscal, 
+ dlaswp, dscal, 
 
  
 Functions that heve been translated:
@@ -23,7 +23,7 @@ Lapack-Drivers:
 dgbsv
 
 Lapack-Computational:
-dgbtrf, dgbtrs
+dgbtrf, dgbtrs, dgbtf2,
 
 Lapack-Auxiliary: 
 ilaenv,
