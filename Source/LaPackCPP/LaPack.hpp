@@ -1,7 +1,8 @@
 #pragma once
 
 // maybe we will later need to include Blas.hpp
-#include "../GeneratedByF2C/f2c.h" // todo: move file to libf2c folder
+//#include "../GeneratedByF2C/f2c.h" // todo: move file to libf2c folder
+#include "../libf2c/f2c.h"
 
 namespace LaPackCPP {
 

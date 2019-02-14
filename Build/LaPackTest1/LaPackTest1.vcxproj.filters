@@ -140,5 +140,8 @@
     <ClInclude Include="..\..\Source\LaPackCPP\LaPack.hpp">
       <Filter>Source Files\LaPackCPP</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\libf2c\f2c.h">
+      <Filter>Source Files\libf2c</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

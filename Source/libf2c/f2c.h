@@ -22,6 +22,8 @@
 #ifndef F2C_INCLUDE
 #define F2C_INCLUDE
 
+//#define __cplusplus //  added by Robin Schmidt
+
 typedef long int integer;
 typedef unsigned long int uinteger; // added by Robin Schmidt (guesswork!!)
 typedef char *address;
@@ -302,9 +304,9 @@ extern integer e_wsli(void);
 extern integer e_wsue(void);
 extern int ef1asc_(ftnint *, ftnlen *, ftnint *, ftnlen *);
 extern integer ef1cmc_(ftnint *, ftnlen *, ftnint *, ftnlen *);
-extern double erf(double);
+//extern double erf(double);         // commented by Robin Schmidt (clashes with erf from...
 extern double erf_(float *);
-extern double erfc(double);
+//extern double erfc(double);        // ...math.h). We need math.h for log in LaPack.cpp
 extern double erfc_(float *);
 extern integer f_back(alist *);
 extern integer f_clos(cllist *);

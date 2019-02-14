@@ -1,5 +1,39 @@
 #include "LaPack.hpp"
+
+
+#include <cmath>       // maybe move elsewhere
+
 namespace LaPackCPP {
+
+// some fiddling to make it compile and link (clean up!)
+double log(doublereal x)  
+{
+  //return 0.0; //                // compiles but will obviously break at runtime
+  return ::log((double)x);      // 'log': is not a member of '`global namespace'' - wrong header?
+  //return std::log((double)x); // 'log': is not a member of 'std'
+}
+// i don't know why this is needed but i get a linker error without - maybe because we are inside
+// the LaPackCPP namespace here 
+// https://en.cppreference.com/w/cpp/numeric/math/log
+// what - it doesn't compile - 
+// global namespace also doesn't work - wtf?
+
+integer s_cmp(char *a0, char *b0, ftnlen la, ftnlen lb)
+{
+  return ::s_cmp(a0, b0, la, lb);
+}
+// without, i get:
+// LaPack.obj : error LNK2019: unresolved external symbol "long __cdecl s_cmp(char *,char *,long,long)"
+// referenced in function "long __cdecl LaPackCPP::ilaenv
+
+int s_copy(register char *a, register char *b, ftnlen la, ftnlen lb)
+{
+  ::s_copy(a, b, la, lb);
+  return 0;
+}
+
+//=================================================================================================
+
 
 // translated from dgbsv, LAPACK driver routine (version 3.7.0) -- 
 template<class T>
@@ -939,6 +973,12 @@ integer ieeeck(integer *ispec, f2c_real *zero, f2c_real *one)
 
 //-------------------------------------------------------------------------------------------------
 
+
+
+
+
+
+
 // LAPACK auxiliary routine (version 3.8.0) 
 integer ilaenv(integer *ispec, char *name__, char *opts, integer *n1, 
   integer *n2, integer *n3, integer *n4, ftnlen name_len, ftnlen opts_len)
@@ -1556,10 +1596,7 @@ L160:
 
 //-------------------------------------------------------------------------------------------------
 
-double log(doublereal x)  // i don't know why this is needed but i get a linker error without
-{
-  return log((double)x);
-}
+
 
 // LAPACK auxiliary routine (version 3.7.1)
 integer iparmq(integer *ispec, char *name__, char *opts, integer *n, integer 
@@ -1593,7 +1630,7 @@ integer iparmq(integer *ispec, char *name__, char *opts, integer *n, integer
     }
     if (nh >= 150) {
       /* Computing MAX */
-      r__1 = log((f2c_real) nh) / log(2.f);
+      r__1 = (f2c_real) (log((f2c_real) nh) / log(2.f)); // outer cast to f2c_real added by Robin Schmidt
       i__1 = 10, i__2 = nh / i_nint(&r__1);
       ns = max(i__1,i__2);
     }

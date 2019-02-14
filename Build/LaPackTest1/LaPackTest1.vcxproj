@@ -258,6 +258,7 @@
     <ClInclude Include="..\..\Source\GeneratedByF2C\f2c.h" />
     <ClInclude Include="..\..\Source\LaPackCPP\Blas.hpp" />
     <ClInclude Include="..\..\Source\LaPackCPP\LaPack.hpp" />
+    <ClInclude Include="..\..\Source\libf2c\f2c.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
