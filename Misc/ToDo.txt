@@ -1,14 +1,15 @@
 
 
+f2c functions that are needed: i_len, s_copy, s_cmp
+
 Functions that have to be translated next:
+ieeeck, iparmq
 
-dscal, 
 
- 
 Functions that heve been translated:
 
 Blas Level 1:
- daxpy, dcopy, idamax, lsame, dswap, xerbla
+ daxpy, dcopy, idamax, lsame, dscal, dswap, xerbla
 
 Blas Level 2:
  dger, dgbmv, dgemv, dtbsv, 
