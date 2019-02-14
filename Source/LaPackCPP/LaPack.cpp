@@ -727,18 +727,18 @@ int gbtrs(char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, T *a
 
   // Local variables 
   static integer i__, j, l, kd, lm;
-  extern int dger_(integer *, integer *, doublereal *,
-    doublereal *, integer *, doublereal *, integer *, doublereal *,
-    integer *);
-  extern logical lsame_(char *, char *, ftnlen, ftnlen);
-  extern int dgemv_(char *, integer *, integer *,
-    doublereal *, doublereal *, integer *, doublereal *, integer *,
-    doublereal *, doublereal *, integer *, ftnlen), dswap_(integer *,
-      doublereal *, integer *, doublereal *, integer *), dtbsv_(char *,
-        char *, char *, integer *, integer *, doublereal *, integer *,
-        doublereal *, integer *, ftnlen, ftnlen, ftnlen);
+  //extern int dger_(integer *, integer *, doublereal *,
+  //  doublereal *, integer *, doublereal *, integer *, doublereal *,
+  //  integer *);
+  //extern logical lsame_(char *, char *, ftnlen, ftnlen);
+  //extern int dgemv_(char *, integer *, integer *,
+  //  doublereal *, doublereal *, integer *, doublereal *, integer *,
+  //  doublereal *, doublereal *, integer *, ftnlen), dswap_(integer *,
+  //    doublereal *, integer *, doublereal *, integer *), dtbsv_(char *,
+  //      char *, char *, integer *, integer *, doublereal *, integer *,
+  //      doublereal *, integer *, ftnlen, ftnlen, ftnlen);
   static logical lnoti;
-  extern int xerbla(char *, integer *, ftnlen);
+  //extern int xerbla(char *, integer *, ftnlen);
   static logical notran;
 
   // Parameter adjustments
@@ -752,8 +752,8 @@ int gbtrs(char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, T *a
 
   // Function Body
   *info = 0;
-  notran = lsame_(trans, "N", (ftnlen)1, (ftnlen)1);
-  if(!notran && !lsame_(trans, "T", (ftnlen)1, (ftnlen)1) && !lsame_(
+  notran = lsame(trans, "N", (ftnlen)1, (ftnlen)1);
+  if(!notran && !lsame(trans, "T", (ftnlen)1, (ftnlen)1) && !lsame(
     trans, "C", (ftnlen)1, (ftnlen)1)) {
     *info = -1;
   }
@@ -805,9 +805,9 @@ int gbtrs(char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, T *a
         lm = min(i__2, i__3);
         l = ipiv[j];
         if(l != j) {
-          dswap_(nrhs, &b[l + b_dim1], ldb, &b[j + b_dim1], ldb);
+          swap(nrhs, &b[l + b_dim1], ldb, &b[j + b_dim1], ldb);
         }
-        dger_(&lm, nrhs, &c_b7, &ab[kd + 1 + j * ab_dim1], &c__1, &b[
+        ger(&lm, nrhs, &c_b7, &ab[kd + 1 + j * ab_dim1], &c__1, &b[
           j + b_dim1], ldb, &b[j + 1 + b_dim1], ldb);
         // L10:
       }
@@ -818,7 +818,7 @@ int gbtrs(char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, T *a
 
       // Solve U*X = B, overwriting B with X.
       i__2 = *kl + *ku;
-      dtbsv_("Upper", "No transpose", "Non-unit", n, &i__2, &ab[
+      tbsv("Upper", "No transpose", "Non-unit", n, &i__2, &ab[
         ab_offset], ldab, &b[i__ * b_dim1 + 1], &c__1, (ftnlen)5,
           (ftnlen)12, (ftnlen)8);
       // L20: 
@@ -833,7 +833,7 @@ int gbtrs(char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, T *a
 
       // Solve U**T*X = B, overwriting B with X.
       i__2 = *kl + *ku;
-      dtbsv_("Upper", "Transpose", "Non-unit", n, &i__2, &ab[ab_offset],
+      tbsv("Upper", "Transpose", "Non-unit", n, &i__2, &ab[ab_offset],
         ldab, &b[i__ * b_dim1 + 1], &c__1, (ftnlen)5, (ftnlen)9,
         (ftnlen)8);
       // L30:
@@ -845,12 +845,12 @@ int gbtrs(char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, T *a
         // Computing MIN 
         i__1 = *kl, i__2 = *n - j;
         lm = min(i__1, i__2);
-        dgemv_("Transpose", &lm, nrhs, &c_b7, &b[j + 1 + b_dim1], ldb,
+        gemv("Transpose", &lm, nrhs, &c_b7, &b[j + 1 + b_dim1], ldb,
           &ab[kd + 1 + j * ab_dim1], &c__1, &c_b23, &b[j +
           b_dim1], ldb, (ftnlen)9);
         l = ipiv[j];
         if(l != j) {
-          dswap_(nrhs, &b[l + b_dim1], ldb, &b[j + b_dim1], ldb);
+          swap(nrhs, &b[l + b_dim1], ldb, &b[j + b_dim1], ldb);
         }
         // L40:
       }
@@ -1879,10 +1879,10 @@ int laswp(integer *n, T *a, integer *lda, integer *k1, integer *k2, integer *ipi
 template int gbtrf(integer *m, integer *n, integer *kl, integer *ku, double *ab, integer *ldab, 
   integer *ipiv, integer *info);
 
-/*
 template int gbtrs(char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, double *ab,
     integer *ldab, integer *ipiv, double *b, integer *ldb, integer *info, ftnlen trans_len);
 
+/*
 template int gbsv(long int *n, long int *kl, long int *ku, long int *nrhs, double *ab, 
   long int *ldab, long int *ipiv, double *b, long int *ldb, long int *info);
 */
