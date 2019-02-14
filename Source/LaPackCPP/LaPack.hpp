@@ -211,6 +211,24 @@ int gbtrs(char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, T *a
 
 //-------------------------------------------------------------------------------------------------
 
+/** IEEECK is called from the ILAENV to verify that Infinity and possibly NaN arithmetic is safe
+(i.e. will not trap).
+
+Arguments:
+ISPEC: Specifies whether to test just for inifinity arithmetic or whether to test for infinity 
+       and NaN arithmetic.
+       = 0: Verify infinity arithmetic only.
+       = 1: Verify infinity and NaN arithmetic.
+ZERO:  Must contain the value 0.0. This is passed to prevent the compiler from optimizing away this
+       code.
+ONE:   Must contain the value 1.0. This is passed to prevent the compiler from optimizing away this 
+       code.
+RETURN VALUE: = 0:  Arithmetic failed to produce the correct answers
+              = 1:  Arithmetic produced the correct answers  */
+integer ieeeck(integer *ispec, f2c_real *zero, f2c_real *one);
+
+//-------------------------------------------------------------------------------------------------
+
 /**
 
 Purpose:
@@ -288,7 +306,6 @@ integer ilaenv(integer *ispec, char *name__, char *opts, integer *n1,
 
 
 //-------------------------------------------------------------------------------------------------
-
 
 /**
 Purpose:
