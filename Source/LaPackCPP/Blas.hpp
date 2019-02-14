@@ -70,6 +70,17 @@ single characters to be compared. */
 logical lsame(char *ca, char *cb, ftnlen ca_len, ftnlen cb_len);
 
 
+/** scal scales a vector by a constant. uses unrolled loops for increment equal to 1.
+
+Arguments:
+N:    number of elements in input vector(s)
+DA:   On entry, DA specifies the scalar alpha.
+DX:   array, dimension ( 1 + ( N - 1 )*abs( INCX ) )
+INCX: storage spacing between elements of DX */
+template<class T>
+int scal(integer *n, T *da, T *dx, integer *incx);
+
+
 /** Interchanges two vectors. uses unrolled loops for increments equal to 1. 
 
 Arguments:
