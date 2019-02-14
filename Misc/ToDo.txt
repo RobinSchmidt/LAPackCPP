@@ -27,3 +27,8 @@ dgbtrf, dgbtrs, dgbtf2,
 
 Lapack-Auxiliary: 
 ilaenv,
+
+
+Some functions define static local variables (for example laswp) - maybe we 
+should use non-static local varibales instead? because when two different 
+threads use a routine concurrently, each needs it own local variables.
