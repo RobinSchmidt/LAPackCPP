@@ -170,6 +170,7 @@ INCX:  On entry, INCX specifies the increment for the elements of X. INCX must n
 template<class T>
 int tbsv(char *uplo, char *trans, char *diag, integer *n, integer *k, T *a, integer *lda,
   T *x, integer *incx, ftnlen uplo_len, ftnlen trans_len, ftnlen diag_len);
+// move down (should be in alphabetical order)
 
 //-------------------------------------------------------------------------------------------------
 
