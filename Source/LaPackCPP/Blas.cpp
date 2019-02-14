@@ -1,4 +1,7 @@
+#include <cmath> 
 #include "Blas.hpp"
+
+
 namespace BlasCPP {
 
 //=================================================================================================
@@ -1806,6 +1809,13 @@ int trsm(char *side, char *uplo, char *transa, char *diag, integer *m, integer *
 template int axpy(long int* n, double *da, double *dx, long int *incx, 
   double *dy, long int *incy);
 
+template int copy(long *n, double *dx, long *incx, double *dy, long *incy);
+
+template long iamax(long *n, double *dx, long *incx);
+
+template int scal(long *n, double *da, double *dx, long *incx);
+
+template int swap(long *n, double *dx, long *incx, double *dy, long *incy);
 
 // Level 2:
 
