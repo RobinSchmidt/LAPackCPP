@@ -24,6 +24,19 @@ std::vector<double> rangeVector(int N, double start, double inc)
   return v;
 }
 
+/** Returns the maximum distance (i.e. absolute value of difference) of the elements of x and y. */
+template<class T>
+T maxDistance(int N, T* x, T* y)
+{
+  T dMax = T(0);
+  for(int i = 0; i < N; i++) {
+    T d = abs(x[i] - y[i]);
+    if(d > dMax)
+      dMax = d;
+  }
+  return dMax;
+}
+
 /** Compares arrays for equality with optional error tolerance. */
 template<class T>
 bool arraysEqual(T* x, T* y, int N, T tolerance = T(0))
@@ -215,7 +228,6 @@ bool gbsvUnitTest()
     68,78,88,98, _, _,
     79,89,99, _, _, _ };   // 9th column
 
-
   long int incX = 1;
   long int incY = 1;
   ftnlen trans_len = 0;      // ftnlen is typedef'd as "long" in f2c.h - i don't know, what this is
@@ -234,12 +246,13 @@ bool gbsvUnitTest()
 
   // We have computed b = A*x - now we try to retrieve x by solving the linear system for x
   double x2[N]; // that's where the solver should write the result into
-  long int nrhs1_ = 1, ldab_ = ldab, ldb_ = ldb; // first, we have just one rhs
-  //gbsv(&N_, &kl_, &ku_, &nrhs1_, ab, &ldab_, ipiv, b, &ldb_, &info);
-
-
-  //int gbsv(long int *n, long int *kl, long int *ku, long int *nrhs, T *ab, long int *ldab, 
-  //long int *ipiv, T *b, long int *ldb, long int *info);
+  long iOne = 1;
+  copy(&N_, b, &iOne, x2, &iOne); 
+  long nrhs1_ = 1, ldab_ = ldab, ldb_ = ldb; // first, we have just one rhs
+  gbsv(&N_, &kl_, &ku_, &nrhs1_, ab, &ldab_, ipiv, x2, &ldb_, &info);
+  double error = maxDistance(N, x, x2);
+  // ok, the result i correct but numerically rather imprecise (last 8 decimal digits are wrong) 
+  // error = 1.e-9 -> try gbsvx and gbsvxx
 
   return r;
 }

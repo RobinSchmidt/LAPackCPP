@@ -52,6 +52,20 @@ an original routine has to be modified to be digestible for the translator, the
 original version will be kept with the appendix _original appended to its 
 filename. 
 
+The documentation must then be copied into the suitable .hpp file and edited 
+for text-formatting and the source code must be copied into the corresponding
+.cpp file. Be sure to look at the top of the converted file - sometimes there 
+are global variables decclared at the top which should become local variables
+for the cpp routine. Also, the declarations of the used functions may have to 
+be commented out (or even deleted) - because if they are Blas routines, the 
+linker will wrongly look for them in the LaPackCPP namespace, if these 
+declarations remain there - without them, it correctly finds them in the
+BlasCPP namespace. Function names will have to be edited for all the calls
+that are made inside the routine.
+
+
+
+
 
 Maybe after a converted file, like "daxpy.c", works, make a templated version 
 "taxpy.cpp" or just "axpy.cpp" ...or combine a lot of these functions into a 
