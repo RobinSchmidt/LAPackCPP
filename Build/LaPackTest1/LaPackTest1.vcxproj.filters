@@ -120,6 +120,15 @@
     <ClCompile Include="..\..\Source\GeneratedByF2C\iparmq.c">
       <Filter>Source Files\GeneratedByF2C</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\libf2c\i_nint.c">
+      <Filter>Source Files\libf2c</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\libf2c\s_cmp.c">
+      <Filter>Source Files\libf2c</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\libf2c\s_copy.c">
+      <Filter>Source Files\libf2c</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\GeneratedByF2C\f2c.h">

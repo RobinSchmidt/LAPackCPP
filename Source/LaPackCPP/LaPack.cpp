@@ -966,9 +966,9 @@ integer ilaenv(integer *ispec, char *name__, char *opts, integer *n1,
   static logical cname;
   static integer nbmin;
   static logical sname;
-  extern integer ieeeck_(integer *, f2c_real *, f2c_real *);
+  extern integer ieeeck(integer *, f2c_real *, f2c_real *);
   static char subnam[16];
-  extern integer iparmq_(integer *, char *, char *, integer *, integer *, 
+  extern integer iparmq(integer *, char *, char *, integer *, integer *, 
     integer *, integer *, ftnlen, ftnlen);
 
 
@@ -1527,7 +1527,7 @@ L140:
   /*     ILAENV = 0 */
   ret_val = 1;
   if (ret_val == 1) {
-    ret_val = ieeeck_(&c__1, &c_b173, &c_b174);
+    ret_val = ieeeck(&c__1, &c_b173, &c_b174);
   }
   return ret_val;
 
@@ -1538,7 +1538,7 @@ L150:
   /*     ILAENV = 0 */
   ret_val = 1;
   if (ret_val == 1) {
-    ret_val = ieeeck_(&c__0, &c_b173, &c_b174);
+    ret_val = ieeeck(&c__0, &c_b173, &c_b174);
   }
   return ret_val;
 
@@ -1546,7 +1546,7 @@ L160:
 
   /*     12 <= ISPEC <= 16: xHSEQR or related subroutines. */
 
-  ret_val = iparmq_(ispec, name__, opts, n1, n2, n3, n4, name_len, opts_len)
+  ret_val = iparmq(ispec, name__, opts, n1, n2, n3, n4, name_len, opts_len)
     ;
   return ret_val;
 
@@ -1555,6 +1555,11 @@ L160:
 } /* ilaenv_ */
 
 //-------------------------------------------------------------------------------------------------
+
+double log(doublereal x)  // i don't know why this is needed but i get a linker error without
+{
+  return log((double)x);
+}
 
 // LAPACK auxiliary routine (version 3.7.1)
 integer iparmq(integer *ispec, char *name__, char *opts, integer *n, integer 
