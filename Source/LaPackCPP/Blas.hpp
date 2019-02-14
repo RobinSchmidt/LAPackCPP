@@ -195,9 +195,9 @@ A:     array, dimension ( LDA, N ). Before entry, the leading m by n part of the
        contain the matrix of coefficients. On exit, A is overwritten by the updated matrix.
 LDA:   On entry, LDA specifies the first dimension of A as declared in the calling (sub) program. 
        LDA must be at least max( 1, m ). */
-int ger(integer *m, integer *n, doublereal *alpha, doublereal *x, integer *incx, doublereal *y, 
-  integer *incy, doublereal *a, integer *lda);
-// templatize!
+template<class T>
+int ger(integer *m, integer *n, T *alpha, T *x, integer *incx, T *y, integer *incy, T *a, 
+  integer *lda);
 
 //-------------------------------------------------------------------------------------------------
 

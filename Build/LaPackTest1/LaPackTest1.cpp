@@ -7,7 +7,7 @@
 #include "../../Source/Tests/TestUtils.cpp"
 
 // todo: make a unity build and include file for all converted c code:
-#include "../../Source/GeneratedByF2C/daxpy.c" // maybe get rid...
+//#include "../../Source/GeneratedByF2C/daxpy.c" // maybe get rid...
 
 #include "../../Source/LaPackCPP/Blas.hpp"
 using namespace BlasCPP;
@@ -270,7 +270,8 @@ int main()
   //  integer *incx, doublereal *dy, integer *incy)
 
   long int incX = 1, incY = 1;
-  int result = daxpy_(&N, &a, &x[0], &incX, &y[0], &incY);
+  int result; 
+  //result = daxpy_(&N, &a, &x[0], &incX, &y[0], &incY);
   // int result = daxpy_(&N, &a[0], &x[0], &incX, &y[0], &incY);
 
   result = axpy(&N, &a, &x[0], &incX, &y[0], &incY);

@@ -450,18 +450,18 @@ int xerbla(char *srname, integer *info, ftnlen srname_len)
 
 //-------------------------------------------------------------------------------------------------
 
-// translated from dger, Reference BLAS level2 routine (version 3.7.0) -- 
-int ger(integer *m, integer *n, doublereal *alpha, doublereal *x, integer *incx, doublereal *y, 
-  integer *incy, doublereal *a, integer *lda)
+// translated from dger, Reference BLAS level2 routine (version 3.7.0)
+template<class T>
+int ger(integer *m, integer *n, T *alpha, T *x, integer *incx, T *y, integer *incy, T *a, 
+  integer *lda)
 {
   // System generated locals
   integer a_dim1, a_offset, i__1, i__2;
 
   // Local variables
   static integer i__, j, ix, jy, kx, info;
-  static doublereal temp;
+  static T temp;
   extern int xerbla(char *, integer *, ftnlen);
-
 
   // Parameter adjustments
   --x;
@@ -1801,8 +1801,19 @@ int trsm(char *side, char *uplo, char *transa, char *diag, integer *m, integer *
 // the i just need to write the instantiation code once and copy/rename the files and just change 
 // the #define - easier to maintain
 
+// Level 1:
+
 template int axpy(long int* n, double *da, double *dx, long int *incx, 
   double *dy, long int *incy);
+
+
+// Level 2:
+
+//template int ger(integer *m, integer *n, doublereal *alpha, doublereal *x, integer *incx, 
+//  doublereal *y, integer *incy, doublereal *a, integer *lda);
+
+template int ger(long *m, long *n, double *alpha, double *x, long *incx, double *y, long *incy, 
+  double *a, long *lda);
 
 template int gbmv(char *trans, integer *m, integer *n, integer *kl, integer *ku, double *alpha, 
   double *a, integer *lda, double *x, integer *incx, double *beta, double *y, integer *incy, 

@@ -1,7 +1,8 @@
+#include "Blas.hpp"
 #include "LaPack.hpp"
-
-
 #include <cmath>       // maybe move elsewhere
+
+using namespace BlasCPP;
 
 namespace LaPackCPP {
 
@@ -104,6 +105,10 @@ template<class T>
 int gbtf2(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab, integer *ipiv, 
   integer *info)
 {
+  /* Table of constant values */
+  static integer c__1 = 1;
+  static doublereal c_b9 = -1.;
+
   /* System generated locals */
   integer ab_dim1, ab_offset, i__1, i__2, i__3, i__4;
   T d__1;
@@ -269,29 +274,31 @@ int gbtrf(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab
   // Local variables 
   static integer i__, j, i2, i3, j2, j3, k2, jb, nb, ii, jj, jm, ip, jp, km,
     ju, kv, nw;
-  extern int dger_(integer *, integer *, T *,
-    T *, integer *, T *, integer *, T *,
-    integer *);
+  // we need to comment these declarations - otherwise, the linker tries to find those functions
+  // in the LaPackCPP namespace (but they belong to the BlasCPP namespace)
+  //extern int ger(integer *, integer *, T *,
+  //  T *, integer *, T *, integer *, T *,
+  //  integer *);
   static T temp;
-  extern int dscal_(integer *, T *, T *,
-    integer *), dgemm_(char *, char *, integer *, integer *, integer *
-      , T *, T *, integer *, T *, integer *,
-      T *, T *, integer *, ftnlen, ftnlen), dcopy_(
-        integer *, T *, integer *, T *, integer *),
-    dswap_(integer *, T *, integer *, T *, integer *
-      );
+  //extern int scal(integer *, T *, T *,
+  //  integer *), gemm(char *, char *, integer *, integer *, integer *
+  //    , T *, T *, integer *, T *, integer *,
+  //    T *, T *, integer *, ftnlen, ftnlen), dcopy_(
+  //      integer *, T *, integer *, T *, integer *),
+  //  swap(integer *, T *, integer *, T *, integer *
+  //    );
   static T work13[4160], work31[4160];
-  extern int dtrsm_(char *, char *, char *, char *,
-    integer *, integer *, T *, T *, integer *,
-    T *, integer *, ftnlen, ftnlen, ftnlen, ftnlen), dgbtf2_(
-      integer *, integer *, integer *, integer *, T *, integer
-      *, integer *, integer *);
-  extern integer idamax_(integer *, T *, integer *);
-  extern int xerbla_(char *, integer *, ftnlen);
-  extern integer ilaenv_(integer *, char *, char *, integer *, integer *,
-    integer *, integer *, ftnlen, ftnlen);
-  extern int dlaswp_(integer *, T *, integer *,
-    integer *, integer *, integer *, integer *);
+  //extern int trsm(char *, char *, char *, char *,
+  //  integer *, integer *, T *, T *, integer *,
+  //  T *, integer *, ftnlen, ftnlen, ftnlen, ftnlen), dgbtf2_(
+  //    integer *, integer *, integer *, integer *, T *, integer
+  //    *, integer *, integer *);
+  //extern integer iamax(integer *, T *, integer *);
+  //extern int xerbla_(char *, integer *, ftnlen);
+  //extern integer ilaenv(integer *, char *, char *, integer *, integer *,
+  //  integer *, integer *, ftnlen, ftnlen);
+  //extern int laswp(integer *, T *, integer *,
+  //  integer *, integer *, integer *, integer *);
 
 
   // KV is the number of superdiagonals in the factor U, allowing for fill-in
@@ -324,7 +331,7 @@ int gbtrf(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab
   }
   if(*info != 0) {
     i__1 = -(*info);
-    xerbla_("DGBTRF", &i__1, (ftnlen)6);
+    xerbla("DGBTRF", &i__1, (ftnlen)6);
     return 0;
   }
 
@@ -334,7 +341,7 @@ int gbtrf(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab
   }
 
   // Determine the block size for this environment
-  nb = ilaenv_(&c__1, "DGBTRF", " ", m, n, kl, ku, (ftnlen)6, (ftnlen)1);
+  nb = ilaenv(&c__1, "DGBTRF", " ", m, n, kl, ku, (ftnlen)6, (ftnlen)1);
   // The block size must not exceed the limit set by the size of the
   // local arrays WORK13 and WORK31.
 
@@ -342,7 +349,7 @@ int gbtrf(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab
 
   if(nb <= 1 || nb > *kl) {
     // Use unblocked code
-    dgbtf2_(m, n, kl, ku, &ab[ab_offset], ldab, &ipiv[1], info);
+    gbtf2(m, n, kl, ku, &ab[ab_offset], ldab, &ipiv[1], info);
   }
   else {
 
@@ -432,7 +439,7 @@ int gbtrf(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab
         i__4 = *kl, i__5 = *m - jj;
         km = min(i__4, i__5);
         i__4 = km + 1;
-        jp = idamax_(&i__4, &ab[kv + 1 + jj * ab_dim1], &c__1);
+        jp = iamax(&i__4, &ab[kv + 1 + jj * ab_dim1], &c__1);
         ipiv[jj] = jp + jj - j;
         if(ab[kv + jp + jj * ab_dim1] != 0.) {
           // Computing MAX 
@@ -447,7 +454,7 @@ int gbtrf(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab
 
               i__4 = *ldab - 1;
               i__5 = *ldab - 1;
-              dswap_(&jb, &ab[kv + 1 + jj - j + j * ab_dim1], &
+              swap(&jb, &ab[kv + 1 + jj - j + j * ab_dim1], &
                 i__4, &ab[kv + jp + jj - j + j * ab_dim1],
                 &i__5);
             }
@@ -457,13 +464,13 @@ int gbtrf(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab
             // which are stored in the work array WORK31 
               i__4 = jj - j;
               i__5 = *ldab - 1;
-              dswap_(&i__4, &ab[kv + 1 + jj - j + j * ab_dim1],
+              swap(&i__4, &ab[kv + 1 + jj - j + j * ab_dim1],
                 &i__5, &work31[jp + jj - j - *kl - 1], &
                 c__65);
               i__4 = j + jb - jj;
               i__5 = *ldab - 1;
               i__6 = *ldab - 1;
-              dswap_(&i__4, &ab[kv + 1 + jj * ab_dim1], &i__5, &
+              swap(&i__4, &ab[kv + 1 + jj * ab_dim1], &i__5, &
                 ab[kv + jp + jj * ab_dim1], &i__6);
             }
           }
@@ -471,7 +478,7 @@ int gbtrf(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab
           // Compute multipliers 
 
           d__1 = 1. / ab[kv + 1 + jj * ab_dim1];
-          dscal_(&km, &d__1, &ab[kv + 2 + jj * ab_dim1], &c__1);
+          scal(&km, &d__1, &ab[kv + 2 + jj * ab_dim1], &c__1);
 
           // Update trailing submatrix within the band and within 
           // the current block. JM is the index of the last column 
@@ -484,7 +491,7 @@ int gbtrf(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab
             i__4 = jm - jj;
             i__5 = *ldab - 1;
             i__6 = *ldab - 1;
-            dger_(&km, &i__4, &c_b18, &ab[kv + 2 + jj * ab_dim1],
+            ger(&km, &i__4, &c_b18, &ab[kv + 2 + jj * ab_dim1],
               &c__1, &ab[kv + (jj + 1) * ab_dim1], &i__5, &
               ab[kv + 1 + (jj + 1) * ab_dim1], &i__6);
           }
@@ -505,7 +512,7 @@ int gbtrf(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab
         i__4 = jj - j + 1;
         nw = min(i__4, i3);
         if(nw > 0) {
-          dcopy_(&nw, &ab[kv + *kl + 1 - jj + j + jj * ab_dim1], &
+          copy(&nw, &ab[kv + *kl + 1 - jj + j + jj * ab_dim1], &
             c__1, &work31[(jj - j + 1) * 65 - 65], &c__1);
         }
         // L80: 
@@ -524,7 +531,7 @@ int gbtrf(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab
         // Use DLASWP to apply the row interchanges to A12, A22, and 
         // A32.
         i__3 = *ldab - 1;
-        dlaswp_(&j2, &ab[kv + 1 - jb + (j + jb) * ab_dim1], &i__3, &
+        laswp(&j2, &ab[kv + 1 - jb + (j + jb) * ab_dim1], &i__3, &
           c__1, &jb, &ipiv[j], &c__1);
 
         // Adjust the pivot indices.
@@ -561,7 +568,7 @@ int gbtrf(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab
           // Update A12 
           i__3 = *ldab - 1;
           i__4 = *ldab - 1;
-          dtrsm_("Left", "Lower", "No transpose", "Unit", &jb, &j2,
+          trsm("Left", "Lower", "No transpose", "Unit", &jb, &j2,
             &c_b31, &ab[kv + 1 + j * ab_dim1], &i__3, &ab[kv
             + 1 - jb + (j + jb) * ab_dim1], &i__4, (ftnlen)4,
             (ftnlen)5, (ftnlen)12, (ftnlen)4);
@@ -572,7 +579,7 @@ int gbtrf(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab
             i__3 = *ldab - 1;
             i__4 = *ldab - 1;
             i__5 = *ldab - 1;
-            dgemm_("No transpose", "No transpose", &i2, &j2, &jb,
+            gemm("No transpose", "No transpose", &i2, &j2, &jb,
               &c_b18, &ab[kv + 1 + jb + j * ab_dim1], &i__3,
               &ab[kv + 1 - jb + (j + jb) * ab_dim1], &i__4,
               &c_b31, &ab[kv + 1 + (j + jb) * ab_dim1], &
@@ -584,7 +591,7 @@ int gbtrf(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab
             // Update A32
             i__3 = *ldab - 1;
             i__4 = *ldab - 1;
-            dgemm_("No transpose", "No transpose", &i3, &j2, &jb,
+            gemm("No transpose", "No transpose", &i3, &j2, &jb,
               &c_b18, work31, &c__65, &ab[kv + 1 - jb + (j
                 + jb) * ab_dim1], &i__3, &c_b31, &ab[kv + *kl
               + 1 - jb + (j + jb) * ab_dim1], &i__4, (
@@ -609,7 +616,7 @@ int gbtrf(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab
 
           // Update A13 in the work array 
           i__3 = *ldab - 1;
-          dtrsm_("Left", "Lower", "No transpose", "Unit", &jb, &j3,
+          trsm("Left", "Lower", "No transpose", "Unit", &jb, &j3,
             &c_b31, &ab[kv + 1 + j * ab_dim1], &i__3, work13,
             &c__65, (ftnlen)4, (ftnlen)5, (ftnlen)12, (ftnlen)
             4);
@@ -618,7 +625,7 @@ int gbtrf(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab
             // Update A23 
             i__3 = *ldab - 1;
             i__4 = *ldab - 1;
-            dgemm_("No transpose", "No transpose", &i2, &j3, &jb,
+            gemm("No transpose", "No transpose", &i2, &j3, &jb,
               &c_b18, &ab[kv + 1 + jb + j * ab_dim1], &i__3,
               work13, &c__65, &c_b31, &ab[jb + 1 + (j + kv)
               * ab_dim1], &i__4, (ftnlen)12, (ftnlen)12);
@@ -627,7 +634,7 @@ int gbtrf(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab
           if(i3 > 0) {
             // Update A33 
             i__3 = *ldab - 1;
-            dgemm_("No transpose", "No transpose", &i3, &j3, &jb,
+            gemm("No transpose", "No transpose", &i3, &j3, &jb,
               &c_b18, work31, &c__65, work13, &c__65, &
               c_b31, &ab[*kl + 1 + (j + kv) * ab_dim1], &
               i__3, (ftnlen)12, (ftnlen)12);
@@ -672,7 +679,7 @@ int gbtrf(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab
             i__4 = jj - j;
             i__5 = *ldab - 1;
             i__6 = *ldab - 1;
-            dswap_(&i__4, &ab[kv + 1 + jj - j + j * ab_dim1], &
+            swap(&i__4, &ab[kv + 1 + jj - j + j * ab_dim1], &
               i__5, &ab[kv + jp + jj - j + j * ab_dim1], &
               i__6);
           }
@@ -680,7 +687,7 @@ int gbtrf(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab
             // The interchange does affect A31
             i__4 = jj - j;
             i__5 = *ldab - 1;
-            dswap_(&i__4, &ab[kv + 1 + jj - j + j * ab_dim1], &
+            swap(&i__4, &ab[kv + 1 + jj - j + j * ab_dim1], &
               i__5, &work31[jp + jj - j - *kl - 1], &c__65);
           }
         }
@@ -690,7 +697,7 @@ int gbtrf(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab
         i__4 = i3, i__5 = jj - j + 1;
         nw = min(i__4, i__5);
         if(nw > 0) {
-          dcopy_(&nw, &work31[(jj - j + 1) * 65 - 65], &c__1, &ab[
+          copy(&nw, &work31[(jj - j + 1) * 65 - 65], &c__1, &ab[
             kv + *kl + 1 - jj + j + jj * ab_dim1], &c__1);
         }
         // L170:
@@ -1864,31 +1871,14 @@ int laswp(integer *n, T *a, integer *lda, integer *k1, integer *k2, integer *ipi
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // commented because of linker errors - now all these subroutines:
 // dgemm*, dcopy*, dswap, dtrsm, idamax, ilaenv, dgemv, dtbsv, dgbtf2, dlaswp,  dscal, 
 // have to translated to fix the linker errors
 
-/*
 template int gbtrf(integer *m, integer *n, integer *kl, integer *ku, double *ab, integer *ldab, 
   integer *ipiv, integer *info);
 
+/*
 template int gbtrs(char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, double *ab,
     integer *ldab, integer *ipiv, double *b, integer *ldb, integer *info, ftnlen trans_len);
 
