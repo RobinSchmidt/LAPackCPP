@@ -46,13 +46,13 @@ int gbsv(long int *n, long int *kl, long int *ku, long int *nrhs, T *ab, long in
 
   // Local variables
   // Subroutine
-  extern  int
-    gbtrf(long int *, long int *, long int *,
-      long int *, double *, long int *, long int *, long int *),
-    xerbla_(char *, long int *, ftnlen),
-    gbtrs(char *, long int *,
-      long int *, long int *, long int *, double *, long int *, long int *, double *,
-      long int *, long int *, ftnlen);
+  //extern  int
+  //  gbtrf(long int *, long int *, long int *,
+  //    long int *, double *, long int *, long int *, long int *),
+  //  xerbla_(char *, long int *, ftnlen),
+  //  gbtrs(char *, long int *,
+  //    long int *, long int *, long int *, double *, long int *, long int *, double *,
+  //    long int *, long int *, ftnlen);
 
   // Parameter adjustments
   ab_dim1 = *ldab;
@@ -85,7 +85,7 @@ int gbsv(long int *n, long int *kl, long int *ku, long int *nrhs, T *ab, long in
   }
   if(*info != 0) {
     i__1 = -(*info);
-    xerbla_("DGBSV ", &i__1, (ftnlen)6);
+    xerbla("DGBSV ", &i__1, (ftnlen)6);
     return 0;
   }
 
@@ -1882,16 +1882,8 @@ template int gbtrf(integer *m, integer *n, integer *kl, integer *ku, double *ab,
 template int gbtrs(char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, double *ab,
     integer *ldab, integer *ipiv, double *b, integer *ldb, integer *info, ftnlen trans_len);
 
-/*
 template int gbsv(long int *n, long int *kl, long int *ku, long int *nrhs, double *ab, 
   long int *ldab, long int *ipiv, double *b, long int *ldb, long int *info);
-*/
-
-
-
-
-
-
 
 
 }
