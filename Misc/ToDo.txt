@@ -2,18 +2,16 @@
 
 Functions that have to be translated next:
 
-dtbsv, dgbtf2, dlaswp,  dscal, 
+dgbtf2, dlaswp, dscal, 
 
  
- 
-
 Functions that heve been translated:
 
 Blas Level 1:
 daxpy, dcopy, idamax, lsame, dswap, xerbla
 
 Blas Level 2:
-dger, dgbmv, dgemv
+dger, dgbmv, dgemv, dtbsv, 
 
 Blas Level 3:
 dgemm, dtrsm 
