@@ -5,35 +5,34 @@
 
 namespace LaPackCPP {
 
-// some fiddling to make it compile and link (clean up!)
+// some fiddling to make it compile and link - those functions are defined outside the LaPackCPP
+// namespace, so in order to not have to enter a :: each time a function is called, we use this
+// wrappers/delegators here inside the namspace - todo: clean this up! try to get rid and if
+// impossible, at least inline them and maybe move to some other file
+
 double log(doublereal x)  
 {
-  //return 0.0; //                // compiles but will obviously break at runtime
-  return ::log((double)x);      // 'log': is not a member of '`global namespace'' - wrong header?
-  //return std::log((double)x); // 'log': is not a member of 'std'
+  return ::log((double)x); 
 }
-// i don't know why this is needed but i get a linker error without - maybe because we are inside
-// the LaPackCPP namespace here 
-// https://en.cppreference.com/w/cpp/numeric/math/log
-// what - it doesn't compile - 
-// global namespace also doesn't work - wtf?
-
+integer i_len(char *s, ftnlen n)
+{
+  return ::i_len(s, n);
+}
 integer s_cmp(char *a0, char *b0, ftnlen la, ftnlen lb)
 {
   return ::s_cmp(a0, b0, la, lb);
 }
-// without, i get:
-// LaPack.obj : error LNK2019: unresolved external symbol "long __cdecl s_cmp(char *,char *,long,long)"
-// referenced in function "long __cdecl LaPackCPP::ilaenv
-
 int s_copy(register char *a, register char *b, ftnlen la, ftnlen lb)
 {
   ::s_copy(a, b, la, lb);
   return 0;
 }
+integer i_nint(f2c_real *x)
+{
+  return ::i_nint(x);
+}
 
 //=================================================================================================
-
 
 // translated from dgbsv, LAPACK driver routine (version 3.7.0) -- 
 template<class T>

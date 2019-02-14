@@ -129,6 +129,9 @@
     <ClCompile Include="..\..\Source\libf2c\s_copy.c">
       <Filter>Source Files\libf2c</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\libf2c\i_len.c">
+      <Filter>Source Files\libf2c</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\GeneratedByF2C\f2c.h">
