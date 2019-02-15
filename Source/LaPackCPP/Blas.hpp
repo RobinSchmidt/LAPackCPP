@@ -68,7 +68,10 @@ integer iamax(integer *n, T *dx, integer *incx);
 /** LSAME returns .TRUE. if CA is the same letter as CB regardless of case. CA and CB specify the 
 single characters to be compared. */
 logical lsame(char *ca, char *cb, ftnlen ca_len, ftnlen cb_len);
-
+//inline logical lsame_(char *ca, char *cb, ftnlen ca_len, ftnlen cb_len) 
+//{ 
+//  return lsame(ca, cb, ca_len, cb_len); 
+//} // temporary - so code can use both lsame and lsame_ (less editing work)
 
 /** scal scales a vector by a constant. uses unrolled loops for increment equal to 1.
 
