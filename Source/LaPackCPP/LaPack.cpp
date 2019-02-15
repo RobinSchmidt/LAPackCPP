@@ -24,11 +24,14 @@ inline long max(long x, long y) {  return std::max(x, y); }
 inline double min(double x, double y) {  return std::min(x, y); }
 inline double max(double x, double y) {  return std::max(x, y); }
 
+inline double sqrt(double x)  { return ::sqrt(x); }
 
 double log(doublereal x)  
 {
   return ::log((double)x); 
 }
+
+
 integer i_len(char *s, ftnlen n)
 {
   return ::i_len(s, n);
@@ -812,17 +815,17 @@ int gbcon(char *norm, integer *n, integer *kl, integer *ku, T *ab, integer *ldab
     integer *);
   static integer kase1;
   static T scale;
-  extern logical lsame_(char *, char *, ftnlen, ftnlen);
+  //extern logical lsame_(char *, char *, ftnlen, ftnlen);
   static integer isave[3];
   extern /* Subroutine */ int drscl_(integer *, doublereal *, doublereal *, 
     integer *);
   static logical lnoti;
-  extern /* Subroutine */ int daxpy_(integer *, doublereal *, doublereal *, 
-    integer *, doublereal *, integer *), dlacn2_(integer *, 
-      doublereal *, doublereal *, integer *, doublereal *, integer *, 
-      integer *);
+  //extern /* Subroutine */ int daxpy_(integer *, doublereal *, doublereal *, 
+  //  integer *, doublereal *, integer *), dlacn2_(integer *, 
+  //    doublereal *, doublereal *, integer *, doublereal *, integer *, 
+  //    integer *);
   //extern doublereal dlamch_(char *, ftnlen);
-  extern integer idamax_(integer *, doublereal *, integer *);
+  //extern integer idamax_(integer *, doublereal *, integer *);
   extern /* Subroutine */ int dlatbs_(char *, char *, char *, char *, 
     integer *, integer *, doublereal *, integer *, doublereal *, 
     doublereal *, doublereal *, integer *, ftnlen, ftnlen, ftnlen, 
@@ -3213,7 +3216,7 @@ T langb(char *norm, integer *n, integer *kl, integer *ku, T *ab, integer *ldab, 
   /* Local variables */
   static integer i__, j, k, l;
   static T sum, temp, scale;
-  extern logical lsame_(char *, char *, ftnlen, ftnlen);
+  //extern logical lsame_(char *, char *, ftnlen, ftnlen);
   static T value;
   extern logical disnan_(doublereal *);
   extern /* Subroutine */ int dlassq_(integer *, T *, integer *, T *, T *);
@@ -3227,7 +3230,7 @@ T langb(char *norm, integer *n, integer *kl, integer *ku, T *ab, integer *ldab, 
   /* Function Body */
   if (*n == 0) {
     value = 0.;
-  } else if (lsame_(norm, "M", (ftnlen)1, (ftnlen)1)) {
+  } else if (lsame(norm, "M", (ftnlen)1, (ftnlen)1)) {
 
     /*        Find max(abs(A(i,j))). */
 
@@ -3248,7 +3251,7 @@ T langb(char *norm, integer *n, integer *kl, integer *ku, T *ab, integer *ldab, 
       }
       /* L20: */
     }
-  } else if (lsame_(norm, "O", (ftnlen)1, (ftnlen)1) || *(unsigned char *)
+  } else if (lsame(norm, "O", (ftnlen)1, (ftnlen)1) || *(unsigned char *)
     norm == '1') {
 
     /*        Find norm1(A). */
@@ -3271,7 +3274,7 @@ T langb(char *norm, integer *n, integer *kl, integer *ku, T *ab, integer *ldab, 
       }
       /* L40: */
     }
-  } else if (lsame_(norm, "I", (ftnlen)1, (ftnlen)1)) {
+  } else if (lsame(norm, "I", (ftnlen)1, (ftnlen)1)) {
 
     /*        Find normI(A). */
 
@@ -3303,7 +3306,7 @@ T langb(char *norm, integer *n, integer *kl, integer *ku, T *ab, integer *ldab, 
       }
       /* L80: */
     }
-  } else if (lsame_(norm, "F", (ftnlen)1, (ftnlen)1) || lsame_(norm, "E", (
+  } else if (lsame(norm, "F", (ftnlen)1, (ftnlen)1) || lsame(norm, "E", (
     ftnlen)1, (ftnlen)1)) {
 
     /*        Find normF(A). */
@@ -3534,7 +3537,7 @@ T lantb(char *norm, char *uplo, char *diag, integer *n, integer *k, T *ab, integ
   static integer i__, j, l;
   static T sum, scale;
   static logical udiag;
-  extern logical lsame_(char *, char *, ftnlen, ftnlen);
+  //extern logical lsame_(char *, char *, ftnlen, ftnlen);
   static T value;
   extern logical disnan_(T *);
   extern /* Subroutine */ int dlassq_(integer *, T *, integer *, T *, T *);
@@ -3548,13 +3551,13 @@ T lantb(char *norm, char *uplo, char *diag, integer *n, integer *k, T *ab, integ
   /* Function Body */
   if (*n == 0) {
     value = 0.;
-  } else if (lsame_(norm, "M", (ftnlen)1, (ftnlen)1)) {
+  } else if (lsame(norm, "M", (ftnlen)1, (ftnlen)1)) {
 
     /*        Find max(abs(A(i,j))). */
 
-    if (lsame_(diag, "U", (ftnlen)1, (ftnlen)1)) {
+    if (lsame(diag, "U", (ftnlen)1, (ftnlen)1)) {
       value = 1.;
-      if (lsame_(uplo, "U", (ftnlen)1, (ftnlen)1)) {
+      if (lsame(uplo, "U", (ftnlen)1, (ftnlen)1)) {
         i__1 = *n;
         for (j = 1; j <= i__1; ++j) {
           /* Computing MAX */
@@ -3587,7 +3590,7 @@ T lantb(char *norm, char *uplo, char *diag, integer *n, integer *k, T *ab, integ
       }
     } else {
       value = 0.;
-      if (lsame_(uplo, "U", (ftnlen)1, (ftnlen)1)) {
+      if (lsame(uplo, "U", (ftnlen)1, (ftnlen)1)) {
         i__1 = *n;
         for (j = 1; j <= i__1; ++j) {
           /* Computing MAX */
@@ -3619,14 +3622,14 @@ T lantb(char *norm, char *uplo, char *diag, integer *n, integer *k, T *ab, integ
         }
       }
     }
-  } else if (lsame_(norm, "O", (ftnlen)1, (ftnlen)1) || *(unsigned char *)
+  } else if (lsame(norm, "O", (ftnlen)1, (ftnlen)1) || *(unsigned char *)
     norm == '1') {
 
     /*        Find norm1(A). */
 
     value = 0.;
-    udiag = lsame_(diag, "U", (ftnlen)1, (ftnlen)1);
-    if (lsame_(uplo, "U", (ftnlen)1, (ftnlen)1)) {
+    udiag = lsame(diag, "U", (ftnlen)1, (ftnlen)1);
+    if (lsame(uplo, "U", (ftnlen)1, (ftnlen)1)) {
       i__1 = *n;
       for (j = 1; j <= i__1; ++j) {
         if (udiag) {
@@ -3681,13 +3684,13 @@ T lantb(char *norm, char *uplo, char *diag, integer *n, integer *k, T *ab, integ
         /* L140: */
       }
     }
-  } else if (lsame_(norm, "I", (ftnlen)1, (ftnlen)1)) {
+  } else if (lsame(norm, "I", (ftnlen)1, (ftnlen)1)) {
 
     /*        Find normI(A). */
 
     value = 0.;
-    if (lsame_(uplo, "U", (ftnlen)1, (ftnlen)1)) {
-      if (lsame_(diag, "U", (ftnlen)1, (ftnlen)1)) {
+    if (lsame(uplo, "U", (ftnlen)1, (ftnlen)1)) {
+      if (lsame(diag, "U", (ftnlen)1, (ftnlen)1)) {
         i__1 = *n;
         for (i__ = 1; i__ <= i__1; ++i__) {
           work[i__] = 1.;
@@ -3727,7 +3730,7 @@ T lantb(char *norm, char *uplo, char *diag, integer *n, integer *k, T *ab, integ
         }
       }
     } else {
-      if (lsame_(diag, "U", (ftnlen)1, (ftnlen)1)) {
+      if (lsame(diag, "U", (ftnlen)1, (ftnlen)1)) {
         i__1 = *n;
         for (i__ = 1; i__ <= i__1; ++i__) {
           work[i__] = 1.;
@@ -3775,13 +3778,13 @@ T lantb(char *norm, char *uplo, char *diag, integer *n, integer *k, T *ab, integ
       }
       /* L270: */
     }
-  } else if (lsame_(norm, "F", (ftnlen)1, (ftnlen)1) || lsame_(norm, "E", (
+  } else if (lsame(norm, "F", (ftnlen)1, (ftnlen)1) || lsame(norm, "E", (
     ftnlen)1, (ftnlen)1)) {
 
     /*        Find normF(A). */
 
-    if (lsame_(uplo, "U", (ftnlen)1, (ftnlen)1)) {
-      if (lsame_(diag, "U", (ftnlen)1, (ftnlen)1)) {
+    if (lsame(uplo, "U", (ftnlen)1, (ftnlen)1)) {
+      if (lsame(diag, "U", (ftnlen)1, (ftnlen)1)) {
         scale = 1.;
         sum = (doublereal) (*n);
         if (*k > 0) {
@@ -3813,7 +3816,7 @@ T lantb(char *norm, char *uplo, char *diag, integer *n, integer *k, T *ab, integ
         }
       }
     } else {
-      if (lsame_(diag, "U", (ftnlen)1, (ftnlen)1)) {
+      if (lsame(diag, "U", (ftnlen)1, (ftnlen)1)) {
         scale = 1.;
         sum = (doublereal) (*n);
         if (*k > 0) {
@@ -3864,7 +3867,7 @@ int laqgb(integer *m, integer *n, integer *kl, integer *ku,
   /* Local variables */
   static integer i__, j;
   static T cj, large, small;
-  extern T dlamch_(char *, ftnlen);
+  //extern T dlamch_(char *, ftnlen);
 
   /* Parameter adjustments */
   ab_dim1 = *ldab;
@@ -3881,8 +3884,7 @@ int laqgb(integer *m, integer *n, integer *kl, integer *ku,
 
   /*     Initialize LARGE and SMALL. */
 
-  small = dlamch_("Safe minimum", (ftnlen)12) / dlamch_("Precision", (
-    ftnlen)9);
+  small = lamch("Safe minimum", (ftnlen)12) / lamch("Precision", (ftnlen)9);
   large = 1. / small;
 
   if (*rowcnd >= .1 && *amax >= small && *amax <= large) {
@@ -4065,11 +4067,11 @@ template int gbsv(long int *n, long int *kl, long int *ku, long int *nrhs, doubl
   long int *ldab, long int *ipiv, double *b, long int *ldb, long int *info);
 
 
-template int gbsvx(char *fact, char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, 
-  doublereal *ab, integer *ldab, doublereal *afb, integer *ldafb, integer *ipiv, char *equed, 
-  doublereal *r__, doublereal *c__, doublereal *b, integer *ldb, doublereal *x, integer *ldx, 
-  doublereal *rcond, doublereal *ferr, doublereal *berr, doublereal *work, integer *iwork, 
-  integer *info, ftnlen fact_len, ftnlen trans_len, ftnlen equed_len);
+//template int gbsvx(char *fact, char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, 
+//  doublereal *ab, integer *ldab, doublereal *afb, integer *ldafb, integer *ipiv, char *equed, 
+//  doublereal *r__, doublereal *c__, doublereal *b, integer *ldb, doublereal *x, integer *ldx, 
+//  doublereal *rcond, doublereal *ferr, doublereal *berr, doublereal *work, integer *iwork, 
+//  integer *info, ftnlen fact_len, ftnlen trans_len, ftnlen equed_len);
 
 
 
