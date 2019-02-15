@@ -2,6 +2,7 @@
 #include "Blas.hpp"
 #include "LaPack.hpp"
 #include <cmath>       // maybe move elsewhere
+#include <limits>      // uses in lamch to inquire numeric parameters
 
 using namespace BlasCPP;
 
@@ -3066,6 +3067,50 @@ int lacpy(char *uplo, integer *m, integer *n, T *a, integer *lda, T *b, integer 
 
 //-------------------------------------------------------------------------------------------------
 
+// todo: in some cases, i guessed what function should map to a particular member of 
+// numeric_limits - verify everything! ..also in smach.c the functions also return double precision
+// values - check that - maybe we shouls return double here, too instead of T
+
+template<class T>
+integer minexponent_(T *dummy)
+{
+  return std::numeric_limits<T>::min_exponent; // there's also a min_exponent10, but they probably mean that
+}
+template<class T>
+integer maxexponent_(T *dummy)
+{
+  return std::numeric_limits<T>::max_exponent; // dito
+}
+template<class T>
+T huge_(T *dummy)
+{
+  return std::numeric_limits<T>::max;  // guessed!!
+}
+template<class T>
+T tiny_(T *dummy)
+{
+  return std::numeric_limits<T>::min;  // guessed!!
+}
+template<class T>
+T radix_(T *dummy)
+{
+  return std::numeric_limits<T>::radix;  // this is probably right
+}
+template<class T>
+T digits_(T *dummy)
+{
+  return std::numeric_limits<T>::digits;  // this probably too
+}
+template<class T>
+T epsilon_(T *dummy)
+{
+  return std::numeric_limits<T>::epsilon; // this is very probably right
+}
+
+//template integer minexponent_(double);
+
+
+
 // DLAMC3 is intended to force A and B to be stored prior to doing the addition of A and B, for use
 // in situations where optimizers might hold one of these in a register.
 // from dlamch.f - LAPACK auxiliary routine (version 3.7.0)
@@ -3077,16 +3122,15 @@ doublereal lamc3(doublereal *a, doublereal *b)
   return ret_val;
 }
 
-
 // from lamch - LAPACK auxiliary routine (version 3.7.0) --
 doublereal lamch(char *cmach, ftnlen cmach_len)
 {
   // some code needs to be written to make that work....
-  double dummy = 0.0;  // added by Robin Schmidt - later, pass the dummy as parameter and change
-                       // all the calls
+  //double dummy = 0.0;  // added by Robin Schmidt - later, pass the dummy as parameter and change
+  //                     // all the calls
 
 
-  static doublereal c_b2 = 0.;
+  static doublereal c_b2 = 0.;  // hmm..it seems, this is the dummy in the original code
 
   /* System generated locals */
   doublereal ret_val;
