@@ -474,6 +474,321 @@ int gbsvx(char *fact, char *trans, integer *n, integer *kl, integer *ku, integer
 
 //-------------------------------------------------------------------------------------------------
 
+
+// from dgbrfs - LAPACK computational routine (version 3.7.0)
+template<class T>
+int gbrfs(char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, T *ab, integer *ldab,
+  T *afb, integer *ldafb, integer *ipiv, T *b, integer *ldb, T *x, integer *ldx, T *ferr, T *berr, 
+  T *work, integer *iwork, integer *info, ftnlen trans_len)
+{
+  /* System generated locals */
+  integer ab_dim1, ab_offset, afb_dim1, afb_offset, b_dim1, b_offset, 
+    x_dim1, x_offset, i__1, i__2, i__3, i__4, i__5, i__6, i__7;
+  T d__1, d__2, d__3;
+
+  /* Local variables */
+  static integer i__, j, k;
+  static T s;
+  static integer kk;
+  static T xk;
+  static integer nz;
+  static T eps;
+  static integer kase;
+  static T safe1, safe2;
+  extern /* Subroutine */ int dgbmv_(char *, integer *, integer *, integer *
+    , integer *, doublereal *, doublereal *, integer *, doublereal *, 
+    integer *, doublereal *, doublereal *, integer *, ftnlen);
+  extern logical lsame_(char *, char *, ftnlen, ftnlen);
+  static integer isave[3];
+  extern /* Subroutine */ int dcopy_(integer *, doublereal *, integer *, 
+    doublereal *, integer *), daxpy_(integer *, doublereal *, 
+      doublereal *, integer *, doublereal *, integer *);
+  static integer count;
+  extern /* Subroutine */ int dlacn2_(integer *, doublereal *, doublereal *,
+    integer *, doublereal *, integer *, integer *);
+  extern doublereal dlamch_(char *, ftnlen);
+  static T safmin;
+  extern /* Subroutine */ int xerbla_(char *, integer *, ftnlen), dgbtrs_(
+    char *, integer *, integer *, integer *, integer *, doublereal *, 
+    integer *, integer *, doublereal *, integer *, integer *, ftnlen);
+  static logical notran;
+  static char transt[1];
+  static T lstres;
+
+  /* Parameter adjustments */
+  ab_dim1 = *ldab;
+  ab_offset = 1 + ab_dim1;
+  ab -= ab_offset;
+  afb_dim1 = *ldafb;
+  afb_offset = 1 + afb_dim1;
+  afb -= afb_offset;
+  --ipiv;
+  b_dim1 = *ldb;
+  b_offset = 1 + b_dim1;
+  b -= b_offset;
+  x_dim1 = *ldx;
+  x_offset = 1 + x_dim1;
+  x -= x_offset;
+  --ferr;
+  --berr;
+  --work;
+  --iwork;
+
+  /* Function Body */
+  *info = 0;
+  notran = lsame_(trans, "N", (ftnlen)1, (ftnlen)1);
+  if (! notran && ! lsame_(trans, "T", (ftnlen)1, (ftnlen)1) && ! lsame_(
+    trans, "C", (ftnlen)1, (ftnlen)1)) {
+    *info = -1;
+  } else if (*n < 0) {
+    *info = -2;
+  } else if (*kl < 0) {
+    *info = -3;
+  } else if (*ku < 0) {
+    *info = -4;
+  } else if (*nrhs < 0) {
+    *info = -5;
+  } else if (*ldab < *kl + *ku + 1) {
+    *info = -7;
+  } else if (*ldafb < (*kl << 1) + *ku + 1) {
+    *info = -9;
+  } else if (*ldb < max(1,*n)) {
+    *info = -12;
+  } else if (*ldx < max(1,*n)) {
+    *info = -14;
+  }
+  if (*info != 0) {
+    i__1 = -(*info);
+    xerbla_("DGBRFS", &i__1, (ftnlen)6);
+    return 0;
+  }
+
+  /*     Quick return if possible */
+
+  if (*n == 0 || *nrhs == 0) {
+    i__1 = *nrhs;
+    for (j = 1; j <= i__1; ++j) {
+      ferr[j] = 0.;
+      berr[j] = 0.;
+      /* L10: */
+    }
+    return 0;
+  }
+
+  if (notran) {
+    *(unsigned char *)transt = 'T';
+  } else {
+    *(unsigned char *)transt = 'N';
+  }
+
+  /*     NZ = maximum number of nonzero elements in each row of A, plus 1 */
+
+  /* Computing MIN */
+  i__1 = *kl + *ku + 2, i__2 = *n + 1;
+  nz = min(i__1,i__2);
+  eps = dlamch_("Epsilon", (ftnlen)7);
+  safmin = dlamch_("Safe minimum", (ftnlen)12);
+  safe1 = nz * safmin;
+  safe2 = safe1 / eps;
+
+  /*     Do for each right hand side */
+
+  i__1 = *nrhs;
+  for (j = 1; j <= i__1; ++j) {
+
+    count = 1;
+    lstres = 3.;
+  L20:
+
+    /*        Loop until stopping criterion is satisfied. */
+
+    /*        Compute residual R = B - op(A) * X, */
+    /*        where op(A) = A, A**T, or A**H, depending on TRANS. */
+
+    dcopy_(n, &b[j * b_dim1 + 1], &c__1, &work[*n + 1], &c__1);
+    dgbmv_(trans, n, n, kl, ku, &c_b15, &ab[ab_offset], ldab, &x[j * 
+      x_dim1 + 1], &c__1, &c_b17, &work[*n + 1], &c__1, (ftnlen)1);
+
+    /*        Compute componentwise relative backward error from formula */
+
+    /*        max(i) ( abs(R(i)) / ( abs(op(A))*abs(X) + abs(B) )(i) ) */
+
+    /*        where abs(Z) is the componentwise absolute value of the matrix */
+    /*        or vector Z.  If the i-th component of the denominator is less */
+    /*        than SAFE2, then SAFE1 is added to the i-th components of the */
+    /*        numerator and denominator before dividing. */
+
+    i__2 = *n;
+    for (i__ = 1; i__ <= i__2; ++i__) {
+      work[i__] = (d__1 = b[i__ + j * b_dim1], abs(d__1));
+      /* L30: */
+    }
+
+    /*        Compute abs(op(A))*abs(X) + abs(B). */
+
+    if (notran) {
+      i__2 = *n;
+      for (k = 1; k <= i__2; ++k) {
+        kk = *ku + 1 - k;
+        xk = (d__1 = x[k + j * x_dim1], abs(d__1));
+        /* Computing MAX */
+        i__3 = 1, i__4 = k - *ku;
+        /* Computing MIN */
+        i__6 = *n, i__7 = k + *kl;
+        i__5 = min(i__6,i__7);
+        for (i__ = max(i__3,i__4); i__ <= i__5; ++i__) {
+          work[i__] += (d__1 = ab[kk + i__ + k * ab_dim1], abs(d__1)
+            ) * xk;
+          /* L40: */
+        }
+        /* L50: */
+      }
+    } else {
+      i__2 = *n;
+      for (k = 1; k <= i__2; ++k) {
+        s = 0.;
+        kk = *ku + 1 - k;
+        /* Computing MAX */
+        i__5 = 1, i__3 = k - *ku;
+        /* Computing MIN */
+        i__6 = *n, i__7 = k + *kl;
+        i__4 = min(i__6,i__7);
+        for (i__ = max(i__5,i__3); i__ <= i__4; ++i__) {
+          s += (d__1 = ab[kk + i__ + k * ab_dim1], abs(d__1)) * (
+            d__2 = x[i__ + j * x_dim1], abs(d__2));
+          /* L60: */
+        }
+        work[k] += s;
+        /* L70: */
+      }
+    }
+    s = 0.;
+    i__2 = *n;
+    for (i__ = 1; i__ <= i__2; ++i__) {
+      if (work[i__] > safe2) {
+        /* Computing MAX */
+        d__2 = s, d__3 = (d__1 = work[*n + i__], abs(d__1)) / work[
+          i__];
+        s = max(d__2,d__3);
+      } else {
+        /* Computing MAX */
+        d__2 = s, d__3 = ((d__1 = work[*n + i__], abs(d__1)) + safe1) 
+          / (work[i__] + safe1);
+        s = max(d__2,d__3);
+      }
+      /* L80: */
+    }
+    berr[j] = s;
+
+    /*        Test stopping criterion. Continue iterating if */
+    /*           1) The residual BERR(J) is larger than machine epsilon, and */
+    /*           2) BERR(J) decreased by at least a factor of 2 during the */
+    /*              last iteration, and */
+    /*           3) At most ITMAX iterations tried. */
+
+    if (berr[j] > eps && berr[j] * 2. <= lstres && count <= 5) {
+
+      /*           Update solution and try again. */
+
+      dgbtrs_(trans, n, kl, ku, &c__1, &afb[afb_offset], ldafb, &ipiv[1]
+        , &work[*n + 1], n, info, (ftnlen)1);
+      daxpy_(n, &c_b17, &work[*n + 1], &c__1, &x[j * x_dim1 + 1], &c__1)
+        ;
+      lstres = berr[j];
+      ++count;
+      goto L20;
+    }
+
+    /*        Bound error from formula */
+
+    /*        norm(X - XTRUE) / norm(X) .le. FERR = */
+    /*        norm( abs(inv(op(A)))* */
+    /*           ( abs(R) + NZ*EPS*( abs(op(A))*abs(X)+abs(B) ))) / norm(X) */
+
+    /*        where */
+    /*          norm(Z) is the magnitude of the largest component of Z */
+    /*          inv(op(A)) is the inverse of op(A) */
+    /*          abs(Z) is the componentwise absolute value of the matrix or */
+    /*             vector Z */
+    /*          NZ is the maximum number of nonzeros in any row of A, plus 1 */
+    /*          EPS is machine epsilon */
+
+    /*        The i-th component of abs(R)+NZ*EPS*(abs(op(A))*abs(X)+abs(B)) */
+    /*        is incremented by SAFE1 if the i-th component of */
+    /*        abs(op(A))*abs(X) + abs(B) is less than SAFE2. */
+
+    /*        Use DLACN2 to estimate the infinity-norm of the matrix */
+    /*           inv(op(A)) * diag(W), */
+    /*        where W = abs(R) + NZ*EPS*( abs(op(A))*abs(X)+abs(B) ))) */
+
+    i__2 = *n;
+    for (i__ = 1; i__ <= i__2; ++i__) {
+      if (work[i__] > safe2) {
+        work[i__] = (d__1 = work[*n + i__], abs(d__1)) + nz * eps * 
+          work[i__];
+      } else {
+        work[i__] = (d__1 = work[*n + i__], abs(d__1)) + nz * eps * 
+          work[i__] + safe1;
+      }
+      /* L90: */
+    }
+
+    kase = 0;
+  L100:
+    dlacn2_(n, &work[(*n << 1) + 1], &work[*n + 1], &iwork[1], &ferr[j], &
+      kase, isave);
+    if (kase != 0) {
+      if (kase == 1) {
+
+        /*              Multiply by diag(W)*inv(op(A)**T). */
+
+        dgbtrs_(transt, n, kl, ku, &c__1, &afb[afb_offset], ldafb, &
+          ipiv[1], &work[*n + 1], n, info, (ftnlen)1);
+        i__2 = *n;
+        for (i__ = 1; i__ <= i__2; ++i__) {
+          work[*n + i__] *= work[i__];
+          /* L110: */
+        }
+      } else {
+
+        /*              Multiply by inv(op(A))*diag(W). */
+
+        i__2 = *n;
+        for (i__ = 1; i__ <= i__2; ++i__) {
+          work[*n + i__] *= work[i__];
+          /* L120: */
+        }
+        dgbtrs_(trans, n, kl, ku, &c__1, &afb[afb_offset], ldafb, &
+          ipiv[1], &work[*n + 1], n, info, (ftnlen)1);
+      }
+      goto L100;
+    }
+
+    /*        Normalize error. */
+
+    lstres = 0.;
+    i__2 = *n;
+    for (i__ = 1; i__ <= i__2; ++i__) {
+      /* Computing MAX */
+      d__2 = lstres, d__3 = (d__1 = x[i__ + j * x_dim1], abs(d__1));
+      lstres = max(d__2,d__3);
+      /* L130: */
+    }
+    if (lstres != 0.) {
+      ferr[j] /= lstres;
+    }
+
+    /* L140: */
+  }
+
+  return 0;
+
+  /*     End of DGBRFS */
+
+} /* dgbrfs_ */
+
+//-------------------------------------------------------------------------------------------------
+
 // translated from dgbtf2, LAPACK computational routine (version 3.7.0)
 template<class T>
 int gbtf2(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab, integer *ipiv, 

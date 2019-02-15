@@ -3,7 +3,7 @@
 f2c functions that are needed: i_len, s_copy, s_cmp, i_nint
 
 Functions that have to be translated next:
- dlamch, dgbcon, dgbequ, dgbrfs, 
+ dlamch, dgbcon, dgbequ,dgbrfs,
  dgbtrf*, dgbtrs*
  dgbsvxx
 
@@ -24,7 +24,7 @@ Lapack-Drivers:
  dgbsv, dgbsvx
 
 Lapack-Computational:
- dgbtrf, dgbtrs, dgbtf2,
+   dgbtrf, dgbtrs, dgbtf2,
 
 Lapack-Auxiliary: 
  dlacpy, dlangb, dlantb, dlaqgb, dlaswp, ieeeck, ilaenv, iparmq
@@ -42,7 +42,9 @@ embed the rouines in a class and use member variables...but that may go
 very much against the grain of the library design and in routines converted
 later, we would have to make a lot of edits...hmm...bad! for the time being,
 i'll just leave it as is...In my typical scenario (of audio apps and plugins),
-the routines will be used from one therad only anyway.
+the routines will be used from one therad only anyway. Or maybe some of them
+are even used to remember a state between calls? Check that carefully before 
+switching to locals.
 
 
 For the naming conventions: We have currently retained the l and i prefixes
