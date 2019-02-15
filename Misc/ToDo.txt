@@ -1,5 +1,6 @@
 
 
+
 f2c functions that are needed: i_len, s_copy, s_cmp, i_nint
 
 Functions that have to be translated next:
@@ -43,6 +44,8 @@ by delegating to std::numeric_limits. The bad news is that lamch doesn't take
 a parameter of the type of which we want to inquire the info, so we may need to
 add a dummy parameter to the declaration and change all the calls to lamch 
 accordingly to pass a dummy...hopefully not too much work.....
+...done - Verify implementation of lamch - especially, if it works with float 
+and double as it should with unit tests
   
 Some functions define static local variables (for example laswp) - maybe we 
 should use non-static local varibales instead? Because when two different 
