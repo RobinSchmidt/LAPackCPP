@@ -25,18 +25,6 @@ inline double min(double x, double y) {  return std::min(x, y); }
 inline double max(double x, double y) {  return std::max(x, y); }
 
 
-//template<class Tx, class Ty>
-//inline Tx min(Tx x, Ty y)
-//{
-//  return std::min(x, Tx(y));
-//}
-//
-//template<class T>
-//inline T max(T x, T y)
-//{
-//  return std::max(x, y);
-//}
-
 double log(doublereal x)  
 {
   return ::log((double)x); 
@@ -523,24 +511,24 @@ int gbsvxx(char *fact, char *trans, integer *n, integer *kl, integer *ku, intege
   static T amax;
   extern doublereal dla_gbrpvgrw__(integer *, integer *, integer *, integer 
     *, doublereal *, integer *, doublereal *, integer *);
-  extern logical lsame_(char *, char *, ftnlen, ftnlen);
+  //extern logical lsame_(char *, char *, ftnlen, ftnlen);
   static T rcmin, rcmax;
   static logical equil;
-  extern doublereal dlamch_(char *, ftnlen);
-  extern /* Subroutine */ int dlaqgb_(integer *, integer *, integer *, 
-    integer *, doublereal *, integer *, doublereal *, doublereal *, 
-    doublereal *, doublereal *, doublereal *, char *, ftnlen);
+  //extern doublereal dlamch_(char *, ftnlen);
+  //extern /* Subroutine */ int dlaqgb_(integer *, integer *, integer *, 
+  //  integer *, doublereal *, integer *, doublereal *, doublereal *, 
+  //  doublereal *, doublereal *, doublereal *, char *, ftnlen);
   static T colcnd;
-  extern /* Subroutine */ int dgbtrf_(integer *, integer *, integer *, 
-    integer *, doublereal *, integer *, integer *, integer *);
+  //extern /* Subroutine */ int dgbtrf_(integer *, integer *, integer *, 
+  //  integer *, doublereal *, integer *, integer *, integer *);
   static logical nofact;
-  extern /* Subroutine */ int dlacpy_(char *, integer *, integer *, 
-    doublereal *, integer *, doublereal *, integer *, ftnlen), 
-    xerbla_(char *, integer *, ftnlen);
+  //extern /* Subroutine */ int dlacpy_(char *, integer *, integer *, 
+  //  doublereal *, integer *, doublereal *, integer *, ftnlen), 
+  //  xerbla_(char *, integer *, ftnlen);
   static T bignum;
-  extern /* Subroutine */ int dgbtrs_(char *, integer *, integer *, integer 
-    *, integer *, doublereal *, integer *, integer *, doublereal *, 
-    integer *, integer *, ftnlen);
+  //extern /* Subroutine */ int dgbtrs_(char *, integer *, integer *, integer 
+  //  *, integer *, doublereal *, integer *, integer *, doublereal *, 
+  //  integer *, integer *, ftnlen);
   static integer infequ;
   static logical colequ;
   static T rowcnd;
@@ -833,7 +821,7 @@ int gbcon(char *norm, integer *n, integer *kl, integer *ku, T *ab, integer *ldab
     integer *, doublereal *, integer *), dlacn2_(integer *, 
       doublereal *, doublereal *, integer *, doublereal *, integer *, 
       integer *);
-  extern doublereal dlamch_(char *, ftnlen);
+  //extern doublereal dlamch_(char *, ftnlen);
   extern integer idamax_(integer *, doublereal *, integer *);
   extern /* Subroutine */ int dlatbs_(char *, char *, char *, char *, 
     integer *, integer *, doublereal *, integer *, doublereal *, 
@@ -885,7 +873,7 @@ int gbcon(char *norm, integer *n, integer *kl, integer *ku, T *ab, integer *ldab
     return 0;
   }
 
-  smlnum = dlamch_("Safe minimum", (ftnlen)12);
+  smlnum = lamch("Safe minimum", (ftnlen)12);
 
   /*     Estimate the norm of inv(A). */
 
@@ -1001,8 +989,8 @@ int gbequ(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab
   /* Local variables */
   static integer i__, j, kd;
   static T rcmin, rcmax;
-  extern doublereal dlamch_(char *, ftnlen);
-  extern /* Subroutine */ int xerbla_(char *, integer *, ftnlen);
+  //extern doublereal dlamch_(char *, ftnlen);
+  //extern /* Subroutine */ int xerbla_(char *, integer *, ftnlen);
   static T bignum, smlnum;
 
   /* Parameter adjustments */
@@ -1027,7 +1015,7 @@ int gbequ(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab
   }
   if (*info != 0) {
     i__1 = -(*info);
-    xerbla_("DGBEQU", &i__1, (ftnlen)6);
+    xerbla("DGBEQU", &i__1, (ftnlen)6);
     return 0;
   }
 
@@ -1042,7 +1030,7 @@ int gbequ(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab
 
   /*     Get machine constants. */
 
-  smlnum = dlamch_("S", (ftnlen)1);
+  smlnum = lamch("S", (ftnlen)1);
   bignum = 1. / smlnum;
 
   /*     Compute row scale factors. */
@@ -1229,22 +1217,22 @@ int gbrfs(char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, T *a
   static T eps;
   static integer kase;
   static T safe1, safe2;
-  extern /* Subroutine */ int dgbmv_(char *, integer *, integer *, integer *
-    , integer *, doublereal *, doublereal *, integer *, doublereal *, 
-    integer *, doublereal *, doublereal *, integer *, ftnlen);
+  //extern /* Subroutine */ int dgbmv_(char *, integer *, integer *, integer *
+  //  , integer *, doublereal *, doublereal *, integer *, doublereal *, 
+  //  integer *, doublereal *, doublereal *, integer *, ftnlen);
   extern logical lsame_(char *, char *, ftnlen, ftnlen);
   static integer isave[3];
-  extern /* Subroutine */ int dcopy_(integer *, doublereal *, integer *, 
-    doublereal *, integer *), daxpy_(integer *, doublereal *, 
-      doublereal *, integer *, doublereal *, integer *);
+  //extern /* Subroutine */ int dcopy_(integer *, doublereal *, integer *, 
+  //  doublereal *, integer *), daxpy_(integer *, doublereal *, 
+  //    doublereal *, integer *, doublereal *, integer *);
   static integer count;
   extern /* Subroutine */ int dlacn2_(integer *, doublereal *, doublereal *,
     integer *, doublereal *, integer *, integer *);
-  extern doublereal dlamch_(char *, ftnlen);
+  //extern doublereal dlamch_(char *, ftnlen);
   static T safmin;
-  extern /* Subroutine */ int xerbla_(char *, integer *, ftnlen), dgbtrs_(
-    char *, integer *, integer *, integer *, integer *, doublereal *, 
-    integer *, integer *, doublereal *, integer *, integer *, ftnlen);
+  //extern /* Subroutine */ int xerbla_(char *, integer *, ftnlen), dgbtrs_(
+  //  char *, integer *, integer *, integer *, integer *, doublereal *, 
+  //  integer *, integer *, doublereal *, integer *, integer *, ftnlen);
   static logical notran;
   static char transt[1];
   static T lstres;
@@ -1293,7 +1281,7 @@ int gbrfs(char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, T *a
   }
   if (*info != 0) {
     i__1 = -(*info);
-    xerbla_("DGBRFS", &i__1, (ftnlen)6);
+    xerbla("DGBRFS", &i__1, (ftnlen)6);
     return 0;
   }
 
@@ -1320,8 +1308,8 @@ int gbrfs(char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, T *a
   /* Computing MIN */
   i__1 = *kl + *ku + 2, i__2 = *n + 1;
   nz = min(i__1,i__2);
-  eps = dlamch_("Epsilon", (ftnlen)7);
-  safmin = dlamch_("Safe minimum", (ftnlen)12);
+  eps = lamch("Epsilon", (ftnlen)7);
+  safmin = lamch("Safe minimum", (ftnlen)12);
   safe1 = nz * safmin;
   safe2 = safe1 / eps;
 
@@ -1339,8 +1327,8 @@ int gbrfs(char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, T *a
     /*        Compute residual R = B - op(A) * X, */
     /*        where op(A) = A, A**T, or A**H, depending on TRANS. */
 
-    dcopy_(n, &b[j * b_dim1 + 1], &c__1, &work[*n + 1], &c__1);
-    dgbmv_(trans, n, n, kl, ku, &c_b15, &ab[ab_offset], ldab, &x[j * 
+    copy(n, &b[j * b_dim1 + 1], &c__1, &work[*n + 1], &c__1);
+    gbmv(trans, n, n, kl, ku, &c_b15, &ab[ab_offset], ldab, &x[j * 
       x_dim1 + 1], &c__1, &c_b17, &work[*n + 1], &c__1, (ftnlen)1);
 
     /*        Compute componentwise relative backward error from formula */
@@ -1424,10 +1412,9 @@ int gbrfs(char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, T *a
 
       /*           Update solution and try again. */
 
-      dgbtrs_(trans, n, kl, ku, &c__1, &afb[afb_offset], ldafb, &ipiv[1]
-        , &work[*n + 1], n, info, (ftnlen)1);
-      daxpy_(n, &c_b17, &work[*n + 1], &c__1, &x[j * x_dim1 + 1], &c__1)
-        ;
+      gbtrs(trans, n, kl, ku, &c__1, &afb[afb_offset], ldafb, &ipiv[1], 
+        &work[*n + 1], n, info, (ftnlen)1);
+      axpy(n, &c_b17, &work[*n + 1], &c__1, &x[j * x_dim1 + 1], &c__1);
       lstres = berr[j];
       ++count;
       goto L20;
@@ -1476,8 +1463,8 @@ int gbrfs(char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, T *a
 
         /*              Multiply by diag(W)*inv(op(A)**T). */
 
-        dgbtrs_(transt, n, kl, ku, &c__1, &afb[afb_offset], ldafb, &
-          ipiv[1], &work[*n + 1], n, info, (ftnlen)1);
+        gbtrs(transt, n, kl, ku, &c__1, &afb[afb_offset], ldafb, 
+          &ipiv[1], &work[*n + 1], n, info, (ftnlen)1);
         i__2 = *n;
         for (i__ = 1; i__ <= i__2; ++i__) {
           work[*n + i__] *= work[i__];
@@ -1492,7 +1479,7 @@ int gbrfs(char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, T *a
           work[*n + i__] *= work[i__];
           /* L120: */
         }
-        dgbtrs_(trans, n, kl, ku, &c__1, &afb[afb_offset], ldafb, &
+        gbtrs(trans, n, kl, ku, &c__1, &afb[afb_offset], ldafb, &
           ipiv[1], &work[*n + 1], n, info, (ftnlen)1);
       }
       goto L100;

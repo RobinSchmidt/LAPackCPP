@@ -1,13 +1,15 @@
 
 
 
+
+
+
 f2c functions that are needed: i_len, s_copy, s_cmp, i_nint
 
 Functions that have to be translated next:
 
-  dlamch - has been copied and renamed to lamch - has to be re-implemented in
-    a generic way to return the numeric limits of the respective type using
-    std::numeric_limits (most probably)
+dla_gbrpvgrw__, dgbequb, dgbrfsx_
+
 
 
 Functions that have been translated:
@@ -30,6 +32,9 @@ Lapack-Computational:
 Lapack-Auxiliary: 
   dlacpy, dlangb, dlantb, dlaqgb, dlaswp, ieeeck, ilaenv, iparmq
 
+  
+..check langb - it can't be templatized straightforwardly because it has no 
+template-typpe inputs ...wait - it does!
   
 
 Implement the "lamch" auxiliary routine in a generic way using templates and
