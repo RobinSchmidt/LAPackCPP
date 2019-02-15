@@ -3,7 +3,9 @@
 f2c functions that are needed: i_len, s_copy, s_cmp, i_nint
 
 Functions that have to be translated next:
- dgbsvx, dgbsvxx
+ dlangb, dlacpy, dlaqgb, dlantb, dlamch, dgbcon, dgbequ, dgbrfs, 
+ dgbtrf*, dgbtrs*
+ dgbsvxx
 
 
 
@@ -19,7 +21,7 @@ Blas Level 3:
  dgemm, dtrsm 
 
 Lapack-Drivers:
- dgbsv
+ dgbsv, dgbsvx
 
 Lapack-Computational:
  dgbtrf, dgbtrs, dgbtf2,
