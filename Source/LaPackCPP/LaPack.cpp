@@ -2353,6 +2353,118 @@ int lacpy(char *uplo, integer *m, integer *n, T *a, integer *lda, T *b, integer 
 
 //-------------------------------------------------------------------------------------------------
 
+// from dlaqgb - LAPACK auxiliary routine (version 3.7.0) 
+template<class T>
+int laqgb(integer *m, integer *n, integer *kl, integer *ku,
+  T *ab, integer *ldab, T *r__, T *c__, T *rowcnd, T *colcnd, T *amax, char *equed, 
+  ftnlen equed_len)
+{
+  /* System generated locals */
+  integer ab_dim1, ab_offset, i__1, i__2, i__3, i__4, i__5, i__6;
+
+  /* Local variables */
+  static integer i__, j;
+  static T cj, large, small;
+  extern T dlamch_(char *, ftnlen);
+
+  /* Parameter adjustments */
+  ab_dim1 = *ldab;
+  ab_offset = 1 + ab_dim1;
+  ab -= ab_offset;
+  --r__;
+  --c__;
+
+  /* Function Body */
+  if (*m <= 0 || *n <= 0) {
+    *(unsigned char *)equed = 'N';
+    return 0;
+  }
+
+  /*     Initialize LARGE and SMALL. */
+
+  small = dlamch_("Safe minimum", (ftnlen)12) / dlamch_("Precision", (
+    ftnlen)9);
+  large = 1. / small;
+
+  if (*rowcnd >= .1 && *amax >= small && *amax <= large) {
+
+    /*        No row scaling */
+
+    if (*colcnd >= .1) {
+
+      /*           No column scaling */
+
+      *(unsigned char *)equed = 'N';
+    } else {
+
+      /*           Column scaling */
+
+      i__1 = *n;
+      for (j = 1; j <= i__1; ++j) {
+        cj = c__[j];
+        /* Computing MAX */
+        i__2 = 1, i__3 = j - *ku;
+        /* Computing MIN */
+        i__5 = *m, i__6 = j + *kl;
+        i__4 = min(i__5,i__6);
+        for (i__ = max(i__2,i__3); i__ <= i__4; ++i__) {
+          ab[*ku + 1 + i__ - j + j * ab_dim1] = cj * ab[*ku + 1 + 
+            i__ - j + j * ab_dim1];
+          /* L10: */
+        }
+        /* L20: */
+      }
+      *(unsigned char *)equed = 'C';
+    }
+  } else if (*colcnd >= .1) {
+
+    /*        Row scaling, no column scaling */
+
+    i__1 = *n;
+    for (j = 1; j <= i__1; ++j) {
+      /* Computing MAX */
+      i__4 = 1, i__2 = j - *ku;
+      /* Computing MIN */
+      i__5 = *m, i__6 = j + *kl;
+      i__3 = min(i__5,i__6);
+      for (i__ = max(i__4,i__2); i__ <= i__3; ++i__) {
+        ab[*ku + 1 + i__ - j + j * ab_dim1] = r__[i__] * ab[*ku + 1 + 
+          i__ - j + j * ab_dim1];
+        /* L30: */
+      }
+      /* L40: */
+    }
+    *(unsigned char *)equed = 'R';
+  } else {
+
+    /*        Row and column scaling */
+
+    i__1 = *n;
+    for (j = 1; j <= i__1; ++j) {
+      cj = c__[j];
+      /* Computing MAX */
+      i__3 = 1, i__4 = j - *ku;
+      /* Computing MIN */
+      i__5 = *m, i__6 = j + *kl;
+      i__2 = min(i__5,i__6);
+      for (i__ = max(i__3,i__4); i__ <= i__2; ++i__) {
+        ab[*ku + 1 + i__ - j + j * ab_dim1] = cj * r__[i__] * ab[*ku 
+          + 1 + i__ - j + j * ab_dim1];
+        /* L50: */
+      }
+      /* L60: */
+    }
+    *(unsigned char *)equed = 'B';
+  }
+
+  return 0;
+
+  /*     End of DLAQGB */
+
+} /* dlaqgb_ */
+
+//-------------------------------------------------------------------------------------------------
+
 // translated from dlaswp, LAPACK auxiliary routine (version 3.7.1)
 template<class T>
 int laswp(integer *n, T *a, integer *lda, integer *k1, integer *k2, integer *ipiv, integer *incx)
