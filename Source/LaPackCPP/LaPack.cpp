@@ -35,6 +35,7 @@ integer i_nint(f2c_real *x)
 }
 
 //=================================================================================================
+// DRIVER routines
 
 // translated from dgbsv, LAPACK driver routine (version 3.7.0) -- 
 template<class T>
@@ -472,8 +473,191 @@ int gbsvx(char *fact, char *trans, integer *n, integer *kl, integer *ku, integer
 
 } /* gbsvx */
 
-//-------------------------------------------------------------------------------------------------
 
+//=================================================================================================
+// COMPUTATIONAL routines
+
+// from dgbcon - LAPACK computational routine (version 3.7.0) 
+template<class T>
+int gbcon(char *norm, integer *n, integer *kl, integer *ku, T *ab, integer *ldab, integer *ipiv, 
+  T *anorm, T *rcond, T *work, integer *iwork, integer *info, ftnlen norm_len)
+{
+  /* System generated locals */
+  integer ab_dim1, ab_offset, i__1, i__2, i__3;
+  T d__1;
+
+  /* Local variables */
+  static integer j;
+  static T t;
+  static integer kd, lm, jp, ix, kase;
+  extern doublereal ddot_(integer *, doublereal *, integer *, doublereal *, 
+    integer *);
+  static integer kase1;
+  static T scale;
+  extern logical lsame_(char *, char *, ftnlen, ftnlen);
+  static integer isave[3];
+  extern /* Subroutine */ int drscl_(integer *, doublereal *, doublereal *, 
+    integer *);
+  static logical lnoti;
+  extern /* Subroutine */ int daxpy_(integer *, doublereal *, doublereal *, 
+    integer *, doublereal *, integer *), dlacn2_(integer *, 
+      doublereal *, doublereal *, integer *, doublereal *, integer *, 
+      integer *);
+  extern doublereal dlamch_(char *, ftnlen);
+  extern integer idamax_(integer *, doublereal *, integer *);
+  extern /* Subroutine */ int dlatbs_(char *, char *, char *, char *, 
+    integer *, integer *, doublereal *, integer *, doublereal *, 
+    doublereal *, doublereal *, integer *, ftnlen, ftnlen, ftnlen, 
+    ftnlen), xerbla_(char *, integer *, ftnlen);
+  static T ainvnm;
+  static logical onenrm;
+  static char normin[1];
+  static T smlnum;
+
+  /* Parameter adjustments */
+  ab_dim1 = *ldab;
+  ab_offset = 1 + ab_dim1;
+  ab -= ab_offset;
+  --ipiv;
+  --work;
+  --iwork;
+
+  /* Function Body */
+  *info = 0;
+  onenrm = *(unsigned char *)norm == '1' || lsame_(norm, "O", (ftnlen)1, (
+    ftnlen)1);
+  if (! onenrm && ! lsame_(norm, "I", (ftnlen)1, (ftnlen)1)) {
+    *info = -1;
+  } else if (*n < 0) {
+    *info = -2;
+  } else if (*kl < 0) {
+    *info = -3;
+  } else if (*ku < 0) {
+    *info = -4;
+  } else if (*ldab < (*kl << 1) + *ku + 1) {
+    *info = -6;
+  } else if (*anorm < 0.) {
+    *info = -8;
+  }
+  if (*info != 0) {
+    i__1 = -(*info);
+    xerbla_("DGBCON", &i__1, (ftnlen)6);
+    return 0;
+  }
+
+  /*     Quick return if possible */
+
+  *rcond = 0.;
+  if (*n == 0) {
+    *rcond = 1.;
+    return 0;
+  } else if (*anorm == 0.) {
+    return 0;
+  }
+
+  smlnum = dlamch_("Safe minimum", (ftnlen)12);
+
+  /*     Estimate the norm of inv(A). */
+
+  ainvnm = 0.;
+  *(unsigned char *)normin = 'N';
+  if (onenrm) {
+    kase1 = 1;
+  } else {
+    kase1 = 2;
+  }
+  kd = *kl + *ku + 1;
+  lnoti = *kl > 0;
+  kase = 0;
+L10:
+  dlacn2_(n, &work[*n + 1], &work[1], &iwork[1], &ainvnm, &kase, isave);
+  if (kase != 0) {
+    if (kase == kase1) {
+
+      /*           Multiply by inv(L). */
+
+      if (lnoti) {
+        i__1 = *n - 1;
+        for (j = 1; j <= i__1; ++j) {
+          /* Computing MIN */
+          i__2 = *kl, i__3 = *n - j;
+          lm = min(i__2,i__3);
+          jp = ipiv[j];
+          t = work[jp];
+          if (jp != j) {
+            work[jp] = work[j];
+            work[j] = t;
+          }
+          d__1 = -t;
+          daxpy_(&lm, &d__1, &ab[kd + 1 + j * ab_dim1], &c__1, &
+            work[j + 1], &c__1);
+          /* L20: */
+        }
+      }
+
+      /*           Multiply by inv(U). */
+
+      i__1 = *kl + *ku;
+      dlatbs_("Upper", "No transpose", "Non-unit", normin, n, &i__1, &
+        ab[ab_offset], ldab, &work[1], &scale, &work[(*n << 1) + 
+        1], info, (ftnlen)5, (ftnlen)12, (ftnlen)8, (ftnlen)1);
+    } else {
+
+      /*           Multiply by inv(U**T). */
+
+      i__1 = *kl + *ku;
+      dlatbs_("Upper", "Transpose", "Non-unit", normin, n, &i__1, &ab[
+        ab_offset], ldab, &work[1], &scale, &work[(*n << 1) + 1], 
+          info, (ftnlen)5, (ftnlen)9, (ftnlen)8, (ftnlen)1);
+
+      /*           Multiply by inv(L**T). */
+
+      if (lnoti) {
+        for (j = *n - 1; j >= 1; --j) {
+          /* Computing MIN */
+          i__1 = *kl, i__2 = *n - j;
+          lm = min(i__1,i__2);
+          work[j] -= ddot_(&lm, &ab[kd + 1 + j * ab_dim1], &c__1, &
+            work[j + 1], &c__1);
+          jp = ipiv[j];
+          if (jp != j) {
+            t = work[jp];
+            work[jp] = work[j];
+            work[j] = t;
+          }
+          /* L30: */
+        }
+      }
+    }
+
+    /*        Divide X by 1/SCALE if doing so will not cause overflow. */
+
+    *(unsigned char *)normin = 'Y';
+    if (scale != 1.) {
+      ix = idamax_(n, &work[1], &c__1);
+      if (scale < (d__1 = work[ix], abs(d__1)) * smlnum || scale == 0.) 
+      {
+        goto L40;
+      }
+      drscl_(n, &scale, &work[1], &c__1);
+    }
+    goto L10;
+  }
+
+  /*     Compute the estimate of the reciprocal condition number. */
+
+  if (ainvnm != 0.) {
+    *rcond = 1. / ainvnm / *anorm;
+  }
+
+L40:
+  return 0;
+
+  /*     End of DGBCON */
+
+} /* dgbcon_ */
+
+//-------------------------------------------------------------------------------------------------
 
 // from dgbrfs - LAPACK computational routine (version 3.7.0)
 template<class T>
