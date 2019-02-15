@@ -1003,15 +1003,6 @@ doublereal lamch(char *cmach, ftnlen cmach_len);
 // For this routine, i need to actually to actually (re)write some code - implementthe functions
 // that return the requested values for the machine precision - using explicit intantiations
 
-
-
-
-
-
-
-
-
-
 //-------------------------------------------------------------------------------------------------
 
 /**
@@ -1091,6 +1082,36 @@ If AMAX > LARGE or AMAX < SMALL, row scaling is done.  */
 template<class T>
 int laqgb(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab, T *r__, T *c__, 
   T *rowcnd, T *colcnd, T *amax, char *equed, ftnlen equed_len);
+
+
+//-------------------------------------------------------------------------------------------------
+
+/**
+Purpose:
+DLASSQ  returns the values  scl  and  smsq  such that
+
+  ( scl**2 )*smsq = x( 1 )**2 +...+ x( n )**2 + ( scale**2 )*sumsq,
+
+where  x( i ) = X( 1 + ( i - 1 )*INCX ). The value of  sumsq  is assumed to be non-negative and
+scl  returns the value 
+
+   scl = max( scale, abs( x( i ) ) ).
+
+scale and sumsq must be supplied in SCALE and SUMSQ and scl and smsq are overwritten on SCALE 
+and SUMSQ respectively. he routine makes only one pass through the vector x.
+
+Arguments:
+N:     The number of elements to be used from the vector X.
+X:     array, dimension (N). The vector for which a scaled sum of squares is computed.
+       x( i )  = X( 1 + ( i - 1 )*INCX ), 1 <= i <= n.
+INCX:  The increment between successive values of the vector X. INCX > 0.
+SCALE: On entry, the value  scale  in the equation above. On exit, SCALE is overwritten with scl, 
+       the scaling factor for the sum of squares.
+SUMSQ: On entry, the value  sumsq  in the equation above. On exit, SUMSQ is overwritten with smsq, 
+       the basic sum of squares from which  scl  has been factored out. */
+template<class T>
+int lassq(integer *n, T *x, integer *incx, T *scale, T *sumsq);
+
 
 //-------------------------------------------------------------------------------------------------
 

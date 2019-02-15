@@ -3966,6 +3966,55 @@ int laqgb(integer *m, integer *n, integer *kl, integer *ku,
 
 //-------------------------------------------------------------------------------------------------
 
+// from dlassq - LAPACK auxiliary routine (version 3.7.0) 
+template<class T>
+int lassq(integer *n, T *x, integer *incx, T *scale, T *sumsq)
+{
+  /* System generated locals */
+  integer i__1, i__2;
+  T d__1;
+
+  /* Local variables */
+  static integer ix;
+  static T absxi;
+  //extern logical disnan_(doublereal *);
+
+  /* Parameter adjustments */
+  --x;
+
+  /* Function Body */
+  if (*n > 0) {
+    i__1 = (*n - 1) * *incx + 1;
+    i__2 = *incx;
+    for (ix = 1; i__2 < 0 ? ix >= i__1 : ix <= i__1; ix += i__2) {
+      absxi = (d__1 = x[ix], abs(d__1));
+      if (absxi > 0. || disnan_(&absxi)) {
+        if (*scale < absxi) {
+          /* Computing 2nd power */
+          d__1 = *scale / absxi;
+          *sumsq = *sumsq * (d__1 * d__1) + 1;
+          *scale = absxi;
+        } else {
+          /* Computing 2nd power */
+          d__1 = absxi / *scale;
+          *sumsq += d__1 * d__1;
+        }
+      }
+      /* L10: */
+    }
+  }
+  return 0;
+
+  /*     End of DLASSQ */
+
+} /* dlassq_ */
+
+
+
+
+
+//-------------------------------------------------------------------------------------------------
+
 // translated from dlaswp, LAPACK auxiliary routine (version 3.7.1)
 template<class T>
 int laswp(integer *n, T *a, integer *lda, integer *k1, integer *k2, integer *ipiv, integer *incx)
@@ -4066,12 +4115,12 @@ template int gbtrs(char *trans, integer *n, integer *kl, integer *ku, integer *n
 template int gbsv(long int *n, long int *kl, long int *ku, long int *nrhs, double *ab, 
   long int *ldab, long int *ipiv, double *b, long int *ldb, long int *info);
 
-//
-//template int gbsvx(char *fact, char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, 
-//  doublereal *ab, integer *ldab, doublereal *afb, integer *ldafb, integer *ipiv, char *equed, 
-//  doublereal *r__, doublereal *c__, doublereal *b, integer *ldb, doublereal *x, integer *ldx, 
-//  doublereal *rcond, doublereal *ferr, doublereal *berr, doublereal *work, integer *iwork, 
-//  integer *info, ftnlen fact_len, ftnlen trans_len, ftnlen equed_len);
+
+template int gbsvx(char *fact, char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, 
+  doublereal *ab, integer *ldab, doublereal *afb, integer *ldafb, integer *ipiv, char *equed, 
+  doublereal *r__, doublereal *c__, doublereal *b, integer *ldb, doublereal *x, integer *ldx, 
+  doublereal *rcond, doublereal *ferr, doublereal *berr, doublereal *work, integer *iwork, 
+  integer *info, ftnlen fact_len, ftnlen trans_len, ftnlen equed_len);
 
 
 
