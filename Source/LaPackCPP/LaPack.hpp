@@ -925,6 +925,39 @@ logical isnan(T *x) { return *x != *x; }
 
 /**
 Purpose:
+DLACN2 estimates the 1-norm of a square, real matrix A. Reverse communication is used for 
+evaluating matrix-vector products.
+
+Arguments:
+N:     The order of the matrix.  N >= 1.
+V:     array, dimension (N). On the final return, V = A*W,  where  EST = norm(V)/norm(W) 
+       (W is not returned).
+X:     array, dimension (N). On an intermediate return, X should be overwritten by 
+       A    * X,  if KASE=1,
+       A**T * X,  if KASE=2,
+       and DLACN2 must be re-called with all the other parameters unchanged.
+ISGN:  array, dimension (N)
+EST:   On entry with KASE = 1 or 2 and ISAVE(1) = 3, EST should be unchanged from the previous call
+       to DLACN2. On exit, EST is an estimate (a lower bound) for norm(A).
+KASE:  On the initial call to DLACN2, KASE should be 0. On an intermediate return, KASE will be 
+       1 or 2, indicating whether X should be overwritten by A * X  or A**T * X. On the final return
+       from DLACN2, KASE will again be 0.        
+ISAVE: is INTEGER array, dimension (3). ISAVE is used to save variables between calls to DLACN2
+
+Further Details:
+Originally named SONEST, dated March 16, 1988. This is a thread safe version of DLACON, which uses
+the array ISAVE in place of a SAVE statement, as follows:
+   DLACON     DLACN2
+    JUMP     ISAVE(1)
+    J        ISAVE(2)
+    ITER     ISAVE(3)  */
+template<class T>
+int lacn2(integer *n, T *v, T *x, integer *isgn, T *est, integer *kase, integer *isave);
+
+//-------------------------------------------------------------------------------------------------
+
+/**
+Purpose:
 langb returns the value of the one norm, or the Frobenius norm, or the infinity norm, or the
 element of largest absolute value of an n by n band matrix A, with kl sub-diagonals and ku
 super-diagonals.
