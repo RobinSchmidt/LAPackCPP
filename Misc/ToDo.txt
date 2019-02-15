@@ -3,7 +3,7 @@
 f2c functions that are needed: i_len, s_copy, s_cmp, i_nint
 
 Functions that have to be translated next:
- dlaqgb, dlantb, dlamch, dgbcon, dgbequ, dgbrfs, 
+ dlantb, dlamch, dgbcon, dgbequ, dgbrfs, 
  dgbtrf*, dgbtrs*
  dgbsvxx
 
@@ -27,12 +27,18 @@ Lapack-Computational:
  dgbtrf, dgbtrs, dgbtf2,
 
 Lapack-Auxiliary: 
- dlacpy, dlangb, dlaswp, ieeeck, ilaenv, iparmq
+ dlacpy, dlangb, dlaqgb, dlaswp, ieeeck, ilaenv, iparmq
 
 
 Some functions define static local variables (for example laswp) - maybe we 
 should use non-static local varibales instead? because when two different 
-threads use a routine concurrently, each needs it own local variables.
+threads use a routine concurrently, each needs it own local variables. Maybe 
+define a macro LA_STATIC that evaluates to static - so we may globally select
+whether static or local (stack-allocated) variables shall be used. When there
+are a lot of local variables, maybe we could get stack overflow, if they are 
+not static? We should have the option to roll back to static, if necessarry, 
+so using a macro seems a suitable approach.
+
 
 For the naming conventions: We have currently retained the l and i prefixes
 (for example in iamax, lsame) for routines that work with integers and 

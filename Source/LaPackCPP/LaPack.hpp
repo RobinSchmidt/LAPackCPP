@@ -589,6 +589,47 @@ int lacpy(char *uplo, integer *m, integer *n, T *a, integer *lda, T *b, integer 
 
 /**
 Purpose:
+DLANTB  returns the value of the one norm,  or the Frobenius norm, or the  infinity norm, or the 
+element of  largest absolute value  of an n by n triangular band matrix A,  with ( k + 1 ) diagonals.
+  DLANTB = ( max(abs(A(i,j))), NORM = 'M' or 'm'
+           (
+           ( norm1(A),         NORM = '1', 'O' or 'o'
+           (
+           ( normI(A),         NORM = 'I' or 'i'
+           (
+           ( normF(A),         NORM = 'F', 'f', 'E' or 'e'
+where  norm1  denotes the  one norm of a matrix (maximum column sum), normI  denotes the  infinity 
+norm of a matrix  (maximum row sum) and normF  denotes the  Frobenius norm of a matrix (square root
+of sum of squares).  Note that  max(abs(A(i,j)))  is not a consistent matrix norm.
+
+Arguments:
+NORM:  Specifies the value to be returned in DLANTB as described above.
+UPLO:  Specifies whether the matrix A is upper or lower triangular.
+       = 'U':  Upper triangular
+       = 'L':  Lower triangular
+DIAG:  Specifies whether or not the matrix A is unit triangular.
+       = 'N':  Non-unit triangular
+       = 'U':  Unit triangular
+N:     The order of the matrix A.  N >= 0.  When N = 0, DLANTB is set to zero.
+K:     The number of super-diagonals of the matrix A if UPLO = 'U', or the number of sub-diagonals 
+       of the matrix A if UPLO = 'L'. K >= 0.
+AB:    array, dimension (LDAB,N). The upper or lower triangular band matrix A, stored in the first 
+       k+1 rows of AB.  The j-th column of A is stored in the j-th column of the array AB as follows:
+       if UPLO = 'U', AB(k+1+i-j,j) = A(i,j) for max(1,j-k)<=i<=j; 
+       if UPLO = 'L', AB(1+i-j,j)   = A(i,j) for j<=i<=min(n,j+k).
+       Note that when DIAG = 'U', the elements of the array AB corresponding to the diagonal 
+       elements of the matrix A are not referenced, but are assumed to be one.
+LDAB:  The leading dimension of the array AB.  LDAB >= K+1.
+WORK:  array, dimension (MAX(1,LWORK)), where LWORK >= N when NORM = 'I'; otherwise, WORK is not
+       referenced.  */
+template<class T>
+T lantb(char *norm, char *uplo, char *diag, integer *n, integer *k, T *ab, integer *ldab, T *work, 
+  ftnlen norm_len, ftnlen uplo_len, ftnlen diag_len);
+
+//-------------------------------------------------------------------------------------------------
+
+/**
+Purpose:
 DLAQGB equilibrates a general M by N band matrix A with KL subdiagonals and KU superdiagonals 
 using the row and scaling factors in the vectors R and C.
 
