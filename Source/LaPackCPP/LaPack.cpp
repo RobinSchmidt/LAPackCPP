@@ -2295,6 +2295,64 @@ doublereal langb(char *norm, integer *n, integer *kl, integer *ku, T *ab, intege
 
 //-------------------------------------------------------------------------------------------------
 
+// translated from dlacpy - LAPACK auxiliary routine (version 3.7.0) 
+template<class T>
+int lacpy(char *uplo, integer *m, integer *n, T *a, integer *lda, T *b, integer *ldb, 
+  ftnlen uplo_len)
+{
+  /* System generated locals */
+  integer a_dim1, a_offset, b_dim1, b_offset, i__1, i__2;
+
+  /* Local variables */
+  static integer i__, j;
+  extern logical lsame_(char *, char *, ftnlen, ftnlen);
+
+  /* Parameter adjustments */
+  a_dim1 = *lda;
+  a_offset = 1 + a_dim1;
+  a -= a_offset;
+  b_dim1 = *ldb;
+  b_offset = 1 + b_dim1;
+  b -= b_offset;
+
+  /* Function Body */
+  if (lsame_(uplo, "U", (ftnlen)1, (ftnlen)1)) {
+    i__1 = *n;
+    for (j = 1; j <= i__1; ++j) {
+      i__2 = min(j,*m);
+      for (i__ = 1; i__ <= i__2; ++i__) {
+        b[i__ + j * b_dim1] = a[i__ + j * a_dim1];
+        /* L10: */
+      }
+      /* L20: */
+    }
+  } else if (lsame_(uplo, "L", (ftnlen)1, (ftnlen)1)) {
+    i__1 = *n;
+    for (j = 1; j <= i__1; ++j) {
+      i__2 = *m;
+      for (i__ = j; i__ <= i__2; ++i__) {
+        b[i__ + j * b_dim1] = a[i__ + j * a_dim1];
+        /* L30: */
+      }
+      /* L40: */
+    }
+  } else {
+    i__1 = *n;
+    for (j = 1; j <= i__1; ++j) {
+      i__2 = *m;
+      for (i__ = 1; i__ <= i__2; ++i__) {
+        b[i__ + j * b_dim1] = a[i__ + j * a_dim1];
+        /* L50: */
+      }
+      /* L60: */
+    }
+  }
+  return 0;
+
+} /* dlacpy_ */
+
+//-------------------------------------------------------------------------------------------------
+
 // translated from dlaswp, LAPACK auxiliary routine (version 3.7.1)
 template<class T>
 int laswp(integer *n, T *a, integer *lda, integer *k1, integer *k2, integer *ipiv, integer *incx)

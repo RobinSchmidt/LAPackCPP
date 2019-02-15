@@ -567,6 +567,26 @@ T langb(char *norm, integer *n, integer *kl, integer *ku, T *ab, integer *ldab, 
 
 //-------------------------------------------------------------------------------------------------
 
+/** Copies all or part of a two-dimensional matrix A to another matrix B.
+
+Arguments:
+UPLO: Specifies the part of the matrix A to be copied to B.
+      = 'U':      Upper triangular part
+      = 'L':      Lower triangular part
+      Otherwise:  All of the matrix A
+M:    The number of rows of the matrix A.  M >= 0.
+N:    The number of columns of the matrix A.  N >= 0.
+A:    array, dimension (LDA,N). The m by n matrix A.  If UPLO = 'U', only the upper triangle or 
+      trapezoid is accessed; if UPLO = 'L', only the lower triangle or trapezoid is accessed.
+LDA:  The leading dimension of the array A.  LDA >= max(1,M).
+B:    array, dimension (LDB,N). On exit, B = A in the locations specified by UPLO.
+LDB:  The leading dimension of the array B.  LDB >= max(1,M). */
+template<class T>
+int lacpy(char *uplo, integer *m, integer *n, T *a, integer *lda, T *b, integer *ldb, 
+  ftnlen uplo_len);
+
+//-------------------------------------------------------------------------------------------------
+
 /* laswp performs a series of row interchanges on the matrix A. One row interchange is 
 initiated for each of rows K1 through K2 of A.
 

@@ -3,7 +3,7 @@
 f2c functions that are needed: i_len, s_copy, s_cmp, i_nint
 
 Functions that have to be translated next:
- dlangb, dlacpy, dlaqgb, dlantb, dlamch, dgbcon, dgbequ, dgbrfs, 
+ dlacpy, dlaqgb, dlantb, dlamch, dgbcon, dgbequ, dgbrfs, 
  dgbtrf*, dgbtrs*
  dgbsvxx
 
@@ -27,7 +27,7 @@ Lapack-Computational:
  dgbtrf, dgbtrs, dgbtf2,
 
 Lapack-Auxiliary: 
- dlaswp, ieeeck, ilaenv, iparmq
+ dlangb, dlaswp, ieeeck, ilaenv, iparmq
 
 
 Some functions define static local variables (for example laswp) - maybe we 
