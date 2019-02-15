@@ -3,6 +3,8 @@
 #include "LaPack.hpp"
 #include <cmath>       // maybe move elsewhere
 #include <limits>      // uses in lamch to inquire numeric parameters
+#include <algorithm>   // for min/max
+
 
 using namespace BlasCPP;
 
@@ -12,6 +14,28 @@ namespace LaPackCPP {
 // namespace, so in order to not have to enter a :: each time a function is called, we use this
 // wrappers/delegators here inside the namspace - todo: clean this up! try to get rid and if
 // impossible, at least inline them and maybe move to some other file
+
+#undef min
+#undef max
+
+inline long min(long x, long y) {  return std::min(x, y); }
+inline long max(long x, long y) {  return std::max(x, y); }
+
+inline double min(double x, double y) {  return std::min(x, y); }
+inline double max(double x, double y) {  return std::max(x, y); }
+
+
+//template<class Tx, class Ty>
+//inline Tx min(Tx x, Ty y)
+//{
+//  return std::min(x, Tx(y));
+//}
+//
+//template<class T>
+//inline T max(T x, T y)
+//{
+//  return std::max(x, y);
+//}
 
 double log(doublereal x)  
 {
@@ -785,6 +809,9 @@ template<class T>
 int gbcon(char *norm, integer *n, integer *kl, integer *ku, T *ab, integer *ldab, integer *ipiv, 
   T *anorm, T *rcond, T *work, integer *iwork, integer *info, ftnlen norm_len)
 {
+  /* Table of constant values */
+  static integer c__1 = 1;
+
   /* System generated locals */
   integer ab_dim1, ab_offset, i__1, i__2, i__3;
   T d__1;
@@ -1182,6 +1209,12 @@ int gbrfs(char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, T *a
   T *afb, integer *ldafb, integer *ipiv, T *b, integer *ldb, T *x, integer *ldx, T *ferr, T *berr, 
   T *work, integer *iwork, integer *info, ftnlen trans_len)
 {
+  /* Table of constant values */
+  static integer c__1 = 1;
+  static doublereal c_b15 = -1.;
+  static doublereal c_b17 = 1.;
+
+
   /* System generated locals */
   integer ab_dim1, ab_offset, afb_dim1, afb_offset, b_dim1, b_offset, 
     x_dim1, x_offset, i__1, i__2, i__3, i__4, i__5, i__6, i__7;
@@ -3177,9 +3210,12 @@ integer iparmq(integer *ispec, char *name__, char *opts, integer *n, integer
 
 // translated from dlangb - LAPACK auxiliary routine (version 3.7.0) */
 template<class T>
-doublereal langb(char *norm, integer *n, integer *kl, integer *ku, T *ab, integer *ldab, T *work, 
+T langb(char *norm, integer *n, integer *kl, integer *ku, T *ab, integer *ldab, T *work, 
   ftnlen norm_len)
 {
+  /* Table of constant values */
+  static integer c__1 = 1;
+
   /* System generated locals */
   integer ab_dim1, ab_offset, i__1, i__2, i__3, i__4, i__5, i__6;
   T ret_val, d__1;
@@ -3373,9 +3409,6 @@ int lacpy(char *uplo, integer *m, integer *n, T *a, integer *lda, T *b, integer 
 // numeric_limits - verify everything! ..also in smach.c the functions also return double precision
 // values - check that - maybe we shouls return double here, too instead of T
 
-#undef min
-#undef max
-
 template<class T>
 integer minexponent_(T *dummy)
 {
@@ -3497,9 +3530,8 @@ doublereal lamch(char *cmach, ftnlen cmach_len)
 
 // from dlantb - LAPACK auxiliary routine (version 3.7.0)
 template<class T>
-T lantb(char *norm, char *uplo, char *diag, integer *n, integer *k,
-  T *ab, integer *ldab, doublereal *work, ftnlen norm_len, 
-  ftnlen uplo_len, ftnlen diag_len)
+T lantb(char *norm, char *uplo, char *diag, integer *n, integer *k, T *ab, integer *ldab, 
+  T *work, ftnlen norm_len, ftnlen uplo_len, ftnlen diag_len)
 {
   /* Table of constant values */
   static integer c__1 = 1;
@@ -4046,11 +4078,11 @@ template int gbsv(long int *n, long int *kl, long int *ku, long int *nrhs, doubl
   long int *ldab, long int *ipiv, double *b, long int *ldb, long int *info);
 
 
-//template int gbsvx(char *fact, char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, 
-//  doublereal *ab, integer *ldab, doublereal *afb, integer *ldafb, integer *ipiv, char *equed, 
-//  doublereal *r__, doublereal *c__, doublereal *b, integer *ldb, doublereal *x, integer *ldx, 
-//  doublereal *rcond, doublereal *ferr, doublereal *berr, doublereal *work, integer *iwork, 
-//  integer *info, ftnlen fact_len, ftnlen trans_len, ftnlen equed_len);
+template int gbsvx(char *fact, char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, 
+  doublereal *ab, integer *ldab, doublereal *afb, integer *ldafb, integer *ipiv, char *equed, 
+  doublereal *r__, doublereal *c__, doublereal *b, integer *ldb, doublereal *x, integer *ldx, 
+  doublereal *rcond, doublereal *ferr, doublereal *berr, doublereal *work, integer *iwork, 
+  integer *info, ftnlen fact_len, ftnlen trans_len, ftnlen equed_len);
 
 
 

@@ -9,9 +9,6 @@ Functions that have to be translated next:
     a generic way to return the numeric limits of the respective type using
     std::numeric_limits (most probably)
 
-  dgbsvxx
-
-
 
 Functions that have been translated:
 
@@ -25,10 +22,10 @@ Blas Level 3:
   dgemm, dtrsm 
 
 Lapack-Drivers:
-  dgbsv, dgbsvx
+  dgbsv, dgbsvx, dgbsvxx
 
 Lapack-Computational:
-  dgbcon,dgbequ, dgbrfs, dgbtrf, dgbtrs, dgbtf2,
+  dgbcon, dgbequ, dgbrfs, dgbtrf, dgbtrs, dgbtf2,
 
 Lapack-Auxiliary: 
   dlacpy, dlangb, dlantb, dlaqgb, dlaswp, ieeeck, ilaenv, iparmq
