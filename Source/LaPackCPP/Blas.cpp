@@ -7,6 +7,71 @@ namespace BlasCPP {
 //=================================================================================================
 // BLAS level 1 routines
 
+
+
+//-------------------------------------------------------------------------------------------------
+
+// from dasum - Reference BLAS level1 routine (version 3.8.0) 
+template<class T>
+T asum(integer *n, T *dx, integer *incx)
+{
+  /* System generated locals */
+  integer i__1, i__2;
+  T ret_val, d__1, d__2, d__3, d__4, d__5, d__6;
+
+  /* Local variables */
+  static integer i__, m, mp1;
+  static T dtemp;
+  static integer nincx;
+
+  /* Parameter adjustments */
+  --dx;
+
+  /* Function Body */
+  ret_val = 0.;
+  dtemp = 0.;
+  if (*n <= 0 || *incx <= 0) {
+    return ret_val;
+  }
+  if (*incx == 1) {
+    /*        code for increment equal to 1 */
+    /*        clean-up loop */
+    m = *n % 6;
+    if (m != 0) {
+      i__1 = m;
+      for (i__ = 1; i__ <= i__1; ++i__) {
+        dtemp += (d__1 = dx[i__], abs(d__1));
+      }
+      if (*n < 6) {
+        ret_val = dtemp;
+        return ret_val;
+      }
+    }
+    mp1 = m + 1;
+    i__1 = *n;
+    for (i__ = mp1; i__ <= i__1; i__ += 6) {
+      dtemp = dtemp + (d__1 = dx[i__], abs(d__1)) + (d__2 = dx[i__ + 1],
+        abs(d__2)) + (d__3 = dx[i__ + 2], abs(d__3)) + (d__4 = 
+          dx[i__ + 3], abs(d__4)) + (d__5 = dx[i__ + 4], abs(d__5)) 
+        + (d__6 = dx[i__ + 5], abs(d__6));
+    }
+  } else {
+
+    /*        code for increment not equal to 1 */
+
+    nincx = *n * *incx;
+    i__1 = nincx;
+    i__2 = *incx;
+    for (i__ = 1; i__2 < 0 ? i__ >= i__1 : i__ <= i__1; i__ += i__2) {
+      dtemp += (d__1 = dx[i__], abs(d__1));
+    }
+  }
+  ret_val = dtemp;
+  return ret_val;
+} /* dasum_ */
+
+  //-------------------------------------------------------------------------------------------------
+
 // translated from daxpy, Reference BLAS level1 routine (version 3.8.0)
 template<class T>
 int axpy(long int* n, T *da, T *dx, long int *incx, T *dy, long int *incy)
@@ -68,7 +133,6 @@ int axpy(long int* n, T *da, T *dx, long int *incx, T *dy, long int *incy)
   }
   return 0;
 }
-
 
 //-------------------------------------------------------------------------------------------------
 

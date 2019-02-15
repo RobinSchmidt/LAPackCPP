@@ -3393,8 +3393,8 @@ T langb(char *norm, integer *n, integer *kl, integer *ku, T *ab, integer *ldab, 
   static T sum, temp, scale;
   //extern logical lsame_(char *, char *, ftnlen, ftnlen);
   static T value;
-  extern logical disnan_(doublereal *);
-  extern /* Subroutine */ int dlassq_(integer *, T *, integer *, T *, T *);
+  //extern logical disnan_(doublereal *);
+  //extern /* Subroutine */ int dlassq_(integer *, T *, integer *, T *, T *);
 
   /* Parameter adjustments */
   ab_dim1 = *ldab;
@@ -3419,7 +3419,7 @@ T langb(char *norm, integer *n, integer *kl, integer *ku, T *ab, integer *ldab, 
       i__3 = min(i__4,i__5);
       for (i__ = max(i__2,1); i__ <= i__3; ++i__) {
         temp = (d__1 = ab[i__ + j * ab_dim1], abs(d__1));
-        if (value < temp || disnan_(&temp)) {
+        if (value < temp || isnan(&temp)) {
           value = temp;
         }
         /* L10: */
@@ -3444,7 +3444,7 @@ T langb(char *norm, integer *n, integer *kl, integer *ku, T *ab, integer *ldab, 
         sum += (d__1 = ab[i__ + j * ab_dim1], abs(d__1));
         /* L30: */
       }
-      if (value < sum || disnan_(&sum)) {
+      if (value < sum || isnan(&sum)) {
         value = sum;
       }
       /* L40: */
@@ -3476,7 +3476,7 @@ T langb(char *norm, integer *n, integer *kl, integer *ku, T *ab, integer *ldab, 
     i__1 = *n;
     for (i__ = 1; i__ <= i__1; ++i__) {
       temp = work[i__];
-      if (value < temp || disnan_(&temp)) {
+      if (value < temp || isnan(&temp)) {
         value = temp;
       }
       /* L80: */
@@ -3497,7 +3497,7 @@ T langb(char *norm, integer *n, integer *kl, integer *ku, T *ab, integer *ldab, 
       /* Computing MIN */
       i__2 = *n, i__3 = j + *kl;
       i__4 = min(i__2,i__3) - l + 1;
-      dlassq_(&i__4, &ab[k + j * ab_dim1], &c__1, &scale, &sum);
+      lassq(&i__4, &ab[k + j * ab_dim1], &c__1, &scale, &sum);
       /* L90: */
     }
     value = scale * sqrt(sum);
@@ -3714,8 +3714,8 @@ T lantb(char *norm, char *uplo, char *diag, integer *n, integer *k, T *ab, integ
   static logical udiag;
   //extern logical lsame_(char *, char *, ftnlen, ftnlen);
   static T value;
-  extern logical disnan_(T *);
-  extern /* Subroutine */ int dlassq_(integer *, T *, integer *, T *, T *);
+  //extern logical disnan_(T *);
+  //extern /* Subroutine */ int dlassq_(integer *, T *, integer *, T *, T *);
 
   /* Parameter adjustments */
   ab_dim1 = *ldab;
@@ -3740,7 +3740,7 @@ T lantb(char *norm, char *uplo, char *diag, integer *n, integer *k, T *ab, integ
           i__3 = *k;
           for (i__ = max(i__2,1); i__ <= i__3; ++i__) {
             sum = (d__1 = ab[i__ + j * ab_dim1], abs(d__1));
-            if (value < sum || disnan_(&sum)) {
+            if (value < sum || isnan(&sum)) {
               value = sum;
             }
             /* L10: */
@@ -3755,7 +3755,7 @@ T lantb(char *norm, char *uplo, char *diag, integer *n, integer *k, T *ab, integ
           i__3 = min(i__2,i__4);
           for (i__ = 2; i__ <= i__3; ++i__) {
             sum = (d__1 = ab[i__ + j * ab_dim1], abs(d__1));
-            if (value < sum || disnan_(&sum)) {
+            if (value < sum || isnan(&sum)) {
               value = sum;
             }
             /* L30: */
@@ -3773,7 +3773,7 @@ T lantb(char *norm, char *uplo, char *diag, integer *n, integer *k, T *ab, integ
           i__2 = *k + 1;
           for (i__ = max(i__3,1); i__ <= i__2; ++i__) {
             sum = (d__1 = ab[i__ + j * ab_dim1], abs(d__1));
-            if (value < sum || disnan_(&sum)) {
+            if (value < sum || isnan(&sum)) {
               value = sum;
             }
             /* L50: */
@@ -3788,7 +3788,7 @@ T lantb(char *norm, char *uplo, char *diag, integer *n, integer *k, T *ab, integ
           i__2 = min(i__3,i__4);
           for (i__ = 1; i__ <= i__2; ++i__) {
             sum = (d__1 = ab[i__ + j * ab_dim1], abs(d__1));
-            if (value < sum || disnan_(&sum)) {
+            if (value < sum || isnan(&sum)) {
               value = sum;
             }
             /* L70: */
@@ -3826,7 +3826,7 @@ T lantb(char *norm, char *uplo, char *diag, integer *n, integer *k, T *ab, integ
             /* L100: */
           }
         }
-        if (value < sum || disnan_(&sum)) {
+        if (value < sum || isnan(&sum)) {
           value = sum;
         }
         /* L110: */
@@ -3853,7 +3853,7 @@ T lantb(char *norm, char *uplo, char *diag, integer *n, integer *k, T *ab, integ
             /* L130: */
           }
         }
-        if (value < sum || disnan_(&sum)) {
+        if (value < sum || isnan(&sum)) {
           value = sum;
         }
         /* L140: */
@@ -3948,7 +3948,7 @@ T lantb(char *norm, char *uplo, char *diag, integer *n, integer *k, T *ab, integ
     i__1 = *n;
     for (i__ = 1; i__ <= i__1; ++i__) {
       sum = work[i__];
-      if (value < sum || disnan_(&sum)) {
+      if (value < sum || isnan(&sum)) {
         value = sum;
       }
       /* L270: */
@@ -3970,8 +3970,7 @@ T lantb(char *norm, char *uplo, char *diag, integer *n, integer *k, T *ab, integ
             i__3 = min(i__4,*k);
             /* Computing MAX */
             i__2 = *k + 2 - j;
-            dlassq_(&i__3, &ab[max(i__2,1) + j * ab_dim1], &c__1, 
-              &scale, &sum);
+            lassq(&i__3, &ab[max(i__2,1) + j * ab_dim1], &c__1, &scale, &sum);
             /* L280: */
           }
         }
@@ -3985,8 +3984,7 @@ T lantb(char *norm, char *uplo, char *diag, integer *n, integer *k, T *ab, integ
           i__3 = min(i__4,i__2);
           /* Computing MAX */
           i__5 = *k + 2 - j;
-          dlassq_(&i__3, &ab[max(i__5,1) + j * ab_dim1], &c__1, &
-            scale, &sum);
+          lassq(&i__3, &ab[max(i__5,1) + j * ab_dim1], &c__1, &scale, &sum);
           /* L290: */
         }
       }
@@ -4000,8 +3998,7 @@ T lantb(char *norm, char *uplo, char *diag, integer *n, integer *k, T *ab, integ
             /* Computing MIN */
             i__4 = *n - j;
             i__3 = min(i__4,*k);
-            dlassq_(&i__3, &ab[j * ab_dim1 + 2], &c__1, &scale, &
-              sum);
+            lassq(&i__3, &ab[j * ab_dim1 + 2], &c__1, &scale, &sum);
             /* L300: */
           }
         }
@@ -4013,7 +4010,7 @@ T lantb(char *norm, char *uplo, char *diag, integer *n, integer *k, T *ab, integ
           /* Computing MIN */
           i__4 = *n - j + 1, i__2 = *k + 1;
           i__3 = min(i__4,i__2);
-          dlassq_(&i__3, &ab[j * ab_dim1 + 1], &c__1, &scale, &sum);
+          lassq(&i__3, &ab[j * ab_dim1 + 1], &c__1, &scale, &sum);
           /* L310: */
         }
       }
@@ -4023,9 +4020,6 @@ T lantb(char *norm, char *uplo, char *diag, integer *n, integer *k, T *ab, integ
 
   ret_val = value;
   return ret_val;
-
-  /*     End of DLANTB */
-
 } /* dlantb_ */
 
 //-------------------------------------------------------------------------------------------------
@@ -4163,7 +4157,7 @@ int lassq(integer *n, T *x, integer *incx, T *scale, T *sumsq)
     i__2 = *incx;
     for (ix = 1; i__2 < 0 ? ix >= i__1 : ix <= i__1; ix += i__2) {
       absxi = (d__1 = x[ix], abs(d__1));
-      if (absxi > 0. || disnan_(&absxi)) {
+      if (absxi > 0. || isnan(&absxi)) {
         if (*scale < absxi) {
           /* Computing 2nd power */
           d__1 = *scale / absxi;

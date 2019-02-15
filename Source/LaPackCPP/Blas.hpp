@@ -33,6 +33,13 @@ namespace BlasCPP {
 
 /** \name BLAS level 1 routines (operations involving scalars and vectors) */
 
+/** Takes the sum of the absolute values.
+N:    number of elements in input vector(s)
+DX:   array, dimension ( 1 + ( N - 1 )*abs( INCX ) )
+INCX: storage spacing between elements of DX  */
+template<class T>
+T asum(integer *n, T *dx, integer *incx);
+
 /** Computes constant times a vector plus a vector: y = a*x + y
 N:    Number of elements in input vector(s)
 a:    On entry, a specifies the scalar alpha.
