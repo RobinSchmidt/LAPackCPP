@@ -114,7 +114,7 @@ FACT:  Specifies whether or not the factored form of the matrix A is supplied on
 TRANS: Specifies the form of the system of equations.
        = 'N':  A * X = B     (No transpose)
        = 'T':  A**T * X = B  (Transpose)
-       = 'C':  A**H * X = B  (Transpose)
+       = 'C':  A**H * X = B  (Transpose) ...ToDo: enable for complex use -> hermitian transpose
 N:     The number of linear equations, i.e., the order of the matrix A.  N >= 0.
 KL:    The number of subdiagonals within the band of A.  KL >= 0.
 KU:    The number of superdiagonals within the band of A.  KU >= 0.
