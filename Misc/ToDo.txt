@@ -8,7 +8,7 @@ f2c functions that are needed: i_len, s_copy, s_cmp, i_nint
 
 Functions that have to be translated next:
 
- dlatbs, dla_gbrpvgrw__, dgbequb, dgbrfsx, disnan, dlassq
+  dlassq, dlacn2, dlatbs, dla_gbrpvgrw__, dgbequb, dgbrfsx, disnan, 
 
 
 
@@ -30,8 +30,11 @@ Lapack-Computational:
   dgbcon, dgbequ, dgbrfs, dgbtrf, dgbtrs, dgbtf2,
 
 Lapack-Auxiliary: 
-  dlacpy, dlangb, dlantb, dlaqgb, dlaswp, ieeeck, ilaenv, iparmq
+  dlacpy, dlangb, dlantb, dlaqgb, dlaswp, ieeeck, ilaenv, iparmq, 
+  disnan (reimplemented), 
 
+  
+  
   
 ..check langb - it can't be templatized straightforwardly because it has no 
 template-typpe inputs ...wait - it does!

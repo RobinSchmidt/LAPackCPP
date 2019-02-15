@@ -845,9 +845,9 @@ int gbcon(char *norm, integer *n, integer *kl, integer *ku, T *ab, integer *ldab
 
   /* Function Body */
   *info = 0;
-  onenrm = *(unsigned char *)norm == '1' || lsame_(norm, "O", (ftnlen)1, (
+  onenrm = *(unsigned char *)norm == '1' || lsame(norm, "O", (ftnlen)1, (
     ftnlen)1);
-  if (! onenrm && ! lsame_(norm, "I", (ftnlen)1, (ftnlen)1)) {
+  if (! onenrm && ! lsame(norm, "I", (ftnlen)1, (ftnlen)1)) {
     *info = -1;
   } else if (*n < 0) {
     *info = -2;
@@ -862,7 +862,7 @@ int gbcon(char *norm, integer *n, integer *kl, integer *ku, T *ab, integer *ldab
   }
   if (*info != 0) {
     i__1 = -(*info);
-    xerbla_("DGBCON", &i__1, (ftnlen)6);
+    xerbla("DGBCON", &i__1, (ftnlen)6);
     return 0;
   }
 
@@ -910,7 +910,7 @@ L10:
             work[j] = t;
           }
           d__1 = -t;
-          daxpy_(&lm, &d__1, &ab[kd + 1 + j * ab_dim1], &c__1, &
+          axpy(&lm, &d__1, &ab[kd + 1 + j * ab_dim1], &c__1, &
             work[j + 1], &c__1);
           /* L20: */
         }
@@ -955,7 +955,7 @@ L10:
 
     *(unsigned char *)normin = 'Y';
     if (scale != 1.) {
-      ix = idamax_(n, &work[1], &c__1);
+      ix = iamax(n, &work[1], &c__1);
       if (scale < (d__1 = work[ix], abs(d__1)) * smlnum || scale == 0.) 
       {
         goto L40;
@@ -4066,7 +4066,7 @@ template int gbtrs(char *trans, integer *n, integer *kl, integer *ku, integer *n
 template int gbsv(long int *n, long int *kl, long int *ku, long int *nrhs, double *ab, 
   long int *ldab, long int *ipiv, double *b, long int *ldb, long int *info);
 
-
+//
 //template int gbsvx(char *fact, char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, 
 //  doublereal *ab, integer *ldab, doublereal *afb, integer *ldafb, integer *ipiv, char *equed, 
 //  doublereal *r__, doublereal *c__, doublereal *b, integer *ldb, doublereal *x, integer *ldx, 

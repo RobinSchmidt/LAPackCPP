@@ -916,6 +916,11 @@ IPARMQ(ISPEC=16) Select structured matrix multiply. (See ISPEC=16 above for deta
 integer iparmq(integer *ispec, char *name__, char *opts, integer *n, integer *ilo, integer *ihi, 
   integer *lwork, ftnlen name_len, ftnlen opts_len);
 
+
+/** Returns true, if x is NaN, flase otherwise (re-implemented by Robin Schmidt). */
+template<class T>
+logical isnan(T *x) { return *x != *x; }
+
 //-------------------------------------------------------------------------------------------------
 
 /**
