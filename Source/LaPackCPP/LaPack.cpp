@@ -659,6 +659,220 @@ L40:
 
 //-------------------------------------------------------------------------------------------------
 
+// from gbequ - LAPACK computational routine (version 3.7.0)
+template<class T>
+int gbequ(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab, T *r__, T *c__, 
+  T *rowcnd, T *colcnd, T *amax, integer *info)
+{
+  /* System generated locals */
+  integer ab_dim1, ab_offset, i__1, i__2, i__3, i__4;
+  T d__1, d__2, d__3;
+
+  /* Local variables */
+  static integer i__, j, kd;
+  static T rcmin, rcmax;
+  extern doublereal dlamch_(char *, ftnlen);
+  extern /* Subroutine */ int xerbla_(char *, integer *, ftnlen);
+  static T bignum, smlnum;
+
+  /* Parameter adjustments */
+  ab_dim1 = *ldab;
+  ab_offset = 1 + ab_dim1;
+  ab -= ab_offset;
+  --r__;
+  --c__;
+
+  /* Function Body */
+  *info = 0;
+  if (*m < 0) {
+    *info = -1;
+  } else if (*n < 0) {
+    *info = -2;
+  } else if (*kl < 0) {
+    *info = -3;
+  } else if (*ku < 0) {
+    *info = -4;
+  } else if (*ldab < *kl + *ku + 1) {
+    *info = -6;
+  }
+  if (*info != 0) {
+    i__1 = -(*info);
+    xerbla_("DGBEQU", &i__1, (ftnlen)6);
+    return 0;
+  }
+
+  /*     Quick return if possible */
+
+  if (*m == 0 || *n == 0) {
+    *rowcnd = 1.;
+    *colcnd = 1.;
+    *amax = 0.;
+    return 0;
+  }
+
+  /*     Get machine constants. */
+
+  smlnum = dlamch_("S", (ftnlen)1);
+  bignum = 1. / smlnum;
+
+  /*     Compute row scale factors. */
+
+  i__1 = *m;
+  for (i__ = 1; i__ <= i__1; ++i__) {
+    r__[i__] = 0.;
+    /* L10: */
+  }
+
+  /*     Find the maximum element in each row. */
+
+  kd = *ku + 1;
+  i__1 = *n;
+  for (j = 1; j <= i__1; ++j) {
+    /* Computing MAX */
+    i__2 = j - *ku;
+    /* Computing MIN */
+    i__4 = j + *kl;
+    i__3 = min(i__4,*m);
+    for (i__ = max(i__2,1); i__ <= i__3; ++i__) {
+      /* Computing MAX */
+      d__2 = r__[i__], d__3 = (d__1 = ab[kd + i__ - j + j * ab_dim1], 
+        abs(d__1));
+      r__[i__] = max(d__2,d__3);
+      /* L20: */
+    }
+    /* L30: */
+  }
+
+  /*     Find the maximum and minimum scale factors. */
+
+  rcmin = bignum;
+  rcmax = 0.;
+  i__1 = *m;
+  for (i__ = 1; i__ <= i__1; ++i__) {
+    /* Computing MAX */
+    d__1 = rcmax, d__2 = r__[i__];
+    rcmax = max(d__1,d__2);
+    /* Computing MIN */
+    d__1 = rcmin, d__2 = r__[i__];
+    rcmin = min(d__1,d__2);
+    /* L40: */
+  }
+  *amax = rcmax;
+
+  if (rcmin == 0.) {
+
+    /*        Find the first zero scale factor and return an error code. */
+
+    i__1 = *m;
+    for (i__ = 1; i__ <= i__1; ++i__) {
+      if (r__[i__] == 0.) {
+        *info = i__;
+        return 0;
+      }
+      /* L50: */
+    }
+  } else {
+
+    /*        Invert the scale factors. */
+
+    i__1 = *m;
+    for (i__ = 1; i__ <= i__1; ++i__) {
+      /* Computing MIN */
+      /* Computing MAX */
+      d__2 = r__[i__];
+      d__1 = max(d__2,smlnum);
+      r__[i__] = 1. / min(d__1,bignum);
+      /* L60: */
+    }
+
+    /*        Compute ROWCND = min(R(I)) / max(R(I)) */
+
+    *rowcnd = max(rcmin,smlnum) / min(rcmax,bignum);
+  }
+
+  /*     Compute column scale factors */
+
+  i__1 = *n;
+  for (j = 1; j <= i__1; ++j) {
+    c__[j] = 0.;
+    /* L70: */
+  }
+
+  /*     Find the maximum element in each column, */
+  /*     assuming the row scaling computed above. */
+
+  kd = *ku + 1;
+  i__1 = *n;
+  for (j = 1; j <= i__1; ++j) {
+    /* Computing MAX */
+    i__3 = j - *ku;
+    /* Computing MIN */
+    i__4 = j + *kl;
+    i__2 = min(i__4,*m);
+    for (i__ = max(i__3,1); i__ <= i__2; ++i__) {
+      /* Computing MAX */
+      d__2 = c__[j], d__3 = (d__1 = ab[kd + i__ - j + j * ab_dim1], abs(
+        d__1)) * r__[i__];
+      c__[j] = max(d__2,d__3);
+      /* L80: */
+    }
+    /* L90: */
+  }
+
+  /*     Find the maximum and minimum scale factors. */
+
+  rcmin = bignum;
+  rcmax = 0.;
+  i__1 = *n;
+  for (j = 1; j <= i__1; ++j) {
+    /* Computing MIN */
+    d__1 = rcmin, d__2 = c__[j];
+    rcmin = min(d__1,d__2);
+    /* Computing MAX */
+    d__1 = rcmax, d__2 = c__[j];
+    rcmax = max(d__1,d__2);
+    /* L100: */
+  }
+
+  if (rcmin == 0.) {
+
+    /*        Find the first zero scale factor and return an error code. */
+
+    i__1 = *n;
+    for (j = 1; j <= i__1; ++j) {
+      if (c__[j] == 0.) {
+        *info = *m + j;
+        return 0;
+      }
+      /* L110: */
+    }
+  } else {
+
+    /*        Invert the scale factors. */
+
+    i__1 = *n;
+    for (j = 1; j <= i__1; ++j) {
+      /* Computing MIN */
+      /* Computing MAX */
+      d__2 = c__[j];
+      d__1 = max(d__2,smlnum);
+      c__[j] = 1. / min(d__1,bignum);
+      /* L120: */
+    }
+
+    /*        Compute COLCND = min(C(J)) / max(C(J)) */
+
+    *colcnd = max(rcmin,smlnum) / min(rcmax,bignum);
+  }
+
+  return 0;
+
+  /*     End of DGBEQU */
+
+} /* dgbequ_ */
+
+//-------------------------------------------------------------------------------------------------
+
 // from dgbrfs - LAPACK computational routine (version 3.7.0)
 template<class T>
 int gbrfs(char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, T *ab, integer *ldab,
