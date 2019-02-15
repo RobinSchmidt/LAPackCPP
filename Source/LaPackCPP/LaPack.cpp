@@ -475,6 +475,305 @@ int gbsvx(char *fact, char *trans, integer *n, integer *kl, integer *ku, integer
 } /* gbsvx */
 
 
+//-------------------------------------------------------------------------------------------------
+
+// from  dgbsvxx -- LAPACK driver routine (version 3.7.0)  
+template<class T>
+int gbsvxx(char *fact, char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, T *ab, 
+  integer *ldab, T *afb, integer *ldafb, integer *ipiv, char *equed, T *r__, T *c__, T *b, 
+  integer *ldb, T *x, integer *ldx, T *rcond, T *rpvgrw, T *berr, integer *n_err_bnds__, 
+  T *err_bnds_norm__, T *err_bnds_comp__, integer *nparams, T *params, T *work, integer *iwork, 
+  integer *info, ftnlen fact_len, ftnlen trans_len, ftnlen equed_len)
+{
+  /* System generated locals */
+  integer ab_dim1, ab_offset, afb_dim1, afb_offset, b_dim1, b_offset, 
+    x_dim1, x_offset, err_bnds_norm_dim1, err_bnds_norm_offset, 
+    err_bnds_comp_dim1, err_bnds_comp_offset, i__1, i__2;
+  doublereal d__1, d__2;
+
+  /* Local variables */
+  static integer i__, j;
+  static T amax;
+  extern doublereal dla_gbrpvgrw__(integer *, integer *, integer *, integer 
+    *, doublereal *, integer *, doublereal *, integer *);
+  extern logical lsame_(char *, char *, ftnlen, ftnlen);
+  static T rcmin, rcmax;
+  static logical equil;
+  extern doublereal dlamch_(char *, ftnlen);
+  extern /* Subroutine */ int dlaqgb_(integer *, integer *, integer *, 
+    integer *, doublereal *, integer *, doublereal *, doublereal *, 
+    doublereal *, doublereal *, doublereal *, char *, ftnlen);
+  static T colcnd;
+  extern /* Subroutine */ int dgbtrf_(integer *, integer *, integer *, 
+    integer *, doublereal *, integer *, integer *, integer *);
+  static logical nofact;
+  extern /* Subroutine */ int dlacpy_(char *, integer *, integer *, 
+    doublereal *, integer *, doublereal *, integer *, ftnlen), 
+    xerbla_(char *, integer *, ftnlen);
+  static T bignum;
+  extern /* Subroutine */ int dgbtrs_(char *, integer *, integer *, integer 
+    *, integer *, doublereal *, integer *, integer *, doublereal *, 
+    integer *, integer *, ftnlen);
+  static integer infequ;
+  static logical colequ;
+  static T rowcnd;
+  static logical notran;
+  static T smlnum;
+  static logical rowequ;
+  extern /* Subroutine */ int dlascl2_(integer *, integer *, doublereal *, 
+    doublereal *, integer *), dgbequb_(integer *, integer *, integer *
+      , integer *, doublereal *, integer *, doublereal *, doublereal *, 
+      doublereal *, doublereal *, doublereal *, integer *), dgbrfsx_(
+        char *, char *, integer *, integer *, integer *, integer *, 
+        doublereal *, integer *, doublereal *, integer *, integer *, 
+        doublereal *, doublereal *, doublereal *, integer *, doublereal *,
+        integer *, doublereal *, doublereal *, integer *, doublereal *, 
+        doublereal *, integer *, doublereal *, doublereal *, integer *, 
+        integer *, ftnlen, ftnlen);
+
+
+
+  /* Parameter adjustments */
+  err_bnds_comp_dim1 = *nrhs;
+  err_bnds_comp_offset = 1 + err_bnds_comp_dim1;
+  err_bnds_comp__ -= err_bnds_comp_offset;
+  err_bnds_norm_dim1 = *nrhs;
+  err_bnds_norm_offset = 1 + err_bnds_norm_dim1;
+  err_bnds_norm__ -= err_bnds_norm_offset;
+  ab_dim1 = *ldab;
+  ab_offset = 1 + ab_dim1;
+  ab -= ab_offset;
+  afb_dim1 = *ldafb;
+  afb_offset = 1 + afb_dim1;
+  afb -= afb_offset;
+  --ipiv;
+  --r__;
+  --c__;
+  b_dim1 = *ldb;
+  b_offset = 1 + b_dim1;
+  b -= b_offset;
+  x_dim1 = *ldx;
+  x_offset = 1 + x_dim1;
+  x -= x_offset;
+  --berr;
+  --params;
+  --work;
+  --iwork;
+
+  /* Function Body */
+  *info = 0;
+  nofact = lsame_(fact, "N", (ftnlen)1, (ftnlen)1);
+  equil = lsame_(fact, "E", (ftnlen)1, (ftnlen)1);
+  notran = lsame_(trans, "N", (ftnlen)1, (ftnlen)1);
+  smlnum = dlamch_("Safe minimum", (ftnlen)12);
+  bignum = 1. / smlnum;
+  if (nofact || equil) {
+    *(unsigned char *)equed = 'N';
+    rowequ = FALSE_;
+    colequ = FALSE_;
+  } else {
+    rowequ = lsame_(equed, "R", (ftnlen)1, (ftnlen)1) || lsame_(equed, 
+      "B", (ftnlen)1, (ftnlen)1);
+    colequ = lsame_(equed, "C", (ftnlen)1, (ftnlen)1) || lsame_(equed, 
+      "B", (ftnlen)1, (ftnlen)1);
+  }
+
+  /*     Default is failure.  If an input parameter is wrong or */
+  /*     factorization fails, make everything look horrible.  Only the */
+  /*     pivot growth is set here, the rest is initialized in DGBRFSX. */
+
+  *rpvgrw = 0.;
+
+  /*     Test the input parameters.  PARAMS is not tested until DGBRFSX. */
+
+  if (! nofact && ! equil && ! lsame_(fact, "F", (ftnlen)1, (ftnlen)1)) {
+    *info = -1;
+  } else if (! notran && ! lsame_(trans, "T", (ftnlen)1, (ftnlen)1) && ! 
+    lsame_(trans, "C", (ftnlen)1, (ftnlen)1)) {
+    *info = -2;
+  } else if (*n < 0) {
+    *info = -3;
+  } else if (*kl < 0) {
+    *info = -4;
+  } else if (*ku < 0) {
+    *info = -5;
+  } else if (*nrhs < 0) {
+    *info = -6;
+  } else if (*ldab < *kl + *ku + 1) {
+    *info = -8;
+  } else if (*ldafb < (*kl << 1) + *ku + 1) {
+    *info = -10;
+  } else if (lsame_(fact, "F", (ftnlen)1, (ftnlen)1) && ! (rowequ || colequ 
+    || lsame_(equed, "N", (ftnlen)1, (ftnlen)1))) {
+    *info = -12;
+  } else {
+    if (rowequ) {
+      rcmin = bignum;
+      rcmax = 0.;
+      i__1 = *n;
+      for (j = 1; j <= i__1; ++j) {
+        /* Computing MIN */
+        d__1 = rcmin, d__2 = r__[j];
+        rcmin = min(d__1,d__2);
+        /* Computing MAX */
+        d__1 = rcmax, d__2 = r__[j];
+        rcmax = max(d__1,d__2);
+        /* L10: */
+      }
+      if (rcmin <= 0.) {
+        *info = -13;
+      } else if (*n > 0) {
+        rowcnd = max(rcmin,smlnum) / min(rcmax,bignum);
+      } else {
+        rowcnd = 1.;
+      }
+    }
+    if (colequ && *info == 0) {
+      rcmin = bignum;
+      rcmax = 0.;
+      i__1 = *n;
+      for (j = 1; j <= i__1; ++j) {
+        /* Computing MIN */
+        d__1 = rcmin, d__2 = c__[j];
+        rcmin = min(d__1,d__2);
+        /* Computing MAX */
+        d__1 = rcmax, d__2 = c__[j];
+        rcmax = max(d__1,d__2);
+        /* L20: */
+      }
+      if (rcmin <= 0.) {
+        *info = -14;
+      } else if (*n > 0) {
+        colcnd = max(rcmin,smlnum) / min(rcmax,bignum);
+      } else {
+        colcnd = 1.;
+      }
+    }
+    if (*info == 0) {
+      if (*ldb < max(1,*n)) {
+        *info = -15;
+      } else if (*ldx < max(1,*n)) {
+        *info = -16;
+      }
+    }
+  }
+
+  if (*info != 0) {
+    i__1 = -(*info);
+    xerbla_("DGBSVXX", &i__1, (ftnlen)7);
+    return 0;
+  }
+
+  if (equil) {
+
+    /*     Compute row and column scalings to equilibrate the matrix A. */
+
+    dgbequb_(n, n, kl, ku, &ab[ab_offset], ldab, &r__[1], &c__[1], &
+      rowcnd, &colcnd, &amax, &infequ);
+    if (infequ == 0) {
+
+      /*     Equilibrate the matrix. */
+
+      dlaqgb_(n, n, kl, ku, &ab[ab_offset], ldab, &r__[1], &c__[1], &
+        rowcnd, &colcnd, &amax, equed, (ftnlen)1);
+      rowequ = lsame_(equed, "R", (ftnlen)1, (ftnlen)1) || lsame_(equed,
+        "B", (ftnlen)1, (ftnlen)1);
+      colequ = lsame_(equed, "C", (ftnlen)1, (ftnlen)1) || lsame_(equed,
+        "B", (ftnlen)1, (ftnlen)1);
+    }
+
+    /*     If the scaling factors are not applied, set them to 1.0. */
+
+    if (! rowequ) {
+      i__1 = *n;
+      for (j = 1; j <= i__1; ++j) {
+        r__[j] = 1.;
+      }
+    }
+    if (! colequ) {
+      i__1 = *n;
+      for (j = 1; j <= i__1; ++j) {
+        c__[j] = 1.;
+      }
+    }
+  }
+
+  /*     Scale the right hand side. */
+
+  if (notran) {
+    if (rowequ) {
+      dlascl2_(n, nrhs, &r__[1], &b[b_offset], ldb);
+    }
+  } else {
+    if (colequ) {
+      dlascl2_(n, nrhs, &c__[1], &b[b_offset], ldb);
+    }
+  }
+
+  if (nofact || equil) {
+
+    /*        Compute the LU factorization of A. */
+
+    i__1 = *n;
+    for (j = 1; j <= i__1; ++j) {
+      i__2 = (*kl << 1) + *ku + 1;
+      for (i__ = *kl + 1; i__ <= i__2; ++i__) {
+        afb[i__ + j * afb_dim1] = ab[i__ - *kl + j * ab_dim1];
+        /* L30: */
+      }
+      /* L40: */
+    }
+    dgbtrf_(n, n, kl, ku, &afb[afb_offset], ldafb, &ipiv[1], info);
+
+    /*        Return if INFO is non-zero. */
+
+    if (*info > 0) {
+
+      /*           Pivot in column INFO is exactly 0 */
+      /*           Compute the reciprocal pivot growth factor of the */
+      /*           leading rank-deficient INFO columns of A. */
+
+      *rpvgrw = dla_gbrpvgrw__(n, kl, ku, info, &ab[ab_offset], ldab, &
+        afb[afb_offset], ldafb);
+      return 0;
+    }
+  }
+
+  /*     Compute the reciprocal pivot growth factor RPVGRW. */
+
+  *rpvgrw = dla_gbrpvgrw__(n, kl, ku, n, &ab[ab_offset], ldab, &afb[
+    afb_offset], ldafb);
+
+  /*     Compute the solution matrix X. */
+
+  dlacpy_("Full", n, nrhs, &b[b_offset], ldb, &x[x_offset], ldx, (ftnlen)4);
+  dgbtrs_(trans, n, kl, ku, nrhs, &afb[afb_offset], ldafb, &ipiv[1], &x[
+    x_offset], ldx, info, (ftnlen)1);
+
+  /*     Use iterative refinement to improve the computed solution and */
+  /*     compute error bounds and backward error estimates for it. */
+
+  dgbrfsx_(trans, equed, n, kl, ku, nrhs, &ab[ab_offset], ldab, &afb[
+    afb_offset], ldafb, &ipiv[1], &r__[1], &c__[1], &b[b_offset], ldb,
+      &x[x_offset], ldx, rcond, &berr[1], n_err_bnds__, &
+      err_bnds_norm__[err_bnds_norm_offset], &err_bnds_comp__[
+        err_bnds_comp_offset], nparams, &params[1], &work[1], &iwork[1], 
+          info, (ftnlen)1, (ftnlen)1);
+
+  /*     Scale solutions. */
+
+  if (colequ && notran) {
+    dlascl2_(n, nrhs, &c__[1], &x[x_offset], ldx);
+  } else if (rowequ && ! notran) {
+    dlascl2_(n, nrhs, &r__[1], &x[x_offset], ldx);
+  }
+
+  return 0;
+
+  /*     End of DGBSVXX */
+
+} /* dgbsvxx_ */
+
 //=================================================================================================
 // COMPUTATIONAL routines
 
