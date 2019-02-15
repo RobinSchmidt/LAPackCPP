@@ -3,9 +3,7 @@
 f2c functions that are needed: i_len, s_copy, s_cmp, i_nint
 
 Functions that have to be translated next:
- dlamch, dgbequ,
- dgbtrf*, dgbtrs*
- dgbsvxx
+ dlamch, dgbsvxx
 
 
 
@@ -24,12 +22,21 @@ Lapack-Drivers:
   dgbsv, dgbsvx
 
 Lapack-Computational:
-  dgbcon, dgbrfs, dgbtrf, dgbtrs, dgbtf2,
+  dgbcon,dgbequ, dgbrfs, dgbtrf, dgbtrs, dgbtf2,
 
 Lapack-Auxiliary: 
   dlacpy, dlangb, dlantb, dlaqgb, dlaswp, ieeeck, ilaenv, iparmq
 
-
+Implement the "lamch" auxiliary routine in a generic way using templates and
+explicit specializations - this is one of the places, where actually some new
+code needs to be written to make it work correctly in a template-based 
+context. The function lamch should call function templates where explicit
+specializations exist for float and double which return the required values
+by delegating to std::numeric_limits. The bad news is that lamch doesn't take
+a parameter of the type of which we want to inquire the info, so we may need to
+add a dummy parameter to the declaration and change all the calls to lamch 
+accordingly to pass a dummy...hopefully not too much work.....
+  
 Some functions define static local variables (for example laswp) - maybe we 
 should use non-static local varibales instead? Because when two different 
 threads use a routine concurrently, each needs it own local variables. Maybe 

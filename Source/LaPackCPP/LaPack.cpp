@@ -3066,6 +3066,90 @@ int lacpy(char *uplo, integer *m, integer *n, T *a, integer *lda, T *b, integer 
 
 //-------------------------------------------------------------------------------------------------
 
+// DLAMC3 is intended to force A and B to be stored prior to doing the addition of A and B, for use
+// in situations where optimizers might hold one of these in a register.
+// from dlamch.f - LAPACK auxiliary routine (version 3.7.0)
+// templatize!
+doublereal lamc3(doublereal *a, doublereal *b)
+{
+  doublereal ret_val;
+  ret_val = *a + *b;
+  return ret_val;
+}
+
+
+// from lamch - LAPACK auxiliary routine (version 3.7.0) --
+doublereal lamch(char *cmach, ftnlen cmach_len)
+{
+  // some code needs to be written to make that work....
+  double dummy = 0.0;  // added by Robin Schmidt - later, pass the dummy as parameter and change
+                       // all the calls
+
+
+  static doublereal c_b2 = 0.;
+
+  /* System generated locals */
+  doublereal ret_val;
+
+  /* Local variables */
+  static doublereal rnd, eps;
+  extern integer minexponent_(doublereal *), maxexponent_(doublereal *);
+  extern doublereal huge_(doublereal *), tiny_(doublereal *);
+  static doublereal rmach;
+  extern logical lsame_(char *, char *, ftnlen, ftnlen);
+  extern doublereal radix_(doublereal *);
+  static doublereal small, sfmin;
+  extern doublereal digits_(doublereal *), epsilon_(doublereal *);
+
+  /*     Assume rounding, not chopping. Always. */
+  rnd = 1.;
+
+  if (1. == rnd) {
+    eps = epsilon_(&c_b2) * .5f;
+  } else {
+    eps = epsilon_(&c_b2);
+  }
+
+  if (lsame_(cmach, "E", (ftnlen)1, (ftnlen)1)) {
+    rmach = eps;
+  } else if (lsame_(cmach, "S", (ftnlen)1, (ftnlen)1)) {
+    sfmin = tiny_(&c_b2);
+    small = 1. / huge_(&c_b2);
+    if (small >= sfmin) {
+
+      /*           Use SMALL plus a bit, to avoid the possibility of rounding */
+      /*           causing overflow when computing  1/sfmin. */
+
+      sfmin = small * (eps + 1.);
+    }
+    rmach = sfmin;
+  } else if (lsame_(cmach, "B", (ftnlen)1, (ftnlen)1)) {
+    rmach = radix_(&c_b2);
+  } else if (lsame_(cmach, "P", (ftnlen)1, (ftnlen)1)) {
+    rmach = eps * radix_(&c_b2);
+  } else if (lsame_(cmach, "N", (ftnlen)1, (ftnlen)1)) {
+    rmach = digits_(&c_b2);
+  } else if (lsame_(cmach, "R", (ftnlen)1, (ftnlen)1)) {
+    rmach = rnd;
+  } else if (lsame_(cmach, "M", (ftnlen)1, (ftnlen)1)) {
+    rmach = (doublereal) minexponent_(&c_b2);
+  } else if (lsame_(cmach, "U", (ftnlen)1, (ftnlen)1)) {
+    rmach = tiny_(&c_b2);
+  } else if (lsame_(cmach, "L", (ftnlen)1, (ftnlen)1)) {
+    rmach = (doublereal) maxexponent_(&c_b2);
+  } else if (lsame_(cmach, "O", (ftnlen)1, (ftnlen)1)) {
+    rmach = huge_(&c_b2);
+  } else {
+    rmach = 0.;
+  }
+
+  ret_val = rmach;
+  return ret_val;
+
+} /* dlamch_ */
+
+//-------------------------------------------------------------------------------------------------
+
 // from dlantb - LAPACK auxiliary routine (version 3.7.0)
 template<class T>
 T lantb(char *norm, char *uplo, char *diag, integer *n, integer *k,

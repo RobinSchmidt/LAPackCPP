@@ -716,6 +716,44 @@ int lacpy(char *uplo, integer *m, integer *n, T *a, integer *lda, T *b, integer 
 
 //-------------------------------------------------------------------------------------------------
 
+
+/** DLAMCH determines double precision machine parameters.
+
+Arguments:
+CMACH: Specifies the value to be returned by DLAMCH:
+       = 'E' or 'e',   DLAMCH := eps       = relative machine precision
+       = 'S' or 's ,   DLAMCH := sfmin     = safe minimum, such that 1/sfmin does not overflow
+       = 'B' or 'b',   DLAMCH := base      = base of the machine
+       = 'P' or 'p',   DLAMCH := eps*base  = eps*base
+       = 'N' or 'n',   DLAMCH := t         = number of (base) digits in the mantissa
+       = 'R' or 'r',   DLAMCH := rnd       = 1.0 when rounding occurs in addition, 0.0 otherwise
+       = 'M' or 'm',   DLAMCH := emin      = minimum exponent before (gradual) underflow
+       = 'U' or 'u',   DLAMCH := rmin      = underflow threshold - base**(emin-1)
+       = 'L' or 'l',   DLAMCH := emax      = largest exponent before overflow
+       = 'O' or 'o',   DLAMCH := rmax      = overflow threshold  - (base**emax)*(1-eps) */
+doublereal lamch(char *cmach, ftnlen cmach_len);
+//template<class T> ..hmm - can't be templatized bcs the datatype appears only in the return value
+// maybe pass a dummy variable - but that requires all calling code to be adapted - but maybe that
+// function is only called in a few palces, so that doesn't matter? we'll see. -if it's practical,
+// get rid of the "d" - it should be only lamch 
+// i think,...we need to somehow call std::numeric_limits<dummy>::eps, etc. in the implementation 
+// to make it work ...or use function templates machineEps, machineSafeMin and provide explicit
+// specializations or better: numericEps,
+
+// For this routine, i need to actually to actually (re)write some code - implementthe functions
+// that return the requested values for the machine precision - using explicit intantiations
+
+
+
+
+
+
+
+
+
+
+//-------------------------------------------------------------------------------------------------
+
 /**
 Purpose:
 DLANTB  returns the value of the one norm,  or the Frobenius norm, or the  infinity norm, or the 
