@@ -3071,6 +3071,9 @@ int lacpy(char *uplo, integer *m, integer *n, T *a, integer *lda, T *b, integer 
 // numeric_limits - verify everything! ..also in smach.c the functions also return double precision
 // values - check that - maybe we shouls return double here, too instead of T
 
+#undef min
+#undef max
+
 template<class T>
 integer minexponent_(T *dummy)
 {
@@ -3084,12 +3087,12 @@ integer maxexponent_(T *dummy)
 template<class T>
 T huge_(T *dummy)
 {
-  return std::numeric_limits<T>::max;  // guessed!!
+  return std::numeric_limits<T>::max();  // guessed!!
 }
 template<class T>
 T tiny_(T *dummy)
 {
-  return std::numeric_limits<T>::min;  // guessed!!
+  return std::numeric_limits<T>::min();  // guessed!!
 }
 template<class T>
 T radix_(T *dummy)
@@ -3104,7 +3107,7 @@ T digits_(T *dummy)
 template<class T>
 T epsilon_(T *dummy)
 {
-  return std::numeric_limits<T>::epsilon; // this is very probably right
+  return std::numeric_limits<T>::epsilon(); // this is very probably right
 }
 
 //template integer minexponent_(double);
@@ -3137,13 +3140,13 @@ doublereal lamch(char *cmach, ftnlen cmach_len)
 
   /* Local variables */
   static doublereal rnd, eps;
-  extern integer minexponent_(doublereal *), maxexponent_(doublereal *);
-  extern doublereal huge_(doublereal *), tiny_(doublereal *);
+  //extern integer minexponent_(doublereal *), maxexponent_(doublereal *);
+  //extern doublereal huge_(doublereal *), tiny_(doublereal *);
   static doublereal rmach;
-  extern logical lsame_(char *, char *, ftnlen, ftnlen);
-  extern doublereal radix_(doublereal *);
+  //extern logical lsame_(char *, char *, ftnlen, ftnlen);
+  //extern doublereal radix_(doublereal *);
   static doublereal small, sfmin;
-  extern doublereal digits_(doublereal *), epsilon_(doublereal *);
+  //extern doublereal digits_(doublereal *), epsilon_(doublereal *);
 
   /*     Assume rounding, not chopping. Always. */
   rnd = 1.;
@@ -3154,9 +3157,9 @@ doublereal lamch(char *cmach, ftnlen cmach_len)
     eps = epsilon_(&c_b2);
   }
 
-  if (lsame_(cmach, "E", (ftnlen)1, (ftnlen)1)) {
+  if (lsame(cmach, "E", (ftnlen)1, (ftnlen)1)) {
     rmach = eps;
-  } else if (lsame_(cmach, "S", (ftnlen)1, (ftnlen)1)) {
+  } else if (lsame(cmach, "S", (ftnlen)1, (ftnlen)1)) {
     sfmin = tiny_(&c_b2);
     small = 1. / huge_(&c_b2);
     if (small >= sfmin) {
@@ -3167,21 +3170,21 @@ doublereal lamch(char *cmach, ftnlen cmach_len)
       sfmin = small * (eps + 1.);
     }
     rmach = sfmin;
-  } else if (lsame_(cmach, "B", (ftnlen)1, (ftnlen)1)) {
+  } else if (lsame(cmach, "B", (ftnlen)1, (ftnlen)1)) {
     rmach = radix_(&c_b2);
-  } else if (lsame_(cmach, "P", (ftnlen)1, (ftnlen)1)) {
+  } else if (lsame(cmach, "P", (ftnlen)1, (ftnlen)1)) {
     rmach = eps * radix_(&c_b2);
-  } else if (lsame_(cmach, "N", (ftnlen)1, (ftnlen)1)) {
+  } else if (lsame(cmach, "N", (ftnlen)1, (ftnlen)1)) {
     rmach = digits_(&c_b2);
-  } else if (lsame_(cmach, "R", (ftnlen)1, (ftnlen)1)) {
+  } else if (lsame(cmach, "R", (ftnlen)1, (ftnlen)1)) {
     rmach = rnd;
-  } else if (lsame_(cmach, "M", (ftnlen)1, (ftnlen)1)) {
+  } else if (lsame(cmach, "M", (ftnlen)1, (ftnlen)1)) {
     rmach = (doublereal) minexponent_(&c_b2);
-  } else if (lsame_(cmach, "U", (ftnlen)1, (ftnlen)1)) {
+  } else if (lsame(cmach, "U", (ftnlen)1, (ftnlen)1)) {
     rmach = tiny_(&c_b2);
-  } else if (lsame_(cmach, "L", (ftnlen)1, (ftnlen)1)) {
+  } else if (lsame(cmach, "L", (ftnlen)1, (ftnlen)1)) {
     rmach = (doublereal) maxexponent_(&c_b2);
-  } else if (lsame_(cmach, "O", (ftnlen)1, (ftnlen)1)) {
+  } else if (lsame(cmach, "O", (ftnlen)1, (ftnlen)1)) {
     rmach = huge_(&c_b2);
   } else {
     rmach = 0.;
