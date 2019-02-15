@@ -2156,6 +2156,143 @@ integer iparmq(integer *ispec, char *name__, char *opts, integer *n, integer
   return ret_val;
 } /* iparmq_ */
 
+
+//-------------------------------------------------------------------------------------------------
+
+// translated from dlangb - LAPACK auxiliary routine (version 3.7.0) */
+template<class T>
+doublereal langb(char *norm, integer *n, integer *kl, integer *ku, T *ab, integer *ldab, T *work, 
+  ftnlen norm_len)
+{
+  /* System generated locals */
+  integer ab_dim1, ab_offset, i__1, i__2, i__3, i__4, i__5, i__6;
+  T ret_val, d__1;
+
+  /* Builtin functions */
+  double sqrt(T);
+
+  /* Local variables */
+  static integer i__, j, k, l;
+  static T sum, temp, scale;
+  extern logical lsame_(char *, char *, ftnlen, ftnlen);
+  static T value;
+  extern logical disnan_(doublereal *);
+  extern /* Subroutine */ int dlassq_(integer *, T *, integer *, T *, T *);
+
+  /* Parameter adjustments */
+  ab_dim1 = *ldab;
+  ab_offset = 1 + ab_dim1;
+  ab -= ab_offset;
+  --work;
+
+  /* Function Body */
+  if (*n == 0) {
+    value = 0.;
+  } else if (lsame_(norm, "M", (ftnlen)1, (ftnlen)1)) {
+
+    /*        Find max(abs(A(i,j))). */
+
+    value = 0.;
+    i__1 = *n;
+    for (j = 1; j <= i__1; ++j) {
+      /* Computing MAX */
+      i__2 = *ku + 2 - j;
+      /* Computing MIN */
+      i__4 = *n + *ku + 1 - j, i__5 = *kl + *ku + 1;
+      i__3 = min(i__4,i__5);
+      for (i__ = max(i__2,1); i__ <= i__3; ++i__) {
+        temp = (d__1 = ab[i__ + j * ab_dim1], abs(d__1));
+        if (value < temp || disnan_(&temp)) {
+          value = temp;
+        }
+        /* L10: */
+      }
+      /* L20: */
+    }
+  } else if (lsame_(norm, "O", (ftnlen)1, (ftnlen)1) || *(unsigned char *)
+    norm == '1') {
+
+    /*        Find norm1(A). */
+
+    value = 0.;
+    i__1 = *n;
+    for (j = 1; j <= i__1; ++j) {
+      sum = 0.;
+      /* Computing MAX */
+      i__3 = *ku + 2 - j;
+      /* Computing MIN */
+      i__4 = *n + *ku + 1 - j, i__5 = *kl + *ku + 1;
+      i__2 = min(i__4,i__5);
+      for (i__ = max(i__3,1); i__ <= i__2; ++i__) {
+        sum += (d__1 = ab[i__ + j * ab_dim1], abs(d__1));
+        /* L30: */
+      }
+      if (value < sum || disnan_(&sum)) {
+        value = sum;
+      }
+      /* L40: */
+    }
+  } else if (lsame_(norm, "I", (ftnlen)1, (ftnlen)1)) {
+
+    /*        Find normI(A). */
+
+    i__1 = *n;
+    for (i__ = 1; i__ <= i__1; ++i__) {
+      work[i__] = 0.;
+      /* L50: */
+    }
+    i__1 = *n;
+    for (j = 1; j <= i__1; ++j) {
+      k = *ku + 1 - j;
+      /* Computing MAX */
+      i__2 = 1, i__3 = j - *ku;
+      /* Computing MIN */
+      i__5 = *n, i__6 = j + *kl;
+      i__4 = min(i__5,i__6);
+      for (i__ = max(i__2,i__3); i__ <= i__4; ++i__) {
+        work[i__] += (d__1 = ab[k + i__ + j * ab_dim1], abs(d__1));
+        /* L60: */
+      }
+      /* L70: */
+    }
+    value = 0.;
+    i__1 = *n;
+    for (i__ = 1; i__ <= i__1; ++i__) {
+      temp = work[i__];
+      if (value < temp || disnan_(&temp)) {
+        value = temp;
+      }
+      /* L80: */
+    }
+  } else if (lsame_(norm, "F", (ftnlen)1, (ftnlen)1) || lsame_(norm, "E", (
+    ftnlen)1, (ftnlen)1)) {
+
+    /*        Find normF(A). */
+
+    scale = 0.;
+    sum = 1.;
+    i__1 = *n;
+    for (j = 1; j <= i__1; ++j) {
+      /* Computing MAX */
+      i__4 = 1, i__2 = j - *ku;
+      l = max(i__4,i__2);
+      k = *ku + 1 - j + l;
+      /* Computing MIN */
+      i__2 = *n, i__3 = j + *kl;
+      i__4 = min(i__2,i__3) - l + 1;
+      dlassq_(&i__4, &ab[k + j * ab_dim1], &c__1, &scale, &sum);
+      /* L90: */
+    }
+    value = scale * sqrt(sum);
+  }
+
+  ret_val = value;
+  return ret_val;
+
+  /*     End of DLANGB */
+
+} /* dlangb_ */
+
 //-------------------------------------------------------------------------------------------------
 
 // translated from dlaswp, LAPACK auxiliary routine (version 3.7.1)

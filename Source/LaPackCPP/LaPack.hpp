@@ -534,6 +534,39 @@ integer iparmq(integer *ispec, char *name__, char *opts, integer *n, integer *il
 
 //-------------------------------------------------------------------------------------------------
 
+/**
+Purpose:
+langb returns the value of the one norm, or the Frobenius norm, or the infinity norm, or the
+element of largest absolute value of an n by n band matrix A, with kl sub-diagonals and ku
+super-diagonals.
+ langb = ( max(abs(A(i,j))), NORM = 'M' or 'm'
+         (
+         ( norm1(A),         NORM = '1', 'O' or 'o'
+         (
+         ( normI(A),         NORM = 'I' or 'i'
+         (
+         ( normF(A),         NORM = 'F', 'f', 'E' or 'e'
+where  norm1  denotes the  one norm of a matrix (maximum column sum), normI denotes the infinity
+norm  of a matrix  (maximum row sum) and normF  denotes the  Frobenius norm of a matrix (square
+root of sum of squares).  Note that  max(abs(A(i,j)))  is not a consistent matrix norm.
+
+Arguments:
+NORM:  Specifies the value to be returned in DLANGB as described above.
+N:     The order of the matrix A.  N >= 0.  When N = 0, DLANGB is set to zero.
+KL:    The number of sub-diagonals of the matrix A.  KL >= 0.
+KU:    The number of super-diagonals of the matrix A.  KU >= 0.
+AB:    array, dimension (LDAB,N). The band matrix A, stored in rows 1 to KL+KU+1. The j-th
+       column of A is stored in the j-th column of the array AB as follows:
+       AB(ku+1+i-j,j) = A(i,j) for max(1,j-ku)<=i<=min(n,j+kl).
+LDAB:  The leading dimension of the array AB.  LDAB >= KL+KU+1.
+WORK:  array, dimension (MAX(1,LWORK)), where LWORK >= N when NORM = 'I'; otherwise, WORK is not
+       referenced. */
+template<class T>
+T langb(char *norm, integer *n, integer *kl, integer *ku, T *ab, integer *ldab, T *work, 
+  ftnlen norm_len);
+
+//-------------------------------------------------------------------------------------------------
+
 /* laswp performs a series of row interchanges on the matrix A. One row interchange is 
 initiated for each of rows K1 through K2 of A.
 

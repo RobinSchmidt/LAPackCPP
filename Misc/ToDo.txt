@@ -9,7 +9,7 @@ Functions that have to be translated next:
 
 
 
-Functions that heve been translated:
+Functions that have been translated:
 
 Blas Level 1:
  daxpy, dcopy, idamax, lsame, dscal, dswap, xerbla
