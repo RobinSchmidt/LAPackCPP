@@ -3,7 +3,7 @@
 f2c functions that are needed: i_len, s_copy, s_cmp, i_nint
 
 Functions that have to be translated next:
- dlamch, dgbcon, dgbequ,dgbrfs,
+ dlamch, dgbcon, dgbequ,
  dgbtrf*, dgbtrs*
  dgbsvxx
 
@@ -12,22 +12,22 @@ Functions that have to be translated next:
 Functions that have been translated:
 
 Blas Level 1:
- daxpy, dcopy, idamax, lsame, dscal, dswap, xerbla
+  daxpy, dcopy, idamax, lsame, dscal, dswap, xerbla
 
 Blas Level 2:
- dger, dgbmv, dgemv, dtbsv, 
+  dger, dgbmv, dgemv, dtbsv, 
 
 Blas Level 3:
- dgemm, dtrsm 
+  dgemm, dtrsm 
 
 Lapack-Drivers:
- dgbsv, dgbsvx
+  dgbsv, dgbsvx
 
 Lapack-Computational:
-   dgbtrf, dgbtrs, dgbtf2,
+  dgbrfs, dgbtrf, dgbtrs, dgbtf2,
 
 Lapack-Auxiliary: 
- dlacpy, dlangb, dlantb, dlaqgb, dlaswp, ieeeck, ilaenv, iparmq
+  dlacpy, dlangb, dlantb, dlaqgb, dlaswp, ieeeck, ilaenv, iparmq
 
 
 Some functions define static local variables (for example laswp) - maybe we 
