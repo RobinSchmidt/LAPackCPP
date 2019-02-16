@@ -3258,6 +3258,30 @@ integer iparmq(integer *ispec, char *name__, char *opts, integer *n, integer
 
 //-------------------------------------------------------------------------------------------------
 
+// -- LAPACK auxiliary routine (version 3.7.0) 
+template<class T>
+int labad(T *small, T *large)
+{
+
+  /* Builtin functions */
+  //double d_lg10(doublereal *), sqrt(doublereal);
+
+
+  /*     If it looks like we're on a Cray, take the square root of */
+  /*     SMALL and LARGE to avoid overflow and underflow problems. */
+  if (d_lg10(large) > 2e3) {
+    *small = sqrt(*small);
+    *large = sqrt(*large);
+  }
+
+  return 0;
+
+  /*     End of DLABAD */
+
+} /* dlabad_ */
+
+//-------------------------------------------------------------------------------------------------
+
 // dlacn2_ - LAPACK auxiliary routine (version 3.7.0) */
 template<class T>
 int lacn2(integer *n, T *v, T *x, integer *isgn, T *est, integer *kase, integer *isave)
@@ -5049,7 +5073,7 @@ L10:
 
   /*     Scale the vector X by MUL */
 
-  dscal_(n, &mul, &sx[1], incx);
+  scal(n, &mul, &sx[1], incx);
 
   if (! done) {
     goto L10;
