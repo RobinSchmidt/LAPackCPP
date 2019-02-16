@@ -1305,11 +1305,19 @@ int latbs(char *uplo, char *trans, char *diag, char *normin, integer *n, integer
   integer *ldab, T *x, T *scale, T *cnorm, integer *info, ftnlen uplo_len, ftnlen trans_len, 
   ftnlen diag_len, ftnlen normin_len);
 
+//-------------------------------------------------------------------------------------------------
 
+/** DRSCL multiplies an n-element real vector x by the real scalar 1/a. This is done without 
+overflow or underflow as long as the final result x/a does not overflow or underflow.
 
-
-
-
+Arguments:
+N:    The number of components of the vector x.
+SA:   The scalar a which is used to divide each component of x. SA must be >= 0, or the subroutine will divide by zero.
+SX:   array, dimension (1+(N-1)*abs(INCX)). The n-element vector x.
+INCX: The increment between successive values of the vector SX.
+      > 0:  SX(1) = X(1) and SX(1+(i-1)*INCX) = x(i),     1< i<= n  */
+template<class T>
+int rscl(integer *n, T *sa, T *sx, integer *incx);
 
 // maybe the LaPack source files should be split into LaPackGB, etc. or: LaPackDrivers, 
 // LapackComputation, LaPackAuxiliary

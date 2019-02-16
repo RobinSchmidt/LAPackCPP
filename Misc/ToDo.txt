@@ -8,7 +8,7 @@ f2c functions that are needed: i_len, s_copy, s_cmp, i_nint
 
 Functions that have to be translated next:
 
-  dla_gbrpvgrw__, dgbequb, dgbrfsx, drscl, 
+  dgbequb, dgbrfsx, dlabad
 
 
 
@@ -18,11 +18,11 @@ Lapack-Drivers:
   dgbsv, dgbsvx, dgbsvxx
 
 Lapack-Computational:
-  dgbcon, dgbequ, dgbrfs, dgbtrf, dgbtrs, dgbtf2,
+  dgbcon, dgbequ, dgbrfs, dgbtrf, dgbtrs, dgbtf2, dla_gbrpvgrw__
 
 Lapack-Auxiliary: 
   dlacn2, dlacpy, dlangb, dlantb, dlaqgb, dlaswp, dlatbs,  ieeeck, ilaenv, 
-  iparmq, disnan (reimplemented), dlassq, 
+  iparmq, disnan (reimplemented), dlassq, drscl,
 
 Blas Level 1:
   dasum, daxpy, dcopy, ddot, idamax, lsame, dscal, dswap, xerbla

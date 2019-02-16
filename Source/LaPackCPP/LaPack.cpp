@@ -811,14 +811,14 @@ int gbcon(char *norm, integer *n, integer *kl, integer *ku, T *ab, integer *ldab
   static integer j;
   static T t;
   static integer kd, lm, jp, ix, kase;
-  extern doublereal ddot_(integer *, doublereal *, integer *, doublereal *, 
-    integer *);
+  //extern doublereal ddot_(integer *, doublereal *, integer *, doublereal *, 
+  //  integer *);
   static integer kase1;
   static T scale;
   //extern logical lsame_(char *, char *, ftnlen, ftnlen);
   static integer isave[3];
-  extern /* Subroutine */ int drscl_(integer *, doublereal *, doublereal *, 
-    integer *);
+  //extern /* Subroutine */ int drscl_(integer *, doublereal *, doublereal *, 
+  //  integer *);
   static logical lnoti;
   //extern /* Subroutine */ int daxpy_(integer *, doublereal *, doublereal *, 
   //  integer *, doublereal *, integer *), dlacn2_(integer *, 
@@ -826,10 +826,10 @@ int gbcon(char *norm, integer *n, integer *kl, integer *ku, T *ab, integer *ldab
   //    integer *);
   //extern doublereal dlamch_(char *, ftnlen);
   //extern integer idamax_(integer *, doublereal *, integer *);
-  extern /* Subroutine */ int dlatbs_(char *, char *, char *, char *, 
-    integer *, integer *, doublereal *, integer *, doublereal *, 
-    doublereal *, doublereal *, integer *, ftnlen, ftnlen, ftnlen, 
-    ftnlen), xerbla_(char *, integer *, ftnlen);
+  //extern /* Subroutine */ int dlatbs_(char *, char *, char *, char *, 
+  //  integer *, integer *, doublereal *, integer *, doublereal *, 
+  //  doublereal *, doublereal *, integer *, ftnlen, ftnlen, ftnlen, 
+  //  ftnlen), xerbla_(char *, integer *, ftnlen);
   static T ainvnm;
   static logical onenrm;
   static char normin[1];
@@ -919,7 +919,7 @@ L10:
       /*           Multiply by inv(U). */
 
       i__1 = *kl + *ku;
-      dlatbs_("Upper", "No transpose", "Non-unit", normin, n, &i__1, &
+      latbs("Upper", "No transpose", "Non-unit", normin, n, &i__1, &
         ab[ab_offset], ldab, &work[1], &scale, &work[(*n << 1) + 
         1], info, (ftnlen)5, (ftnlen)12, (ftnlen)8, (ftnlen)1);
     } else {
@@ -927,7 +927,7 @@ L10:
       /*           Multiply by inv(U**T). */
 
       i__1 = *kl + *ku;
-      dlatbs_("Upper", "Transpose", "Non-unit", normin, n, &i__1, &ab[
+      latbs("Upper", "Transpose", "Non-unit", normin, n, &i__1, &ab[
         ab_offset], ldab, &work[1], &scale, &work[(*n << 1) + 1], 
           info, (ftnlen)5, (ftnlen)9, (ftnlen)8, (ftnlen)1);
 
@@ -938,7 +938,7 @@ L10:
           /* Computing MIN */
           i__1 = *kl, i__2 = *n - j;
           lm = min(i__1,i__2);
-          work[j] -= ddot_(&lm, &ab[kd + 1 + j * ab_dim1], &c__1, &
+          work[j] -= dot(&lm, &ab[kd + 1 + j * ab_dim1], &c__1, &
             work[j + 1], &c__1);
           jp = ipiv[j];
           if (jp != j) {
@@ -960,7 +960,7 @@ L10:
       {
         goto L40;
       }
-      drscl_(n, &scale, &work[1], &c__1);
+      rscl(n, &scale, &work[1], &c__1);
     }
     goto L10;
   }
@@ -4353,9 +4353,9 @@ int latbs(char *uplo, char *trans, char *diag, char *normin, integer *n, integer
   //extern /* Subroutine */ int dscal_(integer *, doublereal *, doublereal *, 
   //  integer *);
   static integer maind;
-  extern logical lsame_(char *, char *, ftnlen, ftnlen);
+  //extern logical lsame_(char *, char *, ftnlen, ftnlen);
   static T tscal, uscal;
-  extern doublereal dasum_(integer *, doublereal *, integer *);
+  //extern doublereal dasum_(integer *, doublereal *, integer *);
   static integer jlast;
   //extern /* Subroutine */ int dtbsv_(char *, char *, char *, integer *, 
   //  integer *, doublereal *, integer *, doublereal *, integer *, 
@@ -4380,20 +4380,20 @@ int latbs(char *uplo, char *trans, char *diag, char *normin, integer *n, integer
 
   /* Function Body */
   *info = 0;
-  upper = lsame_(uplo, "U", (ftnlen)1, (ftnlen)1);
-  notran = lsame_(trans, "N", (ftnlen)1, (ftnlen)1);
-  nounit = lsame_(diag, "N", (ftnlen)1, (ftnlen)1);
+  upper = lsame(uplo, "U", (ftnlen)1, (ftnlen)1);
+  notran = lsame(trans, "N", (ftnlen)1, (ftnlen)1);
+  nounit = lsame(diag, "N", (ftnlen)1, (ftnlen)1);
 
   /*     Test the input parameters. */
 
-  if (! upper && ! lsame_(uplo, "L", (ftnlen)1, (ftnlen)1)) {
+  if (! upper && ! lsame(uplo, "L", (ftnlen)1, (ftnlen)1)) {
     *info = -1;
-  } else if (! notran && ! lsame_(trans, "T", (ftnlen)1, (ftnlen)1) && ! 
-    lsame_(trans, "C", (ftnlen)1, (ftnlen)1)) {
+  } else if (! notran && ! lsame(trans, "T", (ftnlen)1, (ftnlen)1) && ! 
+    lsame(trans, "C", (ftnlen)1, (ftnlen)1)) {
     *info = -2;
-  } else if (! nounit && ! lsame_(diag, "U", (ftnlen)1, (ftnlen)1)) {
+  } else if (! nounit && ! lsame(diag, "U", (ftnlen)1, (ftnlen)1)) {
     *info = -3;
-  } else if (! lsame_(normin, "Y", (ftnlen)1, (ftnlen)1) && ! lsame_(normin,
+  } else if (! lsame(normin, "Y", (ftnlen)1, (ftnlen)1) && ! lsame(normin,
     "N", (ftnlen)1, (ftnlen)1)) {
     *info = -4;
   } else if (*n < 0) {
@@ -4422,7 +4422,7 @@ int latbs(char *uplo, char *trans, char *diag, char *normin, integer *n, integer
   bignum = 1. / smlnum;
   *scale = 1.;
 
-  if (lsame_(normin, "N", (ftnlen)1, (ftnlen)1)) {
+  if (lsame(normin, "N", (ftnlen)1, (ftnlen)1)) {
 
     /*        Compute the 1-norm of each column, not including the diagonal. */
 
@@ -4435,7 +4435,7 @@ int latbs(char *uplo, char *trans, char *diag, char *normin, integer *n, integer
         /* Computing MIN */
         i__2 = *kd, i__3 = j - 1;
         jlen = min(i__2,i__3);
-        cnorm[j] = dasum_(&jlen, &ab[*kd + 1 - jlen + j * ab_dim1], &
+        cnorm[j] = asum(&jlen, &ab[*kd + 1 - jlen + j * ab_dim1], &
           c__1);
         /* L10: */
       }
@@ -4449,7 +4449,7 @@ int latbs(char *uplo, char *trans, char *diag, char *normin, integer *n, integer
         i__2 = *kd, i__3 = *n - j;
         jlen = min(i__2,i__3);
         if (jlen > 0) {
-          cnorm[j] = dasum_(&jlen, &ab[j * ab_dim1 + 2], &c__1);
+          cnorm[j] = asum(&jlen, &ab[j * ab_dim1 + 2], &c__1);
         } else {
           cnorm[j] = 0.;
         }
@@ -4989,8 +4989,83 @@ int latbs(char *uplo, char *trans, char *diag, char *normin, integer *n, integer
 
 } /* dlatbs_ */
 
+//-------------------------------------------------------------------------------------------------
+
+//  drscl - LAPACK auxiliary routine (version 3.8.0) 
+int rscl(integer *n, doublereal *sa, doublereal *sx, 
+  integer *incx)
+{
+  static doublereal mul, cden;
+  static logical done;
+  static doublereal cnum, cden1, cnum1;
+  //extern /* Subroutine */ int dscal_(integer *, doublereal *, doublereal *, 
+  //  integer *), dlabad_(doublereal *, doublereal *);
+  //extern doublereal dlamch_(char *, ftnlen);
+  static doublereal bignum, smlnum;
+
+  /* Parameter adjustments */
+  --sx;
+
+  /* Function Body */
+  if (*n <= 0) {
+    return 0;
+  }
+
+  /*     Get machine parameters */
+
+  smlnum = lamch("S", (ftnlen)1);
+  bignum = 1. / smlnum;
+  labad(&smlnum, &bignum);
+
+  /*     Initialize the denominator to SA and the numerator to 1. */
+
+  cden = *sa;
+  cnum = 1.;
+
+L10:
+  cden1 = cden * smlnum;
+  cnum1 = cnum / bignum;
+  if (abs(cden1) > abs(cnum) && cnum != 0.) {
+
+    /*        Pre-multiply X by SMLNUM if CDEN is large compared to CNUM. */
+
+    mul = smlnum;
+    done = FALSE_;
+    cden = cden1;
+  } else if (abs(cnum1) > abs(cden)) {
+
+    /*        Pre-multiply X by BIGNUM if CDEN is small compared to CNUM. */
+
+    mul = bignum;
+    done = FALSE_;
+    cnum = cnum1;
+  } else {
+
+    /*        Multiply X by CNUM / CDEN and return. */
+
+    mul = cnum / cden;
+    done = TRUE_;
+  }
+
+  /*     Scale the vector X by MUL */
+
+  dscal_(n, &mul, &sx[1], incx);
+
+  if (! done) {
+    goto L10;
+  }
+
+  return 0;
+
+  /*     End of DRSCL */
+
+} /* drscl_ */
 
 
+
+
+//=================================================================================================
+// Template instantiations (todo: move to another file)
 
 // Driver routines:
 
