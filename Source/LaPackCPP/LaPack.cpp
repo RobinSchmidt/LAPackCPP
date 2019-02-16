@@ -2274,6 +2274,66 @@ int gbtrs(char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, T *a
 
 } // gbtrs
 
+
+//-------------------------------------------------------------------------------------------------
+
+// from dla_gbrpvgrw -- LAPACK computational routine (version 3.7.0) 
+template<class T>
+T la_gbrpvgrw(integer *n, integer *kl, integer *ku, integer *ncols, T *ab, integer *ldab,
+  T *afb, integer *ldafb)
+{
+  /* System generated locals */
+  integer ab_dim1, ab_offset, afb_dim1, afb_offset, i__1, i__2, i__3, i__4;
+  T ret_val, d__1, d__2;
+
+  /* Local variables */
+  static integer i__, j, kd;
+  static T amax, umax, rpvgrw;
+
+  /* Parameter adjustments */
+  ab_dim1 = *ldab;
+  ab_offset = 1 + ab_dim1;
+  ab -= ab_offset;
+  afb_dim1 = *ldafb;
+  afb_offset = 1 + afb_dim1;
+  afb -= afb_offset;
+
+  /* Function Body */
+  rpvgrw = 1.;
+  kd = *ku + 1;
+  i__1 = *ncols;
+  for (j = 1; j <= i__1; ++j) {
+    amax = 0.;
+    umax = 0.;
+    /* Computing MAX */
+    i__2 = j - *ku;
+    /* Computing MIN */
+    i__4 = j + *kl;
+    i__3 = min(i__4,*n);
+    for (i__ = max(i__2,1); i__ <= i__3; ++i__) {
+      /* Computing MAX */
+      d__2 = (d__1 = ab[kd + i__ - j + j * ab_dim1], abs(d__1));
+      amax = max(d__2,amax);
+    }
+    /* Computing MAX */
+    i__3 = j - *ku;
+    i__2 = j;
+    for (i__ = max(i__3,1); i__ <= i__2; ++i__) {
+      /* Computing MAX */
+      d__2 = (d__1 = afb[kd + i__ - j + j * afb_dim1], abs(d__1));
+      umax = max(d__2,umax);
+    }
+    if (umax != 0.) {
+      /* Computing MIN */
+      d__1 = amax / umax;
+      rpvgrw = min(d__1,rpvgrw);
+    }
+  }
+  ret_val = rpvgrw;
+  return ret_val;
+} /* dla_gbrpvgrw__ */
+
+
 //=================================================================================================
 // Auxiliary routines:
 

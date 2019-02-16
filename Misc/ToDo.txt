@@ -14,15 +14,6 @@ Functions that have to be translated next:
 
 Functions that have been translated:
 
-Blas Level 1:
-  dasum, daxpy, dcopy, ddot, idamax, lsame, dscal, dswap, xerbla
-
-Blas Level 2:
-  dger, dgbmv, dgemv, dtbsv, 
-
-Blas Level 3:
-  dgemm, dtrsm 
-
 Lapack-Drivers:
   dgbsv, dgbsvx, dgbsvxx
 
@@ -33,6 +24,16 @@ Lapack-Auxiliary:
   dlacn2, dlacpy, dlangb, dlantb, dlaqgb, dlaswp, dlatbs,  ieeeck, ilaenv, 
   iparmq, disnan (reimplemented), dlassq, 
 
+Blas Level 1:
+  dasum, daxpy, dcopy, ddot, idamax, lsame, dscal, dswap, xerbla
+
+Blas Level 2:
+  dger, dgbmv, dgemv, dtbsv, 
+
+Blas Level 3:
+  dgemm, dtrsm  
+  
+  
   
   
   
