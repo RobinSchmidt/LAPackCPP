@@ -512,8 +512,8 @@ int gbsvxx(char *fact, char *trans, integer *n, integer *kl, integer *ku, intege
   /* Local variables */
   static integer i__, j;
   static T amax;
-  extern doublereal dla_gbrpvgrw__(integer *, integer *, integer *, integer 
-    *, doublereal *, integer *, doublereal *, integer *);
+  //extern doublereal dla_gbrpvgrw__(integer *, integer *, integer *, integer 
+  //  *, doublereal *, integer *, doublereal *, integer *);
   //extern logical lsame_(char *, char *, ftnlen, ftnlen);
   static T rcmin, rcmax;
   static logical equil;
@@ -538,16 +538,16 @@ int gbsvxx(char *fact, char *trans, integer *n, integer *kl, integer *ku, intege
   static logical notran;
   static T smlnum;
   static logical rowequ;
-  extern /* Subroutine */ int dlascl2_(integer *, integer *, doublereal *, 
-    doublereal *, integer *), dgbequb_(integer *, integer *, integer *
-      , integer *, doublereal *, integer *, doublereal *, doublereal *, 
-      doublereal *, doublereal *, doublereal *, integer *), dgbrfsx_(
-        char *, char *, integer *, integer *, integer *, integer *, 
-        doublereal *, integer *, doublereal *, integer *, integer *, 
-        doublereal *, doublereal *, doublereal *, integer *, doublereal *,
-        integer *, doublereal *, doublereal *, integer *, doublereal *, 
-        doublereal *, integer *, doublereal *, doublereal *, integer *, 
-        integer *, ftnlen, ftnlen);
+  //extern /* Subroutine */ int dlascl2_(integer *, integer *, doublereal *, 
+  //  doublereal *, integer *), dgbequb_(integer *, integer *, integer *
+  //    , integer *, doublereal *, integer *, doublereal *, doublereal *, 
+  //    doublereal *, doublereal *, doublereal *, integer *), dgbrfsx_(
+  //      char *, char *, integer *, integer *, integer *, integer *, 
+  //      doublereal *, integer *, doublereal *, integer *, integer *, 
+  //      doublereal *, doublereal *, doublereal *, integer *, doublereal *,
+  //      integer *, doublereal *, doublereal *, integer *, doublereal *, 
+  //      doublereal *, integer *, doublereal *, doublereal *, integer *, 
+  //      integer *, ftnlen, ftnlen);
 
 
 
@@ -580,19 +580,19 @@ int gbsvxx(char *fact, char *trans, integer *n, integer *kl, integer *ku, intege
 
   /* Function Body */
   *info = 0;
-  nofact = lsame_(fact, "N", (ftnlen)1, (ftnlen)1);
-  equil = lsame_(fact, "E", (ftnlen)1, (ftnlen)1);
-  notran = lsame_(trans, "N", (ftnlen)1, (ftnlen)1);
-  smlnum = dlamch_("Safe minimum", (ftnlen)12);
+  nofact = lsame(fact, "N", (ftnlen)1, (ftnlen)1);
+  equil = lsame(fact, "E", (ftnlen)1, (ftnlen)1);
+  notran = lsame(trans, "N", (ftnlen)1, (ftnlen)1);
+  smlnum = lamch("Safe minimum", (ftnlen)12);
   bignum = 1. / smlnum;
   if (nofact || equil) {
     *(unsigned char *)equed = 'N';
     rowequ = FALSE_;
     colequ = FALSE_;
   } else {
-    rowequ = lsame_(equed, "R", (ftnlen)1, (ftnlen)1) || lsame_(equed, 
+    rowequ = lsame(equed, "R", (ftnlen)1, (ftnlen)1) || lsame(equed, 
       "B", (ftnlen)1, (ftnlen)1);
-    colequ = lsame_(equed, "C", (ftnlen)1, (ftnlen)1) || lsame_(equed, 
+    colequ = lsame(equed, "C", (ftnlen)1, (ftnlen)1) || lsame(equed, 
       "B", (ftnlen)1, (ftnlen)1);
   }
 
@@ -604,10 +604,10 @@ int gbsvxx(char *fact, char *trans, integer *n, integer *kl, integer *ku, intege
 
   /*     Test the input parameters.  PARAMS is not tested until DGBRFSX. */
 
-  if (! nofact && ! equil && ! lsame_(fact, "F", (ftnlen)1, (ftnlen)1)) {
+  if (! nofact && ! equil && ! lsame(fact, "F", (ftnlen)1, (ftnlen)1)) {
     *info = -1;
-  } else if (! notran && ! lsame_(trans, "T", (ftnlen)1, (ftnlen)1) && ! 
-    lsame_(trans, "C", (ftnlen)1, (ftnlen)1)) {
+  } else if (! notran && ! lsame(trans, "T", (ftnlen)1, (ftnlen)1) && ! 
+    lsame(trans, "C", (ftnlen)1, (ftnlen)1)) {
     *info = -2;
   } else if (*n < 0) {
     *info = -3;
@@ -621,8 +621,8 @@ int gbsvxx(char *fact, char *trans, integer *n, integer *kl, integer *ku, intege
     *info = -8;
   } else if (*ldafb < (*kl << 1) + *ku + 1) {
     *info = -10;
-  } else if (lsame_(fact, "F", (ftnlen)1, (ftnlen)1) && ! (rowequ || colequ 
-    || lsame_(equed, "N", (ftnlen)1, (ftnlen)1))) {
+  } else if (lsame(fact, "F", (ftnlen)1, (ftnlen)1) && ! (rowequ || colequ 
+    || lsame(equed, "N", (ftnlen)1, (ftnlen)1))) {
     *info = -12;
   } else {
     if (rowequ) {
@@ -678,7 +678,7 @@ int gbsvxx(char *fact, char *trans, integer *n, integer *kl, integer *ku, intege
 
   if (*info != 0) {
     i__1 = -(*info);
-    xerbla_("DGBSVXX", &i__1, (ftnlen)7);
+    xerbla("DGBSVXX", &i__1, (ftnlen)7);
     return 0;
   }
 
@@ -686,17 +686,17 @@ int gbsvxx(char *fact, char *trans, integer *n, integer *kl, integer *ku, intege
 
     /*     Compute row and column scalings to equilibrate the matrix A. */
 
-    dgbequb_(n, n, kl, ku, &ab[ab_offset], ldab, &r__[1], &c__[1], &
+    gbequb(n, n, kl, ku, &ab[ab_offset], ldab, &r__[1], &c__[1], &
       rowcnd, &colcnd, &amax, &infequ);
     if (infequ == 0) {
 
       /*     Equilibrate the matrix. */
 
-      dlaqgb_(n, n, kl, ku, &ab[ab_offset], ldab, &r__[1], &c__[1], &
+      laqgb(n, n, kl, ku, &ab[ab_offset], ldab, &r__[1], &c__[1], &
         rowcnd, &colcnd, &amax, equed, (ftnlen)1);
-      rowequ = lsame_(equed, "R", (ftnlen)1, (ftnlen)1) || lsame_(equed,
+      rowequ = lsame(equed, "R", (ftnlen)1, (ftnlen)1) || lsame(equed,
         "B", (ftnlen)1, (ftnlen)1);
-      colequ = lsame_(equed, "C", (ftnlen)1, (ftnlen)1) || lsame_(equed,
+      colequ = lsame(equed, "C", (ftnlen)1, (ftnlen)1) || lsame(equed,
         "B", (ftnlen)1, (ftnlen)1);
     }
 
@@ -720,11 +720,11 @@ int gbsvxx(char *fact, char *trans, integer *n, integer *kl, integer *ku, intege
 
   if (notran) {
     if (rowequ) {
-      dlascl2_(n, nrhs, &r__[1], &b[b_offset], ldb);
+      lascl2(n, nrhs, &r__[1], &b[b_offset], ldb);
     }
   } else {
     if (colequ) {
-      dlascl2_(n, nrhs, &c__[1], &b[b_offset], ldb);
+      lascl2(n, nrhs, &c__[1], &b[b_offset], ldb);
     }
   }
 
@@ -741,7 +741,7 @@ int gbsvxx(char *fact, char *trans, integer *n, integer *kl, integer *ku, intege
       }
       /* L40: */
     }
-    dgbtrf_(n, n, kl, ku, &afb[afb_offset], ldafb, &ipiv[1], info);
+    gbtrf(n, n, kl, ku, &afb[afb_offset], ldafb, &ipiv[1], info);
 
     /*        Return if INFO is non-zero. */
 
@@ -751,7 +751,7 @@ int gbsvxx(char *fact, char *trans, integer *n, integer *kl, integer *ku, intege
       /*           Compute the reciprocal pivot growth factor of the */
       /*           leading rank-deficient INFO columns of A. */
 
-      *rpvgrw = dla_gbrpvgrw__(n, kl, ku, info, &ab[ab_offset], ldab, &
+      *rpvgrw = la_gbrpvgrw(n, kl, ku, info, &ab[ab_offset], ldab, &
         afb[afb_offset], ldafb);
       return 0;
     }
@@ -759,13 +759,13 @@ int gbsvxx(char *fact, char *trans, integer *n, integer *kl, integer *ku, intege
 
   /*     Compute the reciprocal pivot growth factor RPVGRW. */
 
-  *rpvgrw = dla_gbrpvgrw__(n, kl, ku, n, &ab[ab_offset], ldab, &afb[
+  *rpvgrw = la_gbrpvgrw(n, kl, ku, n, &ab[ab_offset], ldab, &afb[
     afb_offset], ldafb);
 
   /*     Compute the solution matrix X. */
 
-  dlacpy_("Full", n, nrhs, &b[b_offset], ldb, &x[x_offset], ldx, (ftnlen)4);
-  dgbtrs_(trans, n, kl, ku, nrhs, &afb[afb_offset], ldafb, &ipiv[1], &x[
+  lacpy("Full", n, nrhs, &b[b_offset], ldb, &x[x_offset], ldx, (ftnlen)4);
+  gbtrs(trans, n, kl, ku, nrhs, &afb[afb_offset], ldafb, &ipiv[1], &x[
     x_offset], ldx, info, (ftnlen)1);
 
   /*     Use iterative refinement to improve the computed solution and */
@@ -781,9 +781,9 @@ int gbsvxx(char *fact, char *trans, integer *n, integer *kl, integer *ku, intege
   /*     Scale solutions. */
 
   if (colequ && notran) {
-    dlascl2_(n, nrhs, &c__[1], &x[x_offset], ldx);
+    lascl2(n, nrhs, &c__[1], &x[x_offset], ldx);
   } else if (rowequ && ! notran) {
-    dlascl2_(n, nrhs, &r__[1], &x[x_offset], ldx);
+    lascl2(n, nrhs, &r__[1], &x[x_offset], ldx);
   }
 
   return 0;
@@ -1191,6 +1191,236 @@ int gbequ(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab
   /*     End of DGBEQU */
 
 } /* dgbequ_ */
+
+//-------------------------------------------------------------------------------------------------
+
+// dgbequb_ -- LAPACK computational routine (version 3.7.0) -
+template<class T>
+int dgbequb_(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab, 
+  T *r__, T *c__, T *rowcnd, T *colcnd, T *amax, integer *info)
+{
+  /* System generated locals */
+  integer ab_dim1, ab_offset, i__1, i__2, i__3, i__4;
+  T d__1, d__2, d__3;
+
+  /* Builtin functions */
+  //double log(doublereal), pow_di(doublereal *, integer *);
+
+  /* Local variables */
+  static integer i__, j, kd;
+  static T radix, rcmin, rcmax;
+  //extern doublereal dlamch_(char *, ftnlen);
+  //extern /* Subroutine */ int xerbla_(char *, integer *, ftnlen);
+  static T bignum, logrdx, smlnum;
+
+  /* Parameter adjustments */
+  ab_dim1 = *ldab;
+  ab_offset = 1 + ab_dim1;
+  ab -= ab_offset;
+  --r__;
+  --c__;
+
+  /* Function Body */
+  *info = 0;
+  if (*m < 0) {
+    *info = -1;
+  } else if (*n < 0) {
+    *info = -2;
+  } else if (*kl < 0) {
+    *info = -3;
+  } else if (*ku < 0) {
+    *info = -4;
+  } else if (*ldab < *kl + *ku + 1) {
+    *info = -6;
+  }
+  if (*info != 0) {
+    i__1 = -(*info);
+    xerbla_("DGBEQUB", &i__1, (ftnlen)7);
+    return 0;
+  }
+
+  /*     Quick return if possible. */
+
+  if (*m == 0 || *n == 0) {
+    *rowcnd = 1.;
+    *colcnd = 1.;
+    *amax = 0.;
+    return 0;
+  }
+
+  /*     Get machine constants.  Assume SMLNUM is a power of the radix. */
+
+  smlnum = dlamch_("S", (ftnlen)1);
+  bignum = 1. / smlnum;
+  radix = dlamch_("B", (ftnlen)1);
+  logrdx = log(radix);
+
+  /*     Compute row scale factors. */
+
+  i__1 = *m;
+  for (i__ = 1; i__ <= i__1; ++i__) {
+    r__[i__] = 0.;
+    /* L10: */
+  }
+
+  /*     Find the maximum element in each row. */
+
+  kd = *ku + 1;
+  i__1 = *n;
+  for (j = 1; j <= i__1; ++j) {
+    /* Computing MAX */
+    i__2 = j - *ku;
+    /* Computing MIN */
+    i__4 = j + *kl;
+    i__3 = min(i__4,*m);
+    for (i__ = max(i__2,1); i__ <= i__3; ++i__) {
+      /* Computing MAX */
+      d__2 = r__[i__], d__3 = (d__1 = ab[kd + i__ - j + j * ab_dim1], 
+        abs(d__1));
+      r__[i__] = max(d__2,d__3);
+      /* L20: */
+    }
+    /* L30: */
+  }
+  i__1 = *m;
+  for (i__ = 1; i__ <= i__1; ++i__) {
+    if (r__[i__] > 0.) {
+      i__3 = (integer) (log(r__[i__]) / logrdx);
+      r__[i__] = pow_di(&radix, &i__3);
+    }
+  }
+
+  /*     Find the maximum and minimum scale factors. */
+
+  rcmin = bignum;
+  rcmax = 0.;
+  i__1 = *m;
+  for (i__ = 1; i__ <= i__1; ++i__) {
+    /* Computing MAX */
+    d__1 = rcmax, d__2 = r__[i__];
+    rcmax = max(d__1,d__2);
+    /* Computing MIN */
+    d__1 = rcmin, d__2 = r__[i__];
+    rcmin = min(d__1,d__2);
+    /* L40: */
+  }
+  *amax = rcmax;
+
+  if (rcmin == 0.) {
+
+    /*        Find the first zero scale factor and return an error code. */
+
+    i__1 = *m;
+    for (i__ = 1; i__ <= i__1; ++i__) {
+      if (r__[i__] == 0.) {
+        *info = i__;
+        return 0;
+      }
+      /* L50: */
+    }
+  } else {
+
+    /*        Invert the scale factors. */
+
+    i__1 = *m;
+    for (i__ = 1; i__ <= i__1; ++i__) {
+      /* Computing MIN */
+      /* Computing MAX */
+      d__2 = r__[i__];
+      d__1 = max(d__2,smlnum);
+      r__[i__] = 1. / min(d__1,bignum);
+      /* L60: */
+    }
+
+    /*        Compute ROWCND = min(R(I)) / max(R(I)). */
+
+    *rowcnd = max(rcmin,smlnum) / min(rcmax,bignum);
+  }
+
+  /*     Compute column scale factors. */
+
+  i__1 = *n;
+  for (j = 1; j <= i__1; ++j) {
+    c__[j] = 0.;
+    /* L70: */
+  }
+
+  /*     Find the maximum element in each column, */
+  /*     assuming the row scaling computed above. */
+
+  i__1 = *n;
+  for (j = 1; j <= i__1; ++j) {
+    /* Computing MAX */
+    i__3 = j - *ku;
+    /* Computing MIN */
+    i__4 = j + *kl;
+    i__2 = min(i__4,*m);
+    for (i__ = max(i__3,1); i__ <= i__2; ++i__) {
+      /* Computing MAX */
+      d__2 = c__[j], d__3 = (d__1 = ab[kd + i__ - j + j * ab_dim1], abs(
+        d__1)) * r__[i__];
+      c__[j] = max(d__2,d__3);
+      /* L80: */
+    }
+    if (c__[j] > 0.) {
+      i__2 = (integer) (log(c__[j]) / logrdx);
+      c__[j] = pow_di(&radix, &i__2);
+    }
+    /* L90: */
+  }
+
+  /*     Find the maximum and minimum scale factors. */
+
+  rcmin = bignum;
+  rcmax = 0.;
+  i__1 = *n;
+  for (j = 1; j <= i__1; ++j) {
+    /* Computing MIN */
+    d__1 = rcmin, d__2 = c__[j];
+    rcmin = min(d__1,d__2);
+    /* Computing MAX */
+    d__1 = rcmax, d__2 = c__[j];
+    rcmax = max(d__1,d__2);
+    /* L100: */
+  }
+
+  if (rcmin == 0.) {
+
+    /*        Find the first zero scale factor and return an error code. */
+
+    i__1 = *n;
+    for (j = 1; j <= i__1; ++j) {
+      if (c__[j] == 0.) {
+        *info = *m + j;
+        return 0;
+      }
+      /* L110: */
+    }
+  } else {
+
+    /*        Invert the scale factors. */
+
+    i__1 = *n;
+    for (j = 1; j <= i__1; ++j) {
+      /* Computing MIN */
+      /* Computing MAX */
+      d__2 = c__[j];
+      d__1 = max(d__2,smlnum);
+      c__[j] = 1. / min(d__1,bignum);
+      /* L120: */
+    }
+
+    /*        Compute COLCND = min(C(J)) / max(C(J)). */
+
+    *colcnd = max(rcmin,smlnum) / min(rcmax,bignum);
+  }
+
+  return 0;
+
+  /*     End of DGBEQUB */
+
+} /* dgbequb_ */
+
 
 //-------------------------------------------------------------------------------------------------
 
@@ -5102,6 +5332,14 @@ template int gbsvx(char *fact, char *trans, integer *n, integer *kl, integer *ku
   doublereal *rcond, doublereal *ferr, doublereal *berr, doublereal *work, integer *iwork, 
   integer *info, ftnlen fact_len, ftnlen trans_len, ftnlen equed_len);
 
+
+template int gbsvxx(char *fact, char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, 
+  doublereal *ab, integer *ldab, doublereal *afb, integer *ldafb, integer *ipiv, char *equed, 
+  doublereal *r__, doublereal *c__, doublereal *b, integer *ldb, doublereal *x, integer *ldx, 
+  doublereal *rcond, doublereal *rpvgrw, doublereal *berr, integer *n_err_bnds__, 
+  doublereal *err_bnds_norm__, doublereal *err_bnds_comp__, integer *nparams, doublereal *params, 
+  doublereal *work, integer *iwork, integer *info, ftnlen fact_len, ftnlen trans_len, 
+  ftnlen equed_len);
 
 
 // Computational routines:
