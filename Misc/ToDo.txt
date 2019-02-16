@@ -8,14 +8,14 @@ f2c functions that are needed: i_len, s_copy, s_cmp, i_nint
 
 Functions that have to be translated next:
 
-  ddot, dla_gbrpvgrw__, dgbequb, dgbrfsx, drscl, 
+  dla_gbrpvgrw__, dgbequb, dgbrfsx, drscl, 
 
 
 
 Functions that have been translated:
 
 Blas Level 1:
-  dasum, daxpy, dcopy, idamax, lsame, dscal, dswap, xerbla
+  dasum, daxpy, dcopy, ddot, idamax, lsame, dscal, dswap, xerbla
 
 Blas Level 2:
   dger, dgbmv, dgemv, dtbsv, 

@@ -4798,15 +4798,14 @@ int latbs(char *uplo, char *trans, char *diag, char *normin, integer *n, integer
             /* Computing MIN */
             i__3 = *kd, i__4 = j - 1;
             jlen = min(i__3,i__4);
-            sumj = ddot_(&jlen, &ab[*kd + 1 - jlen + j * ab_dim1],
+            sumj = dot(&jlen, &ab[*kd + 1 - jlen + j * ab_dim1],
               &c__1, &x[j - jlen], &c__1);
           } else {
             /* Computing MIN */
             i__3 = *kd, i__4 = *n - j;
             jlen = min(i__3,i__4);
             if (jlen > 0) {
-              sumj = ddot_(&jlen, &ab[j * ab_dim1 + 2], &c__1, &
-                x[j + 1], &c__1);
+              sumj = dot(&jlen, &ab[j * ab_dim1 + 2], &c__1, &x[j + 1], &c__1);
             }
           }
         } else {
@@ -4958,6 +4957,7 @@ template int gbtrs(char *trans, integer *n, integer *kl, integer *ku, integer *n
 
 
 // Auxiliary routines:
+
 
 template int latbs(char *uplo, char *trans, char *diag, char *normin, integer *n, integer *kd, 
   double *ab, integer *ldab, double *x, double *scale, double *cnorm, integer *info, 
