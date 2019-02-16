@@ -248,6 +248,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\LaPackCPP\Blas.cpp" />
     <ClCompile Include="..\..\Source\LaPackCPP\LaPack.cpp" />
+    <ClCompile Include="..\..\Source\libf2c\d_lg10.c" />
+    <ClCompile Include="..\..\Source\libf2c\d_sign.c" />
+    <ClCompile Include="..\..\Source\libf2c\i_dnnt.c" />
     <ClCompile Include="..\..\Source\libf2c\i_len.c" />
     <ClCompile Include="..\..\Source\libf2c\i_nint.c" />
     <ClCompile Include="..\..\Source\libf2c\s_cmp.c" />

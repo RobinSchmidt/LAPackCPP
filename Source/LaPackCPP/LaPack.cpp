@@ -1223,14 +1223,14 @@ int gbrfs(char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, T *a
   //extern /* Subroutine */ int dgbmv_(char *, integer *, integer *, integer *
   //  , integer *, doublereal *, doublereal *, integer *, doublereal *, 
   //  integer *, doublereal *, doublereal *, integer *, ftnlen);
-  extern logical lsame_(char *, char *, ftnlen, ftnlen);
+  //extern logical lsame_(char *, char *, ftnlen, ftnlen);
   static integer isave[3];
   //extern /* Subroutine */ int dcopy_(integer *, doublereal *, integer *, 
   //  doublereal *, integer *), daxpy_(integer *, doublereal *, 
   //    doublereal *, integer *, doublereal *, integer *);
   static integer count;
-  extern /* Subroutine */ int dlacn2_(integer *, doublereal *, doublereal *,
-    integer *, doublereal *, integer *, integer *);
+  //extern /* Subroutine */ int dlacn2_(integer *, doublereal *, doublereal *,
+  //  integer *, doublereal *, integer *, integer *);
   //extern doublereal dlamch_(char *, ftnlen);
   static T safmin;
   //extern /* Subroutine */ int xerbla_(char *, integer *, ftnlen), dgbtrs_(
@@ -1261,8 +1261,8 @@ int gbrfs(char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, T *a
 
   /* Function Body */
   *info = 0;
-  notran = lsame_(trans, "N", (ftnlen)1, (ftnlen)1);
-  if (! notran && ! lsame_(trans, "T", (ftnlen)1, (ftnlen)1) && ! lsame_(
+  notran = lsame(trans, "N", (ftnlen)1, (ftnlen)1);
+  if (! notran && ! lsame(trans, "T", (ftnlen)1, (ftnlen)1) && ! lsame(
     trans, "C", (ftnlen)1, (ftnlen)1)) {
     *info = -1;
   } else if (*n < 0) {
@@ -1459,8 +1459,7 @@ int gbrfs(char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, T *a
 
     kase = 0;
   L100:
-    dlacn2_(n, &work[(*n << 1) + 1], &work[*n + 1], &iwork[1], &ferr[j], &
-      kase, isave);
+    lacn2(n, &work[(*n << 1) + 1], &work[*n + 1], &iwork[1], &ferr[j], &kase, isave);
     if (kase != 0) {
       if (kase == 1) {
 
@@ -3295,8 +3294,8 @@ int lacn2(integer *n, T *v, T *x, integer *isgn, T *est, integer *kase, integer 
   T d__1;
 
   /* Builtin functions */
-  double d_sign(doublereal *, doublereal *);
-  integer i_dnnt(doublereal *);
+  //double d_sign(doublereal *, doublereal *);
+  //integer i_dnnt(doublereal *);
 
   /* Local variables */
   static integer i__;
@@ -3606,7 +3605,7 @@ int lacpy(char *uplo, integer *m, integer *n, T *a, integer *lda, T *b, integer 
 
   /* Local variables */
   static integer i__, j;
-  extern logical lsame_(char *, char *, ftnlen, ftnlen);
+  //extern logical lsame_(char *, char *, ftnlen, ftnlen);
 
   /* Parameter adjustments */
   a_dim1 = *lda;
@@ -3617,7 +3616,7 @@ int lacpy(char *uplo, integer *m, integer *n, T *a, integer *lda, T *b, integer 
   b -= b_offset;
 
   /* Function Body */
-  if (lsame_(uplo, "U", (ftnlen)1, (ftnlen)1)) {
+  if (lsame(uplo, "U", (ftnlen)1, (ftnlen)1)) {
     i__1 = *n;
     for (j = 1; j <= i__1; ++j) {
       i__2 = min(j,*m);
@@ -3627,7 +3626,7 @@ int lacpy(char *uplo, integer *m, integer *n, T *a, integer *lda, T *b, integer 
       }
       /* L20: */
     }
-  } else if (lsame_(uplo, "L", (ftnlen)1, (ftnlen)1)) {
+  } else if (lsame(uplo, "L", (ftnlen)1, (ftnlen)1)) {
     i__1 = *n;
     for (j = 1; j <= i__1; ++j) {
       i__2 = *m;

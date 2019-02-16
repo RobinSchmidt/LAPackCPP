@@ -132,6 +132,15 @@
     <ClCompile Include="..\..\Source\libf2c\i_len.c">
       <Filter>Source Files\libf2c</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\libf2c\d_lg10.c">
+      <Filter>Source Files\libf2c</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\libf2c\i_dnnt.c">
+      <Filter>Source Files\libf2c</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\libf2c\d_sign.c">
+      <Filter>Source Files\libf2c</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\GeneratedByF2C\f2c.h">

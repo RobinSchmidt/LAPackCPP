@@ -61,9 +61,6 @@ INCY: storage spacing between elements of DY    */
 template<class T>
 int copy(integer *n, T *dx, integer *incx, T *dy, integer *incy);
 
-
-
-
 /** Forms the dot product of two vectors. uses unrolled loops for increments equal to one.
 
 Arguments:
@@ -73,7 +70,7 @@ INCX: storage spacing between elements of DX
 DY:   array, dimension ( 1 + ( N - 1 )*abs( INCY ) )
 INCY: storage spacing between elements of DY  */
 template<class T>
-doublereal dot(integer *n, T *dx, integer *incx, T *dy, integer *incy);
+T dot(integer *n, T *dx, integer *incx, T *dy, integer *incy);
 
 
 /** iamax finds the index of the first element having maximum absolute value.

@@ -1947,7 +1947,12 @@ int trsm(char *side, char *uplo, char *transa, char *diag, integer *m, integer *
 template int axpy(long int* n, double *da, double *dx, long int *incx, 
   double *dy, long int *incy);
 
+template double asum(integer *n, double *dx, integer *incx);
+
 template int copy(long *n, double *dx, long *incx, double *dy, long *incy);
+
+template double dot(integer *n, double *dx, integer *incx, double *dy, integer *incy);
+
 
 template long iamax(long *n, double *dx, long *incx);
 
