@@ -1,16 +1,10 @@
 
 
-
-
-
-
 f2c functions that are needed: i_len, s_copy, s_cmp, i_nint
 
 Functions that have to be translated next:
 
-  dgbequb, dgbrfsx, dlascl2
-
-
+  dgbrfsx, dlascl2
 
 Functions that have been translated:
 
@@ -18,7 +12,7 @@ Lapack-Drivers:
   dgbsv, dgbsvx, dgbsvxx
 
 Lapack-Computational:
-  dgbcon, dgbequ, dgbrfs, dgbtrf, dgbtrs, dgbtf2, dla_gbrpvgrw__
+  dgbcon, dgbequ, dgbequb, dgbrfs, dgbtrf, dgbtrs, dgbtf2, dla_gbrpvgrw__
 
 Lapack-Auxiliary: 
   dlacn2, dlabad, dlacpy, dlangb, dlantb, dlaqgb, dlaswp, dlatbs,  ieeeck, ilaenv, 
@@ -37,10 +31,6 @@ Blas Level 3:
   
 check labad - it has been translated from double precision version and may 
 not be appropriate for single (magic numbers are used) - maybe re-implement
-  
-..check langb - it can't be templatized straightforwardly because it has no 
-template-typpe inputs ...wait - it does!
-  
 
 Implement the "lamch" auxiliary routine in a generic way using templates and
 explicit specializations - this is one of the places, where actually some new
@@ -62,7 +52,7 @@ whether static or local (stack-allocated) variables shall be used. When there
 are a lot of local variables, maybe we could get stack overflow, if they are 
 not static? We should have the option to roll back to static, if necessarry, 
 so using a macro seems a suitable approach. Another approach would be to 
-embed the rouines in a class and use member variables...but that may go 
+embed the routines in a class and use member variables...but that may go 
 very much against the grain of the library design and in routines converted
 later, we would have to make a lot of edits...hmm...bad! for the time being,
 i'll just leave it as is...In my typical scenario (of audio apps and plugins),
