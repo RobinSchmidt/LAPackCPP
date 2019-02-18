@@ -4,7 +4,7 @@ f2c functions that are needed: i_len, s_copy, s_cmp, i_nint
 
 Functions that have to be translated next:
 
-  dgbrfsx, dlascl2
+  dlascl2
 
 Functions that have been translated:
 
@@ -12,7 +12,8 @@ Lapack-Drivers:
   dgbsv, dgbsvx, dgbsvxx
 
 Lapack-Computational:
-  dgbcon, dgbequ, dgbequb, dgbrfs, dgbtrf, dgbtrs, dgbtf2, dla_gbrpvgrw__
+  dgbcon, dgbequ, dgbequb, dgbrfs, dgbrfsx, dgbtrf, dgbtrs, dgbtf2, 
+  dla_gbrpvgrw__
 
 Lapack-Auxiliary: 
   dlacn2, dlabad, dlacpy, dlangb, dlantb, dlaqgb, dlaswp, dlatbs,  ieeeck, ilaenv, 

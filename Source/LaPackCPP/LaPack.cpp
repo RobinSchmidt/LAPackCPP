@@ -771,7 +771,7 @@ int gbsvxx(char *fact, char *trans, integer *n, integer *kl, integer *ku, intege
   /*     Use iterative refinement to improve the computed solution and */
   /*     compute error bounds and backward error estimates for it. */
 
-  dgbrfsx_(trans, equed, n, kl, ku, nrhs, &ab[ab_offset], ldab, &afb[
+  gbrfsx(trans, equed, n, kl, ku, nrhs, &ab[ab_offset], ldab, &afb[
     afb_offset], ldafb, &ipiv[1], &r__[1], &c__[1], &b[b_offset], ldb,
       &x[x_offset], ldx, rcond, &berr[1], n_err_bnds__, &
       err_bnds_norm__[err_bnds_norm_offset], &err_bnds_comp__[
@@ -1196,8 +1196,8 @@ int gbequ(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab
 
 // dgbequb_ -- LAPACK computational routine (version 3.7.0) -
 template<class T>
-int dgbequb_(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab, 
-  T *r__, T *c__, T *rowcnd, T *colcnd, T *amax, integer *info)
+int gbequb(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *ldab, T *r__, T *c__, 
+  T *rowcnd, T *colcnd, T *amax, integer *info)
 {
   /* System generated locals */
   integer ab_dim1, ab_offset, i__1, i__2, i__3, i__4;
@@ -1739,6 +1739,373 @@ int gbrfs(char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, T *a
   /*     End of DGBRFS */
 
 } /* dgbrfs_ */
+
+//-------------------------------------------------------------------------------------------------
+
+// from dgbrfsx,  LAPACK computational routine (version 3.7.0) -- 
+template<class T>
+int gbrfsx(char *trans, char *equed, integer *n, integer *kl, integer *ku, integer *nrhs, 
+  T *ab, integer *ldab, T *afb, integer *ldafb, integer *ipiv, T *r__, T *c__, T *b, integer *ldb, 
+  T *x, integer *ldx, T *rcond, T *berr, integer *n_err_bnds__, T *err_bnds_norm__, 
+  T *err_bnds_comp__, integer *nparams, T *params, T *work, integer *iwork, integer *info, 
+  ftnlen trans_len, ftnlen equed_len)
+{
+  /* Table of constant values */
+  static integer c_n1 = -1;
+  static integer c__0 = 0;
+  static integer c__1 = 1;
+
+
+  /* System generated locals */
+  integer ab_dim1, ab_offset, afb_dim1, afb_offset, b_dim1, b_offset, 
+    x_dim1, x_offset, err_bnds_norm_dim1, err_bnds_norm_offset, 
+    err_bnds_comp_dim1, err_bnds_comp_offset, i__1;
+  T d__1, d__2;
+
+  /* Builtin functions */
+  double sqrt(T);
+
+  /* Local variables */
+  static T illrcond_thresh__, unstable_thresh__, err_lbnd__;
+  static integer ref_type__;
+  extern integer ilatrans_(char *, ftnlen);
+  static integer j;
+  static T rcond_tmp__;
+  static integer prec_type__, trans_type__;
+  //extern doublereal dla_gbrcond__(char *, integer *, integer *, integer *, 
+  //  doublereal *, integer *, doublereal *, integer *, integer *, 
+  //  integer *, doublereal *, integer *, doublereal *, integer *, 
+  //  ftnlen);
+  static T cwise_wrong__;
+  //extern /* Subroutine */ int dla_gbrfsx_extended__(integer *, integer *, 
+  //  integer *, integer *, integer *, integer *, doublereal *, integer 
+  //  *, doublereal *, integer *, integer *, logical *, doublereal *, 
+  //  doublereal *, integer *, doublereal *, integer *, doublereal *, 
+  //  integer *, doublereal *, doublereal *, doublereal *, doublereal *,
+  //  doublereal *, doublereal *, doublereal *, integer *, doublereal *
+  //  , doublereal *, logical *, integer *);
+  static char norm[1];
+  static logical ignore_cwise__;
+  //extern logical lsame_(char *, char *, ftnlen, ftnlen);
+  static T anorm;
+  //extern doublereal dlangb_(char *, integer *, integer *, integer *, 
+  //  doublereal *, integer *, doublereal *, ftnlen), dlamch_(char *, 
+  //    ftnlen);
+  //extern /* Subroutine */ int dgbcon_(char *, integer *, integer *, integer 
+  //  *, doublereal *, integer *, integer *, doublereal *, doublereal *,
+  //  doublereal *, integer *, integer *, ftnlen), xerbla_(char *, 
+  //    integer *, ftnlen);
+  static logical colequ, notran, rowequ;
+  extern integer ilaprec_(char *, ftnlen);
+  static integer ithresh, n_norms__;
+  static T rthresh;
+
+  /* Parameter adjustments */
+  err_bnds_comp_dim1 = *nrhs;
+  err_bnds_comp_offset = 1 + err_bnds_comp_dim1;
+  err_bnds_comp__ -= err_bnds_comp_offset;
+  err_bnds_norm_dim1 = *nrhs;
+  err_bnds_norm_offset = 1 + err_bnds_norm_dim1;
+  err_bnds_norm__ -= err_bnds_norm_offset;
+  ab_dim1 = *ldab;
+  ab_offset = 1 + ab_dim1;
+  ab -= ab_offset;
+  afb_dim1 = *ldafb;
+  afb_offset = 1 + afb_dim1;
+  afb -= afb_offset;
+  --ipiv;
+  --r__;
+  --c__;
+  b_dim1 = *ldb;
+  b_offset = 1 + b_dim1;
+  b -= b_offset;
+  x_dim1 = *ldx;
+  x_offset = 1 + x_dim1;
+  x -= x_offset;
+  --berr;
+  --params;
+  --work;
+  --iwork;
+
+  /* Function Body */
+  *info = 0;
+  trans_type__ = ilatrans_(trans, (ftnlen)1);
+  ref_type__ = 1;
+  if (*nparams >= 1) {
+    if (params[1] < 0.) {
+      params[1] = 1.;
+    } else {
+      ref_type__ = (integer) params[1];
+    }
+  }
+
+  /*     Set default parameters. */
+
+  illrcond_thresh__ = (doublereal) (*n) * dlamch_("Epsilon", (ftnlen)7);
+  ithresh = 10;
+  rthresh = .5;
+  unstable_thresh__ = .25;
+  ignore_cwise__ = FALSE_;
+
+  if (*nparams >= 2) {
+    if (params[2] < 0.) {
+      params[2] = (doublereal) ithresh;
+    } else {
+      ithresh = (integer) params[2];
+    }
+  }
+  if (*nparams >= 3) {
+    if (params[3] < 0.) {
+      if (ignore_cwise__) {
+        params[3] = 0.;
+      } else {
+        params[3] = 1.;
+      }
+    } else {
+      ignore_cwise__ = params[3] == 0.;
+    }
+  }
+  if (ref_type__ == 0 || *n_err_bnds__ == 0) {
+    n_norms__ = 0;
+  } else if (ignore_cwise__) {
+    n_norms__ = 1;
+  } else {
+    n_norms__ = 2;
+  }
+
+  notran = lsame_(trans, "N", (ftnlen)1, (ftnlen)1);
+  rowequ = lsame_(equed, "R", (ftnlen)1, (ftnlen)1) || lsame_(equed, "B", (
+    ftnlen)1, (ftnlen)1);
+  colequ = lsame_(equed, "C", (ftnlen)1, (ftnlen)1) || lsame_(equed, "B", (
+    ftnlen)1, (ftnlen)1);
+
+  /*     Test input parameters. */
+
+  if (trans_type__ == -1) {
+    *info = -1;
+  } else if (! rowequ && ! colequ && ! lsame_(equed, "N", (ftnlen)1, (
+    ftnlen)1)) {
+    *info = -2;
+  } else if (*n < 0) {
+    *info = -3;
+  } else if (*kl < 0) {
+    *info = -4;
+  } else if (*ku < 0) {
+    *info = -5;
+  } else if (*nrhs < 0) {
+    *info = -6;
+  } else if (*ldab < *kl + *ku + 1) {
+    *info = -8;
+  } else if (*ldafb < (*kl << 1) + *ku + 1) {
+    *info = -10;
+  } else if (*ldb < max(1,*n)) {
+    *info = -13;
+  } else if (*ldx < max(1,*n)) {
+    *info = -15;
+  }
+  if (*info != 0) {
+    i__1 = -(*info);
+    xerbla_("DGBRFSX", &i__1, (ftnlen)7);
+    return 0;
+  }
+
+  /*     Quick return if possible. */
+
+  if (*n == 0 || *nrhs == 0) {
+    *rcond = 1.;
+    i__1 = *nrhs;
+    for (j = 1; j <= i__1; ++j) {
+      berr[j] = 0.;
+      if (*n_err_bnds__ >= 1) {
+        err_bnds_norm__[j + err_bnds_norm_dim1] = 1.;
+        err_bnds_comp__[j + err_bnds_comp_dim1] = 1.;
+      }
+      if (*n_err_bnds__ >= 2) {
+        err_bnds_norm__[j + (err_bnds_norm_dim1 << 1)] = 0.;
+        err_bnds_comp__[j + (err_bnds_comp_dim1 << 1)] = 0.;
+      }
+      if (*n_err_bnds__ >= 3) {
+        err_bnds_norm__[j + err_bnds_norm_dim1 * 3] = 1.;
+        err_bnds_comp__[j + err_bnds_comp_dim1 * 3] = 1.;
+      }
+    }
+    return 0;
+  }
+
+  /*     Default to failure. */
+
+  *rcond = 0.;
+  i__1 = *nrhs;
+  for (j = 1; j <= i__1; ++j) {
+    berr[j] = 1.;
+    if (*n_err_bnds__ >= 1) {
+      err_bnds_norm__[j + err_bnds_norm_dim1] = 1.;
+      err_bnds_comp__[j + err_bnds_comp_dim1] = 1.;
+    }
+    if (*n_err_bnds__ >= 2) {
+      err_bnds_norm__[j + (err_bnds_norm_dim1 << 1)] = 1.;
+      err_bnds_comp__[j + (err_bnds_comp_dim1 << 1)] = 1.;
+    }
+    if (*n_err_bnds__ >= 3) {
+      err_bnds_norm__[j + err_bnds_norm_dim1 * 3] = 0.;
+      err_bnds_comp__[j + err_bnds_comp_dim1 * 3] = 0.;
+    }
+  }
+
+  /*     Compute the norm of A and the reciprocal of the condition */
+  /*     number of A. */
+
+  if (notran) {
+    *(unsigned char *)norm = 'I';
+  } else {
+    *(unsigned char *)norm = '1';
+  }
+  anorm = dlangb_(norm, n, kl, ku, &ab[ab_offset], ldab, &work[1], (ftnlen)
+    1);
+  dgbcon_(norm, n, kl, ku, &afb[afb_offset], ldafb, &ipiv[1], &anorm, rcond,
+    &work[1], &iwork[1], info, (ftnlen)1);
+
+  /*     Perform refinement on each right-hand side */
+
+  if (ref_type__ != 0 && *info == 0) {
+    prec_type__ = ilaprec_("E", (ftnlen)1);
+    if (notran) {
+      dla_gbrfsx_extended__(&prec_type__, &trans_type__, n, kl, ku, 
+        nrhs, &ab[ab_offset], ldab, &afb[afb_offset], ldafb, &
+        ipiv[1], &colequ, &c__[1], &b[b_offset], ldb, &x[x_offset]
+        , ldx, &berr[1], &n_norms__, &err_bnds_norm__[
+          err_bnds_norm_offset], &err_bnds_comp__[
+            err_bnds_comp_offset], &work[*n + 1], &work[1], &work[(*n 
+              << 1) + 1], &work[1], rcond, &ithresh, &rthresh, &
+              unstable_thresh__, &ignore_cwise__, info);
+    } else {
+      dla_gbrfsx_extended__(&prec_type__, &trans_type__, n, kl, ku, 
+        nrhs, &ab[ab_offset], ldab, &afb[afb_offset], ldafb, &
+        ipiv[1], &rowequ, &r__[1], &b[b_offset], ldb, &x[x_offset]
+        , ldx, &berr[1], &n_norms__, &err_bnds_norm__[
+          err_bnds_norm_offset], &err_bnds_comp__[
+            err_bnds_comp_offset], &work[*n + 1], &work[1], &work[(*n 
+              << 1) + 1], &work[1], rcond, &ithresh, &rthresh, &
+              unstable_thresh__, &ignore_cwise__, info);
+    }
+  }
+  /* Computing MAX */
+  d__1 = 10., d__2 = sqrt((doublereal) (*n));
+  err_lbnd__ = max(d__1,d__2) * dlamch_("Epsilon", (ftnlen)7);
+  if (*n_err_bnds__ >= 1 && n_norms__ >= 1) {
+
+    /*     Compute scaled normwise condition number cond(A*C). */
+
+    if (colequ && notran) {
+      rcond_tmp__ = dla_gbrcond__(trans, n, kl, ku, &ab[ab_offset], 
+        ldab, &afb[afb_offset], ldafb, &ipiv[1], &c_n1, &c__[1], 
+        info, &work[1], &iwork[1], (ftnlen)1);
+    } else if (rowequ && ! notran) {
+      rcond_tmp__ = dla_gbrcond__(trans, n, kl, ku, &ab[ab_offset], 
+        ldab, &afb[afb_offset], ldafb, &ipiv[1], &c_n1, &r__[1], 
+        info, &work[1], &iwork[1], (ftnlen)1);
+    } else {
+      rcond_tmp__ = dla_gbrcond__(trans, n, kl, ku, &ab[ab_offset], 
+        ldab, &afb[afb_offset], ldafb, &ipiv[1], &c__0, &r__[1], 
+        info, &work[1], &iwork[1], (ftnlen)1);
+    }
+    i__1 = *nrhs;
+    for (j = 1; j <= i__1; ++j) {
+
+      /*     Cap the error at 1.0. */
+
+      if (*n_err_bnds__ >= 2 && err_bnds_norm__[j + (err_bnds_norm_dim1 
+        << 1)] > 1.) {
+        err_bnds_norm__[j + (err_bnds_norm_dim1 << 1)] = 1.;
+      }
+
+      /*     Threshold the error (see LAWN). */
+
+      if (rcond_tmp__ < illrcond_thresh__) {
+        err_bnds_norm__[j + (err_bnds_norm_dim1 << 1)] = 1.;
+        err_bnds_norm__[j + err_bnds_norm_dim1] = 0.;
+        if (*info <= *n) {
+          *info = *n + j;
+        }
+      } else if (err_bnds_norm__[j + (err_bnds_norm_dim1 << 1)] < 
+        err_lbnd__) {
+        err_bnds_norm__[j + (err_bnds_norm_dim1 << 1)] = err_lbnd__;
+        err_bnds_norm__[j + err_bnds_norm_dim1] = 1.;
+      }
+
+      /*     Save the condition number. */
+
+      if (*n_err_bnds__ >= 3) {
+        err_bnds_norm__[j + err_bnds_norm_dim1 * 3] = rcond_tmp__;
+      }
+    }
+  }
+  if (*n_err_bnds__ >= 1 && n_norms__ >= 2) {
+
+    /*     Compute componentwise condition number cond(A*diag(Y(:,J))) for */
+    /*     each right-hand side using the current solution as an estimate of */
+    /*     the true solution.  If the componentwise error estimate is too */
+    /*     large, then the solution is a lousy estimate of truth and the */
+    /*     estimated RCOND may be too optimistic.  To avoid misleading users, */
+    /*     the inverse condition number is set to 0.0 when the estimated */
+    /*     cwise error is at least CWISE_WRONG. */
+
+    cwise_wrong__ = sqrt(dlamch_("Epsilon", (ftnlen)7));
+    i__1 = *nrhs;
+    for (j = 1; j <= i__1; ++j) {
+      if (err_bnds_comp__[j + (err_bnds_comp_dim1 << 1)] < 
+        cwise_wrong__) {
+        rcond_tmp__ = dla_gbrcond__(trans, n, kl, ku, &ab[ab_offset], 
+          ldab, &afb[afb_offset], ldafb, &ipiv[1], &c__1, &x[j *
+          x_dim1 + 1], info, &work[1], &iwork[1], (ftnlen)1);
+      } else {
+        rcond_tmp__ = 0.;
+      }
+
+      /*     Cap the error at 1.0. */
+
+      if (*n_err_bnds__ >= 2 && err_bnds_comp__[j + (err_bnds_comp_dim1 
+        << 1)] > 1.) {
+        err_bnds_comp__[j + (err_bnds_comp_dim1 << 1)] = 1.;
+      }
+
+      /*     Threshold the error (see LAWN). */
+
+      if (rcond_tmp__ < illrcond_thresh__) {
+        err_bnds_comp__[j + (err_bnds_comp_dim1 << 1)] = 1.;
+        err_bnds_comp__[j + err_bnds_comp_dim1] = 0.;
+        if (params[3] == 1. && *info < *n + j) {
+          *info = *n + j;
+        }
+      } else if (err_bnds_comp__[j + (err_bnds_comp_dim1 << 1)] < 
+        err_lbnd__) {
+        err_bnds_comp__[j + (err_bnds_comp_dim1 << 1)] = err_lbnd__;
+        err_bnds_comp__[j + err_bnds_comp_dim1] = 1.;
+      }
+
+      /*     Save the condition number. */
+
+      if (*n_err_bnds__ >= 3) {
+        err_bnds_comp__[j + err_bnds_comp_dim1 * 3] = rcond_tmp__;
+      }
+    }
+  }
+
+  return 0;
+
+  /*     End of DGBRFSX */
+
+} /* dgbrfsx_ */
+
+
+
+
+
+
+
+
+
+
 
 //-------------------------------------------------------------------------------------------------
 
