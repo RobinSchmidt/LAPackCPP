@@ -974,6 +974,26 @@ template<class T>
 T la_gbrpvgrw(integer *n, integer *kl, integer *ku, integer *ncols, T *ab, integer *ldab, 
   T *afb, integer *ldafb);
 
+//-------------------------------------------------------------------------------------------------
+
+/**
+Purpose:
+DLASCL2 performs a diagonal scaling on a vector:
+  x <-- D * x
+where the diagonal matrix D is stored as a vector. Eventually to be replaced by BLAS_dge_diag_scale
+in the new BLAS
+
+Arguments:
+M:   The number of rows of D and X. M >= 0.
+N:   The number of columns of X. N >= 0.
+D:   array, length M. Diagonal matrix D, stored as a vector of length M.
+X:   array, dimension (LDX,N). On entry, the vector X to be scaled by D. On exit, the scaled vector.
+LDX: The leading dimension of the vector X. LDX >= M. */
+template<class T>
+int lascl2(integer *m, integer *n, T *d__, T *x, integer *ldx);
+
+
+
 //=================================================================================================
 // Auxiliary routines:
 

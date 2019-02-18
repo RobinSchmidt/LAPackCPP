@@ -1235,7 +1235,7 @@ int gbequb(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *lda
   }
   if (*info != 0) {
     i__1 = -(*info);
-    xerbla_("DGBEQUB", &i__1, (ftnlen)7);
+    xerbla("DGBEQUB", &i__1, (ftnlen)7);
     return 0;
   }
 
@@ -1250,9 +1250,9 @@ int gbequb(integer *m, integer *n, integer *kl, integer *ku, T *ab, integer *lda
 
   /*     Get machine constants.  Assume SMLNUM is a power of the radix. */
 
-  smlnum = dlamch_("S", (ftnlen)1);
+  smlnum = lamch("S", (ftnlen)1);
   bignum = 1. / smlnum;
-  radix = dlamch_("B", (ftnlen)1);
+  radix = lamch("B", (ftnlen)1);
   logrdx = log(radix);
 
   /*     Compute row scale factors. */
@@ -1841,7 +1841,7 @@ int gbrfsx(char *trans, char *equed, integer *n, integer *kl, integer *ku, integ
 
   /*     Set default parameters. */
 
-  illrcond_thresh__ = (doublereal) (*n) * dlamch_("Epsilon", (ftnlen)7);
+  illrcond_thresh__ = (doublereal) (*n) * lamch("Epsilon", (ftnlen)7);
   ithresh = 10;
   rthresh = .5;
   unstable_thresh__ = .25;
@@ -1873,17 +1873,17 @@ int gbrfsx(char *trans, char *equed, integer *n, integer *kl, integer *ku, integ
     n_norms__ = 2;
   }
 
-  notran = lsame_(trans, "N", (ftnlen)1, (ftnlen)1);
-  rowequ = lsame_(equed, "R", (ftnlen)1, (ftnlen)1) || lsame_(equed, "B", (
+  notran = lsame(trans, "N", (ftnlen)1, (ftnlen)1);
+  rowequ = lsame(equed, "R", (ftnlen)1, (ftnlen)1) || lsame(equed, "B", (
     ftnlen)1, (ftnlen)1);
-  colequ = lsame_(equed, "C", (ftnlen)1, (ftnlen)1) || lsame_(equed, "B", (
+  colequ = lsame(equed, "C", (ftnlen)1, (ftnlen)1) || lsame(equed, "B", (
     ftnlen)1, (ftnlen)1);
 
   /*     Test input parameters. */
 
   if (trans_type__ == -1) {
     *info = -1;
-  } else if (! rowequ && ! colequ && ! lsame_(equed, "N", (ftnlen)1, (
+  } else if (! rowequ && ! colequ && ! lsame(equed, "N", (ftnlen)1, (
     ftnlen)1)) {
     *info = -2;
   } else if (*n < 0) {
@@ -1905,7 +1905,7 @@ int gbrfsx(char *trans, char *equed, integer *n, integer *kl, integer *ku, integ
   }
   if (*info != 0) {
     i__1 = -(*info);
-    xerbla_("DGBRFSX", &i__1, (ftnlen)7);
+    xerbla("DGBRFSX", &i__1, (ftnlen)7);
     return 0;
   }
 
@@ -1960,9 +1960,9 @@ int gbrfsx(char *trans, char *equed, integer *n, integer *kl, integer *ku, integ
   } else {
     *(unsigned char *)norm = '1';
   }
-  anorm = dlangb_(norm, n, kl, ku, &ab[ab_offset], ldab, &work[1], (ftnlen)
+  anorm = langb(norm, n, kl, ku, &ab[ab_offset], ldab, &work[1], (ftnlen)
     1);
-  dgbcon_(norm, n, kl, ku, &afb[afb_offset], ldafb, &ipiv[1], &anorm, rcond,
+  gbcon(norm, n, kl, ku, &afb[afb_offset], ldafb, &ipiv[1], &anorm, rcond,
     &work[1], &iwork[1], info, (ftnlen)1);
 
   /*     Perform refinement on each right-hand side */
@@ -1991,7 +1991,7 @@ int gbrfsx(char *trans, char *equed, integer *n, integer *kl, integer *ku, integ
   }
   /* Computing MAX */
   d__1 = 10., d__2 = sqrt((doublereal) (*n));
-  err_lbnd__ = max(d__1,d__2) * dlamch_("Epsilon", (ftnlen)7);
+  err_lbnd__ = max(d__1,d__2) * lamch("Epsilon", (ftnlen)7);
   if (*n_err_bnds__ >= 1 && n_norms__ >= 1) {
 
     /*     Compute scaled normwise condition number cond(A*C). */
@@ -2050,7 +2050,7 @@ int gbrfsx(char *trans, char *equed, integer *n, integer *kl, integer *ku, integ
     /*     the inverse condition number is set to 0.0 when the estimated */
     /*     cwise error is at least CWISE_WRONG. */
 
-    cwise_wrong__ = sqrt(dlamch_("Epsilon", (ftnlen)7));
+    cwise_wrong__ = sqrt(lamch("Epsilon", (ftnlen)7));
     i__1 = *nrhs;
     for (j = 1; j <= i__1; ++j) {
       if (err_bnds_comp__[j + (err_bnds_comp_dim1 << 1)] < 
@@ -2929,6 +2929,34 @@ T la_gbrpvgrw(integer *n, integer *kl, integer *ku, integer *ncols, T *ab, integ
   return ret_val;
 } /* dla_gbrpvgrw__ */
 
+//-------------------------------------------------------------------------------------------------
+
+// dlascl2 -- LAPACK computational routine (version 3.7.0) -- 
+template<class T>
+int lascl2(integer *m, integer *n, T *d__, T *x, integer *ldx)
+{
+  /* System generated locals */
+  integer x_dim1, x_offset, i__1, i__2;
+
+  /* Local variables */
+  static integer i__, j;
+
+  /* Parameter adjustments */
+  --d__;
+  x_dim1 = *ldx;
+  x_offset = 1 + x_dim1;
+  x -= x_offset;
+
+  /* Function Body */
+  i__1 = *n;
+  for (j = 1; j <= i__1; ++j) {
+    i__2 = *m;
+    for (i__ = 1; i__ <= i__2; ++i__) {
+      x[i__ + j * x_dim1] *= d__[i__];
+    }
+  }
+  return 0;
+} /* dlascl2_ */
 
 //=================================================================================================
 // Auxiliary routines:
