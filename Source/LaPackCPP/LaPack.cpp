@@ -2921,8 +2921,8 @@ int la_gbamv(integer *trans, integer *m, integer *n, integer *kl, integer *ku, T
 
   /* Function Body */
   info = 0;
-  if (! (*trans == ilatrans_("N", (ftnlen)1) || *trans == ilatrans_("T", (
-    ftnlen)1) || *trans == ilatrans_("C", (ftnlen)1))) {
+  if (! (*trans == ilatrans("N", (ftnlen)1) || *trans == ilatrans("T", (
+    ftnlen)1) || *trans == ilatrans("C", (ftnlen)1))) {
     info = 1;
   } else if (*m < 0) {
     info = 2;
@@ -2940,7 +2940,7 @@ int la_gbamv(integer *trans, integer *m, integer *n, integer *kl, integer *ku, T
     info = 11;
   }
   if (info != 0) {
-    xerbla_("DLA_GBAMV ", &info, (ftnlen)10);
+    xerbla("DLA_GBAMV ", &info, (ftnlen)10);
     return 0;
   }
 
@@ -2974,7 +2974,7 @@ int la_gbamv(integer *trans, integer *m, integer *n, integer *kl, integer *ku, T
   /*     Set SAFE1 essentially to be the underflow threshold times the */
   /*     number of additions in each row. */
 
-  safe1 = dlamch_("Safe minimum", (ftnlen)12);
+  safe1 = lamch("Safe minimum", (ftnlen)12);
   safe1 = (*n + 1) * safe1;
 
   /*     Form  y := alpha*abs(A)*abs(x) + beta*abs(y). */
@@ -3692,7 +3692,7 @@ int la_gbrfsx_extended(integer *prec_type__, integer *trans_type__, integer *n, 
 
     la_gbamv(trans_type__, n, n, kl, ku, &c_b8, &ab[ab_offset], ldab, &
       y[j * y_dim1 + 1], &c__1, &c_b8, &ayb[1], &c__1);
-    dla_lin_berr__(n, n, &c__1, &res[1], &ayb[1], &berr_out__[j]);
+    la_lin_berr(n, n, &c__1, &res[1], &ayb[1], &berr_out__[j]);
 
     /*     End of loop for each RHS */
 
@@ -3758,6 +3758,58 @@ T la_gbrpvgrw(integer *n, integer *kl, integer *ku, integer *ncols, T *ab, integ
   ret_val = rpvgrw;
   return ret_val;
 } /* dla_gbrpvgrw__ */
+
+
+//-------------------------------------------------------------------------------------------------
+
+// dla_lin_berr__ -- LAPACK computational routine (version 3.7.0) 
+template<class T>
+int la_lin_berr(integer *n, integer *nz, integer *nrhs, T *res, T *ayb, T *berr)
+{
+  /* System generated locals */
+  integer ayb_dim1, ayb_offset, res_dim1, res_offset, i__1, i__2;
+  T d__1;
+
+  /* Local variables */
+  static integer i__, j;
+  static T tmp, safe1;
+  //extern T dlamch_(char *, ftnlen);
+
+  /*     Adding SAFE1 to the numerator guards against spuriously zero */
+  /*     residuals.  A similar safeguard is in the SLA_yyAMV routine used */
+  /*     to compute AYB. */
+
+  /* Parameter adjustments */
+  --berr;
+  ayb_dim1 = *n;
+  ayb_offset = 1 + ayb_dim1;
+  ayb -= ayb_offset;
+  res_dim1 = *n;
+  res_offset = 1 + res_dim1;
+  res -= res_offset;
+
+  /* Function Body */
+  safe1 = lamch("Safe minimum", (ftnlen)12);
+  safe1 = (*nz + 1) * safe1;
+  i__1 = *nrhs;
+  for (j = 1; j <= i__1; ++j) {
+    berr[j] = 0.;
+    i__2 = *n;
+    for (i__ = 1; i__ <= i__2; ++i__) {
+      if (ayb[i__ + j * ayb_dim1] != 0.) {
+        tmp = (safe1 + (d__1 = res[i__ + j * res_dim1], abs(d__1))) / 
+          ayb[i__ + j * ayb_dim1];
+        /* Computing MAX */
+        d__1 = berr[j];
+        berr[j] = max(d__1,tmp);
+      }
+      /*     If AYB is exactly 0.0 (and if computed by SLA_yyAMV), then we know */
+      /*     the true residual also must be exactly 0.0. */
+    }
+  }
+  return 0;
+} /* dla_lin_berr__ */
+
 
 //-------------------------------------------------------------------------------------------------
 
