@@ -5,6 +5,28 @@ void blas_dgbmv_x(enum blas_order_type order, enum blas_trans_type trans,
   const double *a, int lda, const double *x, int incx,
   double beta, double *y, int incy, enum blas_prec_type prec)
 {
+  // LOCAL VARIABLES 
+  //
+  // As an example, these variables are described on the mxn, column *  major, banded matrix 
+  // described in section 2.2.3 of the specification  
+  // astart      indexes first element in A where computation begins
+  // incai1      indexes first element in row where row is less than lbound
+  // incai2      indexes first element in row where row exceeds lbound
+  // lbound      denotes the number of rows before  first element shifts 
+  // rbound      denotes the columns where there is blank space
+  // ra          index of the rightmost element for a given row
+  // la          index of leftmost  elements for a given row
+  // ra - la     width of a row
+  //                         rbound 
+  //             la   ra    ____|_____ 
+  //              |    |   |          |
+  //          |  a00  a01   *    *   *
+  //  lbound -|  a10  a11  a12   *   *
+  //          |  a20  a21  a22  a23  *
+  //              *   a31  a32  a33 a34
+  //              *    *   a42  a43 a44
+  // Varations on order and transpose have been implemented by modifying these local variables. 
+
   static const char routine_name[] = "BLAS_dgbmv_x";
 
   switch (prec) {
