@@ -3213,7 +3213,7 @@ int la_gbrfsx_extended(integer *prec_type__, integer *trans_type__, integer *n, 
   if (*info != 0) {
     return 0;
   }
-  chla_transtype__(ch__1, (ftnlen)1, trans_type__);
+  chla_transtype(ch__1, (ftnlen)1, trans_type__);
   *(unsigned char *)trans = *(unsigned char *)&ch__1[0];
   eps = lamch("Epsilon", (ftnlen)7);
   hugeval = lamch("Overflow", (ftnlen)8);
@@ -3552,6 +3552,20 @@ int lascl2(integer *m, integer *n, T *d__, T *x, integer *ldx)
 //=================================================================================================
 // Auxiliary routines:
 
+// LAPACK computational routine (version 3.7.0)
+VOID chla_transtype(char *ret_val, ftnlen ret_val_len, integer *trans)
+{
+  if (*trans == 111) {
+    *(unsigned char *)ret_val = 'N';
+  } else if (*trans == 112) {
+    *(unsigned char *)ret_val = 'T';
+  } else if (*trans == 113) {
+    *(unsigned char *)ret_val = 'C';
+  } else {
+    *(unsigned char *)ret_val = 'X';
+  }
+  return ;
+} 
 
 //-------------------------------------------------------------------------------------------------
 

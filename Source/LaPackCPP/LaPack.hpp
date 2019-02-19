@@ -1188,7 +1188,11 @@ int lascl2(integer *m, integer *n, T *d__, T *x, integer *ldx);
 // Auxiliary routines:
 
 
-
+/** This subroutine translates from a BLAST-specified integer constant to the character string 
+specifying a transposition operation. CHLA_TRANSTYPE returns an CHARACTER*1. If CHLA_TRANSTYPE is
+'X', then input is not an integer indicating a transposition operator. Otherwise CHLA_TRANSTYPE 
+returns the constant value corresponding to TRANS. */
+VOID chla_transtype(char *ret_val, ftnlen ret_val_len, integer *trans);
 
 //-------------------------------------------------------------------------------------------------
 
