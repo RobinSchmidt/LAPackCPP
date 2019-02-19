@@ -3265,7 +3265,7 @@ int la_gbrfsx_extended(integer *prec_type__, integer *trans_type__, integer *n, 
         //  ab_offset], ldab, &y[j * y_dim1 + 1], &c__1, &c_b8, &
         //    res[1], &c__1, prec_type__);
       } else {
-        blas_dgbmv2_x__(trans_type__, n, n, kl, ku, &c_b6, &ab[
+        blas_dgbmv2_x(trans_type__, n, n, kl, ku, &c_b6, &ab[
           ab_offset], ldab, &y[j * y_dim1 + 1], &y_tail__[1], &
             c__1, &c_b8, &res[1], &c__1, prec_type__);
       }
