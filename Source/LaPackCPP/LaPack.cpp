@@ -51,6 +51,22 @@ integer i_nint(f2c_real *x)
   return ::i_nint(x);
 }
 
+blas_trans_type toTransType(integer* value)
+{
+  if( *value == 'T' ) return blas_trans;
+  if( *value == 'C' ) return blas_conj_trans;
+  else                return blas_no_trans;       // 'N'
+}
+
+blas_prec_type toPrecType(integer* value)
+{
+  if( *value == 'S' ) return blas_prec_single;
+  if( *value == 'D' ) return blas_prec_double;
+  if( *value == 'I' ) return blas_prec_indigenous;
+  else                return blas_prec_extra;       // 'X'
+}
+// maybe raise assertion when the value is not one of the predefined ones
+
 //=================================================================================================
 // DRIVER routines
 
@@ -3240,9 +3256,14 @@ int la_gbrfsx_extended(integer *prec_type__, integer *trans_type__, integer *n, 
           j * y_dim1 + 1], &c__1, &c_b8, &res[1], &c__1, (
             ftnlen)1);
       } else if (y_prec_state__ == 1) {
-        blas_dgbmv_x__(trans_type__, n, n, kl, ku, &c_b6, &ab[
-          ab_offset], ldab, &y[j * y_dim1 + 1], &c__1, &c_b8, &
-            res[1], &c__1, prec_type__);
+        // call to blas_dgbmv_x was edited by Robin Schmidt to make it compatible to the xblas 
+        // routine - the original code is retained as comment below (todo: try to templatize)
+        blas_dgbmv_x(blas_colmajor,  // blas_colmajor added by Robin - guess!!!
+          toTransType(trans_type__), *n, *n, *kl, *ku, c_b6, &ab[ab_offset], *ldab,
+          &y[j * y_dim1 + 1], c__1, c_b8, &res[1], c__1, toPrecType(prec_type__));
+        //blas_dgbmv_x(trans_type__, n, n, kl, ku, &c_b6, &ab[    
+        //  ab_offset], ldab, &y[j * y_dim1 + 1], &c__1, &c_b8, &
+        //    res[1], &c__1, prec_type__);
       } else {
         blas_dgbmv2_x__(trans_type__, n, n, kl, ku, &c_b6, &ab[
           ab_offset], ldab, &y[j * y_dim1 + 1], &y_tail__[1], &

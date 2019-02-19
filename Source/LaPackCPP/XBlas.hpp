@@ -33,6 +33,7 @@ prec   Specifies the internal precision to be used.
         = blas_prec_extra : anything at least 1.5 times as accurate
                             than double, and wider than 80-bits.
                             We use double-double in our implementation. */
-void BLAS_dgbmv_x(enum blas_order_type order, enum blas_trans_type trans, int m, int n, int kl, 
+void blas_dgbmv_x(enum blas_order_type order, enum blas_trans_type trans, int m, int n, int kl, 
   int ku, double alpha, const double *a, int lda, const double *x, int incx, double beta, 
   double *y, int incy, enum blas_prec_type prec);
+// todo: templatize! ...if possible, get rid of the "d"

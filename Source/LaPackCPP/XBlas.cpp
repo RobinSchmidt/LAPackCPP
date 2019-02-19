@@ -1,6 +1,6 @@
 #include "XBlas.hpp"
 
-void BLAS_dgbmv_x(enum blas_order_type order, enum blas_trans_type trans,
+void blas_dgbmv_x(enum blas_order_type order, enum blas_trans_type trans,
   int m, int n, int kl, int ku, double alpha,
   const double *a, int lda, const double *x, int incx,
   double beta, double *y, int incy, enum blas_prec_type prec)
