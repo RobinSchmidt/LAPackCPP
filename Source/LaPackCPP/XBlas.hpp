@@ -1,12 +1,7 @@
 #pragma once
 
-// may or may not be needed:
-//#include "blas_extended.h"
-//#include "blas_extended_private.h"
-
-
-
-
+#include "XBlas/blas_extended.h"
+#include "XBlas/blas_extended_private.h"
 
 /**
 Purpose:
