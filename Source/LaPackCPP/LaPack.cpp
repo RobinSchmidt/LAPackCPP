@@ -2889,6 +2889,245 @@ int gbtrs(char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, T *a
 
 //-------------------------------------------------------------------------------------------------
 
+// dla_gbamv -- LAPACK computational routine (version 3.7.1)
+template<class T>
+int la_gbamv(integer *trans, integer *m, integer *n, integer *kl, integer *ku, T *alpha, T *ab, 
+  integer *ldab, T *x, integer *incx, T *beta, T *y, integer *incy)
+{
+  /* System generated locals */
+  integer ab_dim1, ab_offset, i__1, i__2, i__3, i__4;
+  T d__1;
+
+  /* Builtin functions */
+  //double d_sign(doublereal *, doublereal *);
+
+  /* Local variables */
+  //extern integer ilatrans_(char *, ftnlen);
+  static integer i__, j;
+  static logical symb_zero__;
+  static integer kd, ke, iy, jx, kx, ky, info;
+  static T temp;
+  static integer lenx, leny;
+  static T safe1;
+  //extern doublereal dlamch_(char *, ftnlen);
+  //extern /* Subroutine */ int xerbla_(char *, integer *, ftnlen);
+
+  /* Parameter adjustments */
+  ab_dim1 = *ldab;
+  ab_offset = 1 + ab_dim1;
+  ab -= ab_offset;
+  --x;
+  --y;
+
+  /* Function Body */
+  info = 0;
+  if (! (*trans == ilatrans_("N", (ftnlen)1) || *trans == ilatrans_("T", (
+    ftnlen)1) || *trans == ilatrans_("C", (ftnlen)1))) {
+    info = 1;
+  } else if (*m < 0) {
+    info = 2;
+  } else if (*n < 0) {
+    info = 3;
+  } else if (*kl < 0 || *kl > *m - 1) {
+    info = 4;
+  } else if (*ku < 0 || *ku > *n - 1) {
+    info = 5;
+  } else if (*ldab < *kl + *ku + 1) {
+    info = 6;
+  } else if (*incx == 0) {
+    info = 8;
+  } else if (*incy == 0) {
+    info = 11;
+  }
+  if (info != 0) {
+    xerbla_("DLA_GBAMV ", &info, (ftnlen)10);
+    return 0;
+  }
+
+  /*     Quick return if possible. */
+
+  if (*m == 0 || *n == 0 || *alpha == 0. && *beta == 1.) {
+    return 0;
+  }
+
+  /*     Set  LENX  and  LENY, the lengths of the vectors x and y, and set */
+  /*     up the start points in  X  and  Y. */
+
+  if (*trans == ilatrans_("N", (ftnlen)1)) {
+    lenx = *n;
+    leny = *m;
+  } else {
+    lenx = *m;
+    leny = *n;
+  }
+  if (*incx > 0) {
+    kx = 1;
+  } else {
+    kx = 1 - (lenx - 1) * *incx;
+  }
+  if (*incy > 0) {
+    ky = 1;
+  } else {
+    ky = 1 - (leny - 1) * *incy;
+  }
+
+  /*     Set SAFE1 essentially to be the underflow threshold times the */
+  /*     number of additions in each row. */
+
+  safe1 = dlamch_("Safe minimum", (ftnlen)12);
+  safe1 = (*n + 1) * safe1;
+
+  /*     Form  y := alpha*abs(A)*abs(x) + beta*abs(y). */
+
+  /*     The O(M*N) SYMB_ZERO tests could be replaced by O(N) queries to */
+  /*     the inexact flag.  Still doesn't help change the iteration order */
+  /*     to per-column. */
+
+  kd = *ku + 1;
+  ke = *kl + 1;
+  iy = ky;
+  if (*incx == 1) {
+    if (*trans == ilatrans_("N", (ftnlen)1)) {
+      i__1 = leny;
+      for (i__ = 1; i__ <= i__1; ++i__) {
+        if (*beta == 0.) {
+          symb_zero__ = TRUE_;
+          y[iy] = 0.;
+        } else if (y[iy] == 0.) {
+          symb_zero__ = TRUE_;
+        } else {
+          symb_zero__ = FALSE_;
+          y[iy] = *beta * (d__1 = y[iy], abs(d__1));
+        }
+        if (*alpha != 0.) {
+          /* Computing MAX */
+          i__2 = i__ - *kl;
+          /* Computing MIN */
+          i__4 = i__ + *ku;
+          i__3 = min(i__4,lenx);
+          for (j = max(i__2,1); j <= i__3; ++j) {
+            temp = (d__1 = ab[kd + i__ - j + j * ab_dim1], abs(
+              d__1));
+            symb_zero__ = symb_zero__ && (x[j] == 0. || temp == 
+              0.);
+            y[iy] += *alpha * (d__1 = x[j], abs(d__1)) * temp;
+          }
+        }
+        if (! symb_zero__) {
+          y[iy] += d_sign(&safe1, &y[iy]);
+        }
+        iy += *incy;
+      }
+    } else {
+      i__1 = leny;
+      for (i__ = 1; i__ <= i__1; ++i__) {
+        if (*beta == 0.) {
+          symb_zero__ = TRUE_;
+          y[iy] = 0.;
+        } else if (y[iy] == 0.) {
+          symb_zero__ = TRUE_;
+        } else {
+          symb_zero__ = FALSE_;
+          y[iy] = *beta * (d__1 = y[iy], abs(d__1));
+        }
+        if (*alpha != 0.) {
+          /* Computing MAX */
+          i__3 = i__ - *kl;
+          /* Computing MIN */
+          i__4 = i__ + *ku;
+          i__2 = min(i__4,lenx);
+          for (j = max(i__3,1); j <= i__2; ++j) {
+            temp = (d__1 = ab[ke - i__ + j + i__ * ab_dim1], abs(
+              d__1));
+            symb_zero__ = symb_zero__ && (x[j] == 0. || temp == 
+              0.);
+            y[iy] += *alpha * (d__1 = x[j], abs(d__1)) * temp;
+          }
+        }
+        if (! symb_zero__) {
+          y[iy] += d_sign(&safe1, &y[iy]);
+        }
+        iy += *incy;
+      }
+    }
+  } else {
+    if (*trans == ilatrans_("N", (ftnlen)1)) {
+      i__1 = leny;
+      for (i__ = 1; i__ <= i__1; ++i__) {
+        if (*beta == 0.) {
+          symb_zero__ = TRUE_;
+          y[iy] = 0.;
+        } else if (y[iy] == 0.) {
+          symb_zero__ = TRUE_;
+        } else {
+          symb_zero__ = FALSE_;
+          y[iy] = *beta * (d__1 = y[iy], abs(d__1));
+        }
+        if (*alpha != 0.) {
+          jx = kx;
+          /* Computing MAX */
+          i__2 = i__ - *kl;
+          /* Computing MIN */
+          i__4 = i__ + *ku;
+          i__3 = min(i__4,lenx);
+          for (j = max(i__2,1); j <= i__3; ++j) {
+            temp = (d__1 = ab[kd + i__ - j + j * ab_dim1], abs(
+              d__1));
+            symb_zero__ = symb_zero__ && (x[jx] == 0. || temp == 
+              0.);
+            y[iy] += *alpha * (d__1 = x[jx], abs(d__1)) * temp;
+            jx += *incx;
+          }
+        }
+        if (! symb_zero__) {
+          y[iy] += d_sign(&safe1, &y[iy]);
+        }
+        iy += *incy;
+      }
+    } else {
+      i__1 = leny;
+      for (i__ = 1; i__ <= i__1; ++i__) {
+        if (*beta == 0.) {
+          symb_zero__ = TRUE_;
+          y[iy] = 0.;
+        } else if (y[iy] == 0.) {
+          symb_zero__ = TRUE_;
+        } else {
+          symb_zero__ = FALSE_;
+          y[iy] = *beta * (d__1 = y[iy], abs(d__1));
+        }
+        if (*alpha != 0.) {
+          jx = kx;
+          /* Computing MAX */
+          i__3 = i__ - *kl;
+          /* Computing MIN */
+          i__4 = i__ + *ku;
+          i__2 = min(i__4,lenx);
+          for (j = max(i__3,1); j <= i__2; ++j) {
+            temp = (d__1 = ab[ke - i__ + j + i__ * ab_dim1], abs(
+              d__1));
+            symb_zero__ = symb_zero__ && (x[jx] == 0. || temp == 
+              0.);
+            y[iy] += *alpha * (d__1 = x[jx], abs(d__1)) * temp;
+            jx += *incx;
+          }
+        }
+        if (! symb_zero__) {
+          y[iy] += d_sign(&safe1, &y[iy]);
+        }
+        iy += *incy;
+      }
+    }
+  }
+
+  return 0;
+
+  /*     End of DLA_GBAMV */
+
+} /* dla_gbamv__ */
+
+//-------------------------------------------------------------------------------------------------
+
 // dla_gbrcond -- LAPACK computational routine (version 3.7.0) -- 
 template<class T>
 T la_gbrcond(char *trans, integer *n, integer *kl, integer *ku, T *ab, integer *ldab, 
@@ -3451,7 +3690,7 @@ int la_gbrfsx_extended(integer *prec_type__, integer *trans_type__, integer *n, 
 
     /*     Compute abs(op(A_s))*abs(Y) + abs(B_s). */
 
-    dla_gbamv__(trans_type__, n, n, kl, ku, &c_b8, &ab[ab_offset], ldab, &
+    la_gbamv(trans_type__, n, n, kl, ku, &c_b8, &ab[ab_offset], ldab, &
       y[j * y_dim1 + 1], &c__1, &c_b8, &ayb[1], &c__1);
     dla_lin_berr__(n, n, &c__1, &res[1], &ayb[1], &berr_out__[j]);
 
