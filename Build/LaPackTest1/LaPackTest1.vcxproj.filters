@@ -144,6 +144,9 @@
     <ClCompile Include="..\..\Source\LaPackCPP\XBlas.cpp">
       <Filter>Source Files\LaPackCPP</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\libf2c\pow_di.c">
+      <Filter>Source Files\libf2c</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\GeneratedByF2C\f2c.h">

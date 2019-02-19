@@ -1785,7 +1785,7 @@ int gbrfsx(char *trans, char *equed, integer *n, integer *kl, integer *ku, integ
   /* Local variables */
   static T illrcond_thresh__, unstable_thresh__, err_lbnd__;
   static integer ref_type__;
-  extern integer ilatrans_(char *, ftnlen);
+  //extern integer ilatrans_(char *, ftnlen);
   static integer j;
   static T rcond_tmp__;
   static integer prec_type__, trans_type__;
@@ -1813,7 +1813,7 @@ int gbrfsx(char *trans, char *equed, integer *n, integer *kl, integer *ku, integ
   //  doublereal *, integer *, integer *, ftnlen), xerbla_(char *, 
   //    integer *, ftnlen);
   static logical colequ, notran, rowequ;
-  extern integer ilaprec_(char *, ftnlen);
+  //extern integer ilaprec_(char *, ftnlen);
   static integer ithresh, n_norms__;
   static T rthresh;
 
@@ -1846,7 +1846,7 @@ int gbrfsx(char *trans, char *equed, integer *n, integer *kl, integer *ku, integ
 
   /* Function Body */
   *info = 0;
-  trans_type__ = ilatrans_(trans, (ftnlen)1);
+  trans_type__ = ilatrans(trans, (ftnlen)1);
   ref_type__ = 1;
   if (*nparams >= 1) {
     if (params[1] < 0.) {
@@ -1985,7 +1985,7 @@ int gbrfsx(char *trans, char *equed, integer *n, integer *kl, integer *ku, integ
   /*     Perform refinement on each right-hand side */
 
   if (ref_type__ != 0 && *info == 0) {
-    prec_type__ = ilaprec_("E", (ftnlen)1);
+    prec_type__ = ilaprec("E", (ftnlen)1);
     if (notran) {
       la_gbrfsx_extended(&prec_type__, &trans_type__, n, kl, ku, 
         nrhs, &ab[ab_offset], ldab, &afb[afb_offset], ldafb, &
@@ -4623,6 +4623,36 @@ L160:
   /*     End of ILAENV */
 
 } /* ilaenv_ */
+
+//-------------------------------------------------------------------------------------------------
+
+// LAPACK computational routine (version 3.7.0) 
+integer ilaprec(char *prec, ftnlen prec_len)
+{
+  /* System generated locals */
+  integer ret_val;
+
+  /* Local variables */
+  extern logical lsame_(char *, char *, ftnlen, ftnlen);
+
+  if (lsame(prec, "S", (ftnlen)1, (ftnlen)1)) {
+    ret_val = 211;
+  } else if (lsame(prec, "D", (ftnlen)1, (ftnlen)1)) {
+    ret_val = 212;
+  } else if (lsame(prec, "I", (ftnlen)1, (ftnlen)1)) {
+    ret_val = 213;
+  } else if (lsame(prec, "X", (ftnlen)1, (ftnlen)1) || lsame_(prec, "E", (
+    ftnlen)1, (ftnlen)1)) {
+    ret_val = 214;
+  } else {
+    ret_val = -1;
+  }
+  return ret_val;
+
+  /*     End of ILAPREC */
+
+} /* ilaprec_ */
+
 
 //-------------------------------------------------------------------------------------------------
 

@@ -1377,6 +1377,14 @@ integer ilaenv(integer *ispec, char *name__, char *opts, integer *n1,
 
 //-------------------------------------------------------------------------------------------------
 
+/** This subroutine translated from a character string specifying an intermediate precision to the
+relevant BLAST-specified integer constant. ILAPREC returns an INTEGER. If ILAPREC < 0, then the 
+input is not a character indicating a supported intermediate precision. Otherwise ILAPREC returns 
+the constant value corresponding to PREC. */
+integer ilaprec(char *prec, ftnlen prec_len);
+
+//-------------------------------------------------------------------------------------------------
+
 /** This subroutine translates from a character string specifying a transposition operation to the
 relevant BLAST-specified integer constant. ILATRANS returns an INTEGER. If ILATRANS < 0, then the 
 input is not a character indicating a transposition operator.  Otherwise ILATRANS returns the 
