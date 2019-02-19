@@ -1182,7 +1182,20 @@ LDX: The leading dimension of the vector X. LDX >= M. */
 template<class T>
 int lascl2(integer *m, integer *n, T *d__, T *x, integer *ldx);
 
+//-------------------------------------------------------------------------------------------------
 
+/**
+Purpose:
+DLA_WWADDW adds a vector W into a doubled-single vector (X, Y). This works for all extant IBM's hex
+and binary floating point arithmetics, but not for decimal.
+
+Arguments:
+N: The length of vectors X, Y, and W.
+X: array, dimension (N). The first part of the doubled-single accumulation vector.
+Y: array, dimension (N). The second part of the doubled-single accumulation vector.
+W : array, dimension (N). The vector to be added. */
+template<class T>
+int la_wwaddw(integer *n, T *x, T *y, T *w);
 
 //=================================================================================================
 // Auxiliary routines:

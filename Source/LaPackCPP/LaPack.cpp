@@ -3407,7 +3407,7 @@ int la_gbrfsx_extended(integer *prec_type__, integer *trans_type__, integer *n, 
       if (y_prec_state__ < 2) {
         axpy(n, &c_b8, &dy[1], &c__1, &y[j * y_dim1 + 1], &c__1);
       } else {
-        dla_wwaddw__(n, &y[j * y_dim1 + 1], &y_tail__[1], &dy[1]);
+        la_wwaddw(n, &y[j * y_dim1 + 1], &y_tail__[1], &dy[1]);
       }
     }
     /*        Target of "IF (Z_STOP .AND. X_STOP)".  Sun's f77 won't EXIT. */
@@ -3548,6 +3548,37 @@ int lascl2(integer *m, integer *n, T *d__, T *x, integer *ldx)
   }
   return 0;
 } /* dlascl2_ */
+
+
+//-------------------------------------------------------------------------------------------------
+
+// LAPACK computational routine (version 3.7.0)
+template<class T>
+int la_wwaddw(integer *n, T *x, T *y, T *w)
+{
+  /* System generated locals */
+  integer i__1;
+
+  /* Local variables */
+  static integer i__;
+  static doublereal s;
+
+  /* Parameter adjustments */
+  --w;
+  --y;
+  --x;
+
+  /* Function Body */
+  i__1 = *n;
+  for (i__ = 1; i__ <= i__1; ++i__) {
+    s = x[i__] + w[i__];
+    s = s + s - s;
+    y[i__] = x[i__] - s + w[i__] + y[i__];
+    x[i__] = s;
+    /* L10: */
+  }
+  return 0;
+} /* dla_wwaddw__ */
 
 //=================================================================================================
 // Auxiliary routines:
