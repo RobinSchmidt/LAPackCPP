@@ -1381,7 +1381,7 @@ integer ilaenv(integer *ispec, char *name__, char *opts, integer *n1,
 relevant BLAST-specified integer constant. ILATRANS returns an INTEGER. If ILATRANS < 0, then the 
 input is not a character indicating a transposition operator.  Otherwise ILATRANS returns the 
 constant value corresponding to TRANS. */
-integer ilatrans_(char *trans, ftnlen trans_len);
+integer ilatrans(char *trans, ftnlen trans_len);
 
 //-------------------------------------------------------------------------------------------------
 

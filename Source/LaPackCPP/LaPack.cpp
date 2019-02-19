@@ -2953,7 +2953,7 @@ int la_gbamv(integer *trans, integer *m, integer *n, integer *kl, integer *ku, T
   /*     Set  LENX  and  LENY, the lengths of the vectors x and y, and set */
   /*     up the start points in  X  and  Y. */
 
-  if (*trans == ilatrans_("N", (ftnlen)1)) {
+  if (*trans == ilatrans("N", (ftnlen)1)) {
     lenx = *n;
     leny = *m;
   } else {
@@ -2987,7 +2987,7 @@ int la_gbamv(integer *trans, integer *m, integer *n, integer *kl, integer *ku, T
   ke = *kl + 1;
   iy = ky;
   if (*incx == 1) {
-    if (*trans == ilatrans_("N", (ftnlen)1)) {
+    if (*trans == ilatrans("N", (ftnlen)1)) {
       i__1 = leny;
       for (i__ = 1; i__ <= i__1; ++i__) {
         if (*beta == 0.) {
@@ -3051,7 +3051,7 @@ int la_gbamv(integer *trans, integer *m, integer *n, integer *kl, integer *ku, T
       }
     }
   } else {
-    if (*trans == ilatrans_("N", (ftnlen)1)) {
+    if (*trans == ilatrans("N", (ftnlen)1)) {
       i__1 = leny;
       for (i__ = 1; i__ <= i__1; ++i__) {
         if (*beta == 0.) {
@@ -4633,14 +4633,14 @@ integer ilatrans(char *trans, ftnlen trans_len)
   integer ret_val;
 
   /* Local variables */
-  extern logical lsame_(char *, char *, ftnlen, ftnlen);
+  //extern logical lsame_(char *, char *, ftnlen, ftnlen);
 
   /*     .. Executable Statements .. */
-  if (lsame_(trans, "N", (ftnlen)1, (ftnlen)1)) {
+  if (lsame(trans, "N", (ftnlen)1, (ftnlen)1)) {
     ret_val = 111;
-  } else if (lsame_(trans, "T", (ftnlen)1, (ftnlen)1)) {
+  } else if (lsame(trans, "T", (ftnlen)1, (ftnlen)1)) {
     ret_val = 112;
-  } else if (lsame_(trans, "C", (ftnlen)1, (ftnlen)1)) {
+  } else if (lsame(trans, "C", (ftnlen)1, (ftnlen)1)) {
     ret_val = 113;
   } else {
     ret_val = -1;
@@ -6690,6 +6690,15 @@ template int gbsvxx(char *fact, char *trans, integer *n, integer *kl, integer *k
 
 
 // Computational routines:
+
+template int gbequb(integer *m, integer *n, integer *kl, integer *ku, double *ab, integer *ldab, 
+  double *r__, double *c__, double *rowcnd, double *colcnd, double *amax, integer *info);
+
+template int gbrfsx(char *trans, char *equed, integer *n, integer *kl, integer *ku, integer *nrhs, 
+  double *ab, integer *ldab, double *afb, integer *ldafb, integer *ipiv, double *r__, double *c__, 
+  double *b, integer *ldb, double *x, integer *ldx, double *rcond, double *berr, 
+  integer *n_err_bnds__, double *err_bnds_norm__, double *err_bnds_comp__, integer *nparams, 
+  double *params, double *work, integer *iwork, integer *info, ftnlen trans_len, ftnlen equed_len);
 
 template int gbtrf(integer *m, integer *n, integer *kl, integer *ku, double *ab, integer *ldab, 
   integer *ipiv, integer *info);
