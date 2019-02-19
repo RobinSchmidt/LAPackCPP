@@ -1084,14 +1084,11 @@ INFO:
   = 0:  Successful exit.
   < 0:  if INFO = -i, the ith argument to DGBTRS had an illegal value  */
 template<class T>
-int dla_gbrfsx_extended(integer *prec_type__, integer *trans_type__, integer *n, integer *kl, 
+int la_gbrfsx_extended(integer *prec_type__, integer *trans_type__, integer *n, integer *kl, 
   integer *ku, integer *nrhs, T *ab, integer *ldab, T *afb, integer *ldafb, integer *ipiv, 
   logical *colequ, T *c__, T *b, integer *ldb, T *y, integer *ldy, T *berr_out__, 
   integer *n_norms__, T *err_bnds_norm__, T *err_bnds_comp__, T *res, T *ayb, T *dy, T *y_tail__, 
   T *rcond, integer *ithresh, T *rthresh, T *dz_ub__, logical *ignore_cwise__, integer *info);
-
-
-
 
 //-------------------------------------------------------------------------------------------------
 

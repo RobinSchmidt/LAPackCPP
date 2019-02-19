@@ -1970,7 +1970,7 @@ int gbrfsx(char *trans, char *equed, integer *n, integer *kl, integer *ku, integ
   if (ref_type__ != 0 && *info == 0) {
     prec_type__ = ilaprec_("E", (ftnlen)1);
     if (notran) {
-      dla_gbrfsx_extended__(&prec_type__, &trans_type__, n, kl, ku, 
+      la_gbrfsx_extended(&prec_type__, &trans_type__, n, kl, ku, 
         nrhs, &ab[ab_offset], ldab, &afb[afb_offset], ldafb, &
         ipiv[1], &colequ, &c__[1], &b[b_offset], ldb, &x[x_offset]
         , ldx, &berr[1], &n_norms__, &err_bnds_norm__[
@@ -1979,7 +1979,7 @@ int gbrfsx(char *trans, char *equed, integer *n, integer *kl, integer *ku, integ
               << 1) + 1], &work[1], rcond, &ithresh, &rthresh, &
               unstable_thresh__, &ignore_cwise__, info);
     } else {
-      dla_gbrfsx_extended__(&prec_type__, &trans_type__, n, kl, ku, 
+      la_gbrfsx_extended(&prec_type__, &trans_type__, n, kl, ku, 
         nrhs, &ab[ab_offset], ldab, &afb[afb_offset], ldafb, &
         ipiv[1], &rowequ, &r__[1], &b[b_offset], ldb, &x[x_offset]
         , ldx, &berr[1], &n_norms__, &err_bnds_norm__[
@@ -1997,15 +1997,15 @@ int gbrfsx(char *trans, char *equed, integer *n, integer *kl, integer *ku, integ
     /*     Compute scaled normwise condition number cond(A*C). */
 
     if (colequ && notran) {
-      rcond_tmp__ = dla_gbrcond__(trans, n, kl, ku, &ab[ab_offset], 
+      rcond_tmp__ = la_gbrcond(trans, n, kl, ku, &ab[ab_offset], 
         ldab, &afb[afb_offset], ldafb, &ipiv[1], &c_n1, &c__[1], 
         info, &work[1], &iwork[1], (ftnlen)1);
     } else if (rowequ && ! notran) {
-      rcond_tmp__ = dla_gbrcond__(trans, n, kl, ku, &ab[ab_offset], 
+      rcond_tmp__ = la_gbrcond(trans, n, kl, ku, &ab[ab_offset], 
         ldab, &afb[afb_offset], ldafb, &ipiv[1], &c_n1, &r__[1], 
         info, &work[1], &iwork[1], (ftnlen)1);
     } else {
-      rcond_tmp__ = dla_gbrcond__(trans, n, kl, ku, &ab[ab_offset], 
+      rcond_tmp__ = la_gbrcond(trans, n, kl, ku, &ab[ab_offset], 
         ldab, &afb[afb_offset], ldafb, &ipiv[1], &c__0, &r__[1], 
         info, &work[1], &iwork[1], (ftnlen)1);
     }
@@ -2055,7 +2055,7 @@ int gbrfsx(char *trans, char *equed, integer *n, integer *kl, integer *ku, integ
     for (j = 1; j <= i__1; ++j) {
       if (err_bnds_comp__[j + (err_bnds_comp_dim1 << 1)] < 
         cwise_wrong__) {
-        rcond_tmp__ = dla_gbrcond__(trans, n, kl, ku, &ab[ab_offset], 
+        rcond_tmp__ = la_gbrcond(trans, n, kl, ku, &ab[ab_offset], 
           ldab, &afb[afb_offset], ldafb, &ipiv[1], &c__1, &x[j *
           x_dim1 + 1], info, &work[1], &iwork[1], (ftnlen)1);
       } else {
@@ -2870,6 +2870,341 @@ int gbtrs(char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, T *a
 
 } // gbtrs
 
+//-------------------------------------------------------------------------------------------------
+
+// dla_gbrfsx_extended -- LAPACK computational routine (version 3.7.1) --
+template<class T>
+int la_gbrfsx_extended(integer *prec_type__, integer *trans_type__, integer *n, integer *kl, 
+  integer *ku, integer *nrhs, T *ab, integer *ldab, T *afb, integer *ldafb, integer *ipiv, 
+  logical *colequ, T *c__, T *b, integer *ldb, T *y, integer *ldy, T *berr_out__, 
+  integer *n_norms__, T *err_bnds_norm__, T *err_bnds_comp__, T *res, T *ayb, T *dy, T *y_tail__, 
+  T *rcond, integer *ithresh, T *rthresh, T *dz_ub__, logical *ignore_cwise__, integer *info)
+{
+  /* Table of constant values */
+  static integer c__1 = 1;
+  static T c_b6 = -1.;
+  static T c_b8 = 1.;
+
+  /* System generated locals */
+  integer ab_dim1, ab_offset, afb_dim1, afb_offset, b_dim1, b_offset, 
+    y_dim1, y_offset, err_bnds_norm_dim1, err_bnds_norm_offset, 
+    err_bnds_comp_dim1, err_bnds_comp_offset, i__1, i__2, i__3;
+  T d__1, d__2;
+  char ch__1[1];
+
+  /* Local variables */
+  static T dxratmax, dzratmax;
+  static integer i__, j, m;
+  //extern /* Subroutine */ int dla_gbamv__(integer *, integer *, integer *, 
+  //  integer *, integer *, doublereal *, doublereal *, integer *, 
+  //  doublereal *, integer *, doublereal *, doublereal *, integer *);
+  static logical incr_prec__;
+  static T prev_dz_z__, yk, final_dx_x__;
+  //extern /* Subroutine */ int dla_wwaddw__(integer *, doublereal *, 
+  //  doublereal *, doublereal *);
+  static T final_dz_z__, prevnormdx;
+  static integer cnt;
+  static T dyk, eps, incr_thresh__, dx_x__, dz_z__;
+  //extern /* Subroutine */ int dla_lin_berr__(integer *, integer *, integer *
+  //  , doublereal *, doublereal *, doublereal *);
+  static T ymin;
+  //extern /* Subroutine */ int blas_dgbmv_x__(integer *, integer *, integer *
+  //  , integer *, integer *, doublereal *, doublereal *, integer *, 
+  //  doublereal *, integer *, doublereal *, doublereal *, integer *, 
+  //  integer *);
+  static integer y_prec_state__;
+  //extern /* Subroutine */ int blas_dgbmv2_x__(integer *, integer *, integer 
+  //  *, integer *, integer *, doublereal *, doublereal *, integer *, 
+  //  doublereal *, doublereal *, integer *, doublereal *, doublereal *,
+  //  integer *, integer *), dgbmv_(char *, integer *, integer *, 
+  //    integer *, integer *, doublereal *, doublereal *, integer *, 
+  //    doublereal *, integer *, doublereal *, doublereal *, integer *, 
+  //    ftnlen), dcopy_(integer *, doublereal *, integer *, doublereal *, 
+  //      integer *);
+  static T dxrat, dzrat;
+  //extern /* Subroutine */ int daxpy_(integer *, doublereal *, doublereal *, 
+  //  integer *, doublereal *, integer *);
+  static char trans[1];
+  static T normx, normy;
+  //extern doublereal dlamch_(char *, ftnlen);
+  //extern /* Subroutine */ int dgbtrs_(char *, integer *, integer *, integer 
+  //  *, integer *, doublereal *, integer *, integer *, doublereal *, 
+  //  integer *, integer *, ftnlen);
+  static T normdx;
+  //extern /* Character */ VOID chla_transtype__(char *, ftnlen, integer *);
+  static T hugeval;
+  static integer x_state__, z_state__;
+
+  /* Parameter adjustments */
+  err_bnds_comp_dim1 = *nrhs;
+  err_bnds_comp_offset = 1 + err_bnds_comp_dim1;
+  err_bnds_comp__ -= err_bnds_comp_offset;
+  err_bnds_norm_dim1 = *nrhs;
+  err_bnds_norm_offset = 1 + err_bnds_norm_dim1;
+  err_bnds_norm__ -= err_bnds_norm_offset;
+  ab_dim1 = *ldab;
+  ab_offset = 1 + ab_dim1;
+  ab -= ab_offset;
+  afb_dim1 = *ldafb;
+  afb_offset = 1 + afb_dim1;
+  afb -= afb_offset;
+  --ipiv;
+  --c__;
+  b_dim1 = *ldb;
+  b_offset = 1 + b_dim1;
+  b -= b_offset;
+  y_dim1 = *ldy;
+  y_offset = 1 + y_dim1;
+  y -= y_offset;
+  --berr_out__;
+  --res;
+  --ayb;
+  --dy;
+  --y_tail__;
+
+  /* Function Body */
+  if (*info != 0) {
+    return 0;
+  }
+  chla_transtype__(ch__1, (ftnlen)1, trans_type__);
+  *(unsigned char *)trans = *(unsigned char *)&ch__1[0];
+  eps = dlamch_("Epsilon", (ftnlen)7);
+  hugeval = dlamch_("Overflow", (ftnlen)8);
+  /*     Force HUGEVAL to Inf */
+  hugeval *= hugeval;
+  /*     Using HUGEVAL may lead to spurious underflows. */
+  incr_thresh__ = (doublereal) (*n) * eps;
+  m = *kl + *ku + 1;
+  i__1 = *nrhs;
+  for (j = 1; j <= i__1; ++j) {
+    y_prec_state__ = 1;
+    if (y_prec_state__ == 2) {
+      i__2 = *n;
+      for (i__ = 1; i__ <= i__2; ++i__) {
+        y_tail__[i__] = 0.;
+      }
+    }
+    dxrat = 0.;
+    dxratmax = 0.;
+    dzrat = 0.;
+    dzratmax = 0.;
+    final_dx_x__ = hugeval;
+    final_dz_z__ = hugeval;
+    prevnormdx = hugeval;
+    prev_dz_z__ = hugeval;
+    dz_z__ = hugeval;
+    dx_x__ = hugeval;
+    x_state__ = 1;
+    z_state__ = 0;
+    incr_prec__ = FALSE_;
+    i__2 = *ithresh;
+    for (cnt = 1; cnt <= i__2; ++cnt) {
+
+      /*        Compute residual RES = B_s - op(A_s) * Y, */
+      /*            op(A) = A, A**T, or A**H depending on TRANS (and type). */
+
+      dcopy_(n, &b[j * b_dim1 + 1], &c__1, &res[1], &c__1);
+      if (y_prec_state__ == 0) {
+        dgbmv_(trans, &m, n, kl, ku, &c_b6, &ab[ab_offset], ldab, &y[
+          j * y_dim1 + 1], &c__1, &c_b8, &res[1], &c__1, (
+            ftnlen)1);
+      } else if (y_prec_state__ == 1) {
+        blas_dgbmv_x__(trans_type__, n, n, kl, ku, &c_b6, &ab[
+          ab_offset], ldab, &y[j * y_dim1 + 1], &c__1, &c_b8, &
+            res[1], &c__1, prec_type__);
+      } else {
+        blas_dgbmv2_x__(trans_type__, n, n, kl, ku, &c_b6, &ab[
+          ab_offset], ldab, &y[j * y_dim1 + 1], &y_tail__[1], &
+            c__1, &c_b8, &res[1], &c__1, prec_type__);
+      }
+      /*        XXX: RES is no longer needed. */
+      dcopy_(n, &res[1], &c__1, &dy[1], &c__1);
+      dgbtrs_(trans, n, kl, ku, &c__1, &afb[afb_offset], ldafb, &ipiv[1]
+        , &dy[1], n, info, (ftnlen)1);
+
+      /*         Calculate relative changes DX_X, DZ_Z and ratios DXRAT, DZRAT. */
+
+      normx = 0.;
+      normy = 0.;
+      normdx = 0.;
+      dz_z__ = 0.;
+      ymin = hugeval;
+      i__3 = *n;
+      for (i__ = 1; i__ <= i__3; ++i__) {
+        yk = (d__1 = y[i__ + j * y_dim1], abs(d__1));
+        dyk = (d__1 = dy[i__], abs(d__1));
+        if (yk != 0.) {
+          /* Computing MAX */
+          d__1 = dz_z__, d__2 = dyk / yk;
+          dz_z__ = max(d__1,d__2);
+        } else if (dyk != 0.) {
+          dz_z__ = hugeval;
+        }
+        ymin = min(ymin,yk);
+        normy = max(normy,yk);
+        if (*colequ) {
+          /* Computing MAX */
+          d__1 = normx, d__2 = yk * c__[i__];
+          normx = max(d__1,d__2);
+          /* Computing MAX */
+          d__1 = normdx, d__2 = dyk * c__[i__];
+          normdx = max(d__1,d__2);
+        } else {
+          normx = normy;
+          normdx = max(normdx,dyk);
+        }
+      }
+      if (normx != 0.) {
+        dx_x__ = normdx / normx;
+      } else if (normdx == 0.) {
+        dx_x__ = 0.;
+      } else {
+        dx_x__ = hugeval;
+      }
+      dxrat = normdx / prevnormdx;
+      dzrat = dz_z__ / prev_dz_z__;
+
+      /*         Check termination criteria. */
+
+      if (! (*ignore_cwise__) && ymin * *rcond < incr_thresh__ * normy 
+        && y_prec_state__ < 2) {
+        incr_prec__ = TRUE_;
+      }
+      if (x_state__ == 3 && dxrat <= *rthresh) {
+        x_state__ = 1;
+      }
+      if (x_state__ == 1) {
+        if (dx_x__ <= eps) {
+          x_state__ = 2;
+        } else if (dxrat > *rthresh) {
+          if (y_prec_state__ != 2) {
+            incr_prec__ = TRUE_;
+          } else {
+            x_state__ = 3;
+          }
+        } else {
+          if (dxrat > dxratmax) {
+            dxratmax = dxrat;
+          }
+        }
+        if (x_state__ > 1) {
+          final_dx_x__ = dx_x__;
+        }
+      }
+      if (z_state__ == 0 && dz_z__ <= *dz_ub__) {
+        z_state__ = 1;
+      }
+      if (z_state__ == 3 && dzrat <= *rthresh) {
+        z_state__ = 1;
+      }
+      if (z_state__ == 1) {
+        if (dz_z__ <= eps) {
+          z_state__ = 2;
+        } else if (dz_z__ > *dz_ub__) {
+          z_state__ = 0;
+          dzratmax = 0.;
+          final_dz_z__ = hugeval;
+        } else if (dzrat > *rthresh) {
+          if (y_prec_state__ != 2) {
+            incr_prec__ = TRUE_;
+          } else {
+            z_state__ = 3;
+          }
+        } else {
+          if (dzrat > dzratmax) {
+            dzratmax = dzrat;
+          }
+        }
+        if (z_state__ > 1) {
+          final_dz_z__ = dz_z__;
+        }
+      }
+
+      /*           Exit if both normwise and componentwise stopped working, */
+      /*           but if componentwise is unstable, let it go at least two */
+      /*           iterations. */
+
+      if (x_state__ != 1) {
+        if (*ignore_cwise__) {
+          goto L666;
+        }
+        if (z_state__ == 3 || z_state__ == 2) {
+          goto L666;
+        }
+        if (z_state__ == 0 && cnt > 1) {
+          goto L666;
+        }
+      }
+      if (incr_prec__) {
+        incr_prec__ = FALSE_;
+        ++y_prec_state__;
+        i__3 = *n;
+        for (i__ = 1; i__ <= i__3; ++i__) {
+          y_tail__[i__] = 0.;
+        }
+      }
+      prevnormdx = normdx;
+      prev_dz_z__ = dz_z__;
+
+      /*           Update soluton. */
+
+      if (y_prec_state__ < 2) {
+        daxpy_(n, &c_b8, &dy[1], &c__1, &y[j * y_dim1 + 1], &c__1);
+      } else {
+        dla_wwaddw__(n, &y[j * y_dim1 + 1], &y_tail__[1], &dy[1]);
+      }
+    }
+    /*        Target of "IF (Z_STOP .AND. X_STOP)".  Sun's f77 won't EXIT. */
+  L666:
+
+    /*     Set final_* when cnt hits ithresh. */
+
+    if (x_state__ == 1) {
+      final_dx_x__ = dx_x__;
+    }
+    if (z_state__ == 1) {
+      final_dz_z__ = dz_z__;
+    }
+
+    /*     Compute error bounds. */
+
+    if (*n_norms__ >= 1) {
+      err_bnds_norm__[j + (err_bnds_norm_dim1 << 1)] = final_dx_x__ / (
+        1 - dxratmax);
+    }
+    if (*n_norms__ >= 2) {
+      err_bnds_comp__[j + (err_bnds_comp_dim1 << 1)] = final_dz_z__ / (
+        1 - dzratmax);
+    }
+
+    /*     Compute componentwise relative backward error from formula */
+    /*         max(i) ( abs(R(i)) / ( abs(op(A_s))*abs(Y) + abs(B_s) )(i) ) */
+    /*     where abs(Z) is the componentwise absolute value of the matrix */
+    /*     or vector Z. */
+
+    /*        Compute residual RES = B_s - op(A_s) * Y, */
+    /*            op(A) = A, A**T, or A**H depending on TRANS (and type). */
+
+    dcopy_(n, &b[j * b_dim1 + 1], &c__1, &res[1], &c__1);
+    dgbmv_(trans, n, n, kl, ku, &c_b6, &ab[ab_offset], ldab, &y[j * 
+      y_dim1 + 1], &c__1, &c_b8, &res[1], &c__1, (ftnlen)1);
+    i__2 = *n;
+    for (i__ = 1; i__ <= i__2; ++i__) {
+      ayb[i__] = (d__1 = b[i__ + j * b_dim1], abs(d__1));
+    }
+
+    /*     Compute abs(op(A_s))*abs(Y) + abs(B_s). */
+
+    dla_gbamv__(trans_type__, n, n, kl, ku, &c_b8, &ab[ab_offset], ldab, &
+      y[j * y_dim1 + 1], &c__1, &c_b8, &ayb[1], &c__1);
+    dla_lin_berr__(n, n, &c__1, &res[1], &ayb[1], &berr_out__[j]);
+
+    /*     End of loop for each RHS */
+
+  }
+
+  return 0;
+} /* dla_gbrfsx_extended__ */
 
 //-------------------------------------------------------------------------------------------------
 
