@@ -2872,6 +2872,236 @@ int gbtrs(char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, T *a
 
 //-------------------------------------------------------------------------------------------------
 
+// dla_gbrcond -- LAPACK computational routine (version 3.7.0) -- 
+template<class T>
+T la_gbrcond(char *trans, integer *n, integer *kl, integer *ku, T *ab, integer *ldab, 
+  T *afb, integer *ldafb, integer *ipiv, integer *cmode, T *c__, integer *info, T *work, 
+  integer *iwork, ftnlen trans_len)
+{
+  /* Table of constant values */
+  static integer c__1 = 1;
+
+  /* System generated locals */
+  integer ab_dim1, ab_offset, afb_dim1, afb_offset, i__1, i__2, i__3, i__4;
+  T ret_val, d__1;
+
+  /* Local variables */
+  static integer i__, j, kd, ke;
+  static T tmp;
+  static integer kase;
+  //extern logical lsame_(char *, char *, ftnlen, ftnlen);
+  static integer isave[3];
+  //extern /* Subroutine */ int dlacn2_(integer *, doublereal *, doublereal *,
+  //  integer *, doublereal *, integer *, integer *), xerbla_(char *, 
+  //    integer *, ftnlen), dgbtrs_(char *, integer *, integer *, integer 
+  //      *, integer *, doublereal *, integer *, integer *, doublereal *, 
+  //      integer *, integer *, ftnlen);
+  static T ainvnm;
+  static logical notrans;
+
+  /* Parameter adjustments */
+  ab_dim1 = *ldab;
+  ab_offset = 1 + ab_dim1;
+  ab -= ab_offset;
+  afb_dim1 = *ldafb;
+  afb_offset = 1 + afb_dim1;
+  afb -= afb_offset;
+  --ipiv;
+  --c__;
+  --work;
+  --iwork;
+
+  /* Function Body */
+  ret_val = 0.;
+
+  *info = 0;
+  notrans = lsame(trans, "N", (ftnlen)1, (ftnlen)1);
+  if (! notrans && ! lsame(trans, "T", (ftnlen)1, (ftnlen)1) && ! lsame(
+    trans, "C", (ftnlen)1, (ftnlen)1)) {
+    *info = -1;
+  } else if (*n < 0) {
+    *info = -2;
+  } else if (*kl < 0 || *kl > *n - 1) {
+    *info = -3;
+  } else if (*ku < 0 || *ku > *n - 1) {
+    *info = -4;
+  } else if (*ldab < *kl + *ku + 1) {
+    *info = -6;
+  } else if (*ldafb < (*kl << 1) + *ku + 1) {
+    *info = -8;
+  }
+  if (*info != 0) {
+    i__1 = -(*info);
+    xerbla("DLA_GBRCOND", &i__1, (ftnlen)11);
+    return ret_val;
+  }
+  if (*n == 0) {
+    ret_val = 1.;
+    return ret_val;
+  }
+
+  /*     Compute the equilibration matrix R such that */
+  /*     inv(R)*A*C has unit 1-norm. */
+
+  kd = *ku + 1;
+  ke = *kl + 1;
+  if (notrans) {
+    i__1 = *n;
+    for (i__ = 1; i__ <= i__1; ++i__) {
+      tmp = 0.;
+      if (*cmode == 1) {
+        /* Computing MAX */
+        i__2 = i__ - *kl;
+        /* Computing MIN */
+        i__4 = i__ + *ku;
+        i__3 = min(i__4,*n);
+        for (j = max(i__2,1); j <= i__3; ++j) {
+          tmp += (d__1 = ab[kd + i__ - j + j * ab_dim1] * c__[j], 
+            abs(d__1));
+        }
+      } else if (*cmode == 0) {
+        /* Computing MAX */
+        i__3 = i__ - *kl;
+        /* Computing MIN */
+        i__4 = i__ + *ku;
+        i__2 = min(i__4,*n);
+        for (j = max(i__3,1); j <= i__2; ++j) {
+          tmp += (d__1 = ab[kd + i__ - j + j * ab_dim1], abs(d__1));
+        }
+      } else {
+        /* Computing MAX */
+        i__2 = i__ - *kl;
+        /* Computing MIN */
+        i__4 = i__ + *ku;
+        i__3 = min(i__4,*n);
+        for (j = max(i__2,1); j <= i__3; ++j) {
+          tmp += (d__1 = ab[kd + i__ - j + j * ab_dim1] / c__[j], 
+            abs(d__1));
+        }
+      }
+      work[(*n << 1) + i__] = tmp;
+    }
+  } else {
+    i__1 = *n;
+    for (i__ = 1; i__ <= i__1; ++i__) {
+      tmp = 0.;
+      if (*cmode == 1) {
+        /* Computing MAX */
+        i__3 = i__ - *kl;
+        /* Computing MIN */
+        i__4 = i__ + *ku;
+        i__2 = min(i__4,*n);
+        for (j = max(i__3,1); j <= i__2; ++j) {
+          tmp += (d__1 = ab[ke - i__ + j + i__ * ab_dim1] * c__[j], 
+            abs(d__1));
+        }
+      } else if (*cmode == 0) {
+        /* Computing MAX */
+        i__2 = i__ - *kl;
+        /* Computing MIN */
+        i__4 = i__ + *ku;
+        i__3 = min(i__4,*n);
+        for (j = max(i__2,1); j <= i__3; ++j) {
+          tmp += (d__1 = ab[ke - i__ + j + i__ * ab_dim1], abs(d__1)
+            );
+        }
+      } else {
+        /* Computing MAX */
+        i__3 = i__ - *kl;
+        /* Computing MIN */
+        i__4 = i__ + *ku;
+        i__2 = min(i__4,*n);
+        for (j = max(i__3,1); j <= i__2; ++j) {
+          tmp += (d__1 = ab[ke - i__ + j + i__ * ab_dim1] / c__[j], 
+            abs(d__1));
+        }
+      }
+      work[(*n << 1) + i__] = tmp;
+    }
+  }
+
+  /*     Estimate the norm of inv(op(A)). */
+
+  ainvnm = 0.;
+  kase = 0;
+L10:
+  lacn2(n, &work[*n + 1], &work[1], &iwork[1], &ainvnm, &kase, isave);
+  if (kase != 0) {
+    if (kase == 2) {
+
+      /*           Multiply by R. */
+
+      i__1 = *n;
+      for (i__ = 1; i__ <= i__1; ++i__) {
+        work[i__] *= work[(*n << 1) + i__];
+      }
+      if (notrans) {
+        gbtrs("No transpose", n, kl, ku, &c__1, &afb[afb_offset], 
+          ldafb, &ipiv[1], &work[1], n, info, (ftnlen)12);
+      } else {
+        gbtrs("Transpose", n, kl, ku, &c__1, &afb[afb_offset], 
+          ldafb, &ipiv[1], &work[1], n, info, (ftnlen)9);
+      }
+
+      /*           Multiply by inv(C). */
+
+      if (*cmode == 1) {
+        i__1 = *n;
+        for (i__ = 1; i__ <= i__1; ++i__) {
+          work[i__] /= c__[i__];
+        }
+      } else if (*cmode == -1) {
+        i__1 = *n;
+        for (i__ = 1; i__ <= i__1; ++i__) {
+          work[i__] *= c__[i__];
+        }
+      }
+    } else {
+
+      /*           Multiply by inv(C**T). */
+
+      if (*cmode == 1) {
+        i__1 = *n;
+        for (i__ = 1; i__ <= i__1; ++i__) {
+          work[i__] /= c__[i__];
+        }
+      } else if (*cmode == -1) {
+        i__1 = *n;
+        for (i__ = 1; i__ <= i__1; ++i__) {
+          work[i__] *= c__[i__];
+        }
+      }
+      if (notrans) {
+        gbtrs("Transpose", n, kl, ku, &c__1, &afb[afb_offset], 
+          ldafb, &ipiv[1], &work[1], n, info, (ftnlen)9);
+      } else {
+        gbtrs("No transpose", n, kl, ku, &c__1, &afb[afb_offset], 
+          ldafb, &ipiv[1], &work[1], n, info, (ftnlen)12);
+      }
+
+      /*           Multiply by R. */
+
+      i__1 = *n;
+      for (i__ = 1; i__ <= i__1; ++i__) {
+        work[i__] *= work[(*n << 1) + i__];
+      }
+    }
+    goto L10;
+  }
+
+  /*     Compute the estimate of the reciprocal condition number. */
+
+  if (ainvnm != 0.) {
+    ret_val = 1. / ainvnm;
+  }
+
+  return ret_val;
+
+} /* dla_gbrcond__ */
+
+
+//-------------------------------------------------------------------------------------------------
+
 // dla_gbrfsx_extended -- LAPACK computational routine (version 3.7.1) --
 template<class T>
 int la_gbrfsx_extended(integer *prec_type__, integer *trans_type__, integer *n, integer *kl, 
@@ -2968,8 +3198,8 @@ int la_gbrfsx_extended(integer *prec_type__, integer *trans_type__, integer *n, 
   }
   chla_transtype__(ch__1, (ftnlen)1, trans_type__);
   *(unsigned char *)trans = *(unsigned char *)&ch__1[0];
-  eps = dlamch_("Epsilon", (ftnlen)7);
-  hugeval = dlamch_("Overflow", (ftnlen)8);
+  eps = lamch("Epsilon", (ftnlen)7);
+  hugeval = lamch("Overflow", (ftnlen)8);
   /*     Force HUGEVAL to Inf */
   hugeval *= hugeval;
   /*     Using HUGEVAL may lead to spurious underflows. */
@@ -3003,9 +3233,9 @@ int la_gbrfsx_extended(integer *prec_type__, integer *trans_type__, integer *n, 
       /*        Compute residual RES = B_s - op(A_s) * Y, */
       /*            op(A) = A, A**T, or A**H depending on TRANS (and type). */
 
-      dcopy_(n, &b[j * b_dim1 + 1], &c__1, &res[1], &c__1);
+      copy(n, &b[j * b_dim1 + 1], &c__1, &res[1], &c__1);
       if (y_prec_state__ == 0) {
-        dgbmv_(trans, &m, n, kl, ku, &c_b6, &ab[ab_offset], ldab, &y[
+        gbmv(trans, &m, n, kl, ku, &c_b6, &ab[ab_offset], ldab, &y[
           j * y_dim1 + 1], &c__1, &c_b8, &res[1], &c__1, (
             ftnlen)1);
       } else if (y_prec_state__ == 1) {
@@ -3018,8 +3248,8 @@ int la_gbrfsx_extended(integer *prec_type__, integer *trans_type__, integer *n, 
             c__1, &c_b8, &res[1], &c__1, prec_type__);
       }
       /*        XXX: RES is no longer needed. */
-      dcopy_(n, &res[1], &c__1, &dy[1], &c__1);
-      dgbtrs_(trans, n, kl, ku, &c__1, &afb[afb_offset], ldafb, &ipiv[1]
+      copy(n, &res[1], &c__1, &dy[1], &c__1);
+      gbtrs(trans, n, kl, ku, &c__1, &afb[afb_offset], ldafb, &ipiv[1]
         , &dy[1], n, info, (ftnlen)1);
 
       /*         Calculate relative changes DX_X, DZ_Z and ratios DXRAT, DZRAT. */
@@ -3149,7 +3379,7 @@ int la_gbrfsx_extended(integer *prec_type__, integer *trans_type__, integer *n, 
       /*           Update soluton. */
 
       if (y_prec_state__ < 2) {
-        daxpy_(n, &c_b8, &dy[1], &c__1, &y[j * y_dim1 + 1], &c__1);
+        axpy(n, &c_b8, &dy[1], &c__1, &y[j * y_dim1 + 1], &c__1);
       } else {
         dla_wwaddw__(n, &y[j * y_dim1 + 1], &y_tail__[1], &dy[1]);
       }
@@ -3185,8 +3415,8 @@ int la_gbrfsx_extended(integer *prec_type__, integer *trans_type__, integer *n, 
     /*        Compute residual RES = B_s - op(A_s) * Y, */
     /*            op(A) = A, A**T, or A**H depending on TRANS (and type). */
 
-    dcopy_(n, &b[j * b_dim1 + 1], &c__1, &res[1], &c__1);
-    dgbmv_(trans, n, n, kl, ku, &c_b6, &ab[ab_offset], ldab, &y[j * 
+    copy(n, &b[j * b_dim1 + 1], &c__1, &res[1], &c__1);
+    gbmv(trans, n, n, kl, ku, &c_b6, &ab[ab_offset], ldab, &y[j * 
       y_dim1 + 1], &c__1, &c_b8, &res[1], &c__1, (ftnlen)1);
     i__2 = *n;
     for (i__ = 1; i__ <= i__2; ++i__) {

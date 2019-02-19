@@ -4,7 +4,8 @@ f2c functions that are needed: i_len, s_copy, s_cmp, i_nint
 
 Functions that have to be translated next:
  
-  dla_gbrcond__
+  dla_gbrcond__, chla_transtype__, blas_dgbmv_x__, dla_wwaddw__, dla_gbamv__,
+  dla_lin_berr__
 
 Functions that have been translated:
 

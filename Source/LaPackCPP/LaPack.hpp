@@ -991,9 +991,9 @@ INFO:    = 0:  Successful exit.
 WORK:  array, dimension (5*N). Workspace.
 IWORK: array, dimension (N). Workspace. */
 template<class T>
-doublereal la_gbrcond(char *trans, integer *n, integer *kl, integer *ku, T *ab, integer *ldab, 
-  T *afb, integer *ldafb, integer *ipiv, integer *cmode, T *c__, integer *info, T *work, 
-  integer *iwork, ftnlen trans_len);
+T la_gbrcond(char *trans, integer *n, integer *kl, integer *ku, T *ab, integer *ldab, T *afb, 
+  integer *ldafb, integer *ipiv, integer *cmode, T *c__, integer *info, T *work, integer *iwork, 
+  ftnlen trans_len);
 
 //-------------------------------------------------------------------------------------------------
 
