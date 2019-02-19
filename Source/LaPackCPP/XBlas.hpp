@@ -3,6 +3,9 @@
 #include "XBlas/blas_extended.h"
 #include "XBlas/blas_extended_private.h"
 
+// maybe wrap a namespace XBlasCPP around these functions, use capitalization (or not) of "BLAS" 
+// in function names sonsistently
+
 //-------------------------------------------------------------------------------------------------
 
 /**
@@ -76,3 +79,13 @@ prec   Specifies the internal precision to be used.
 void blas_dgbmv2_x(enum blas_order_type order, enum blas_trans_type trans, int m, int n, int kl, 
   int ku, double alpha, const double *a, int lda, const double *head_x, const double *tail_x, 
   int incx, double beta, double *y, int incy, enum blas_prec_type prec);
+
+//-------------------------------------------------------------------------------------------------
+
+/**
+Argument
+rname     routine name
+iflag     a negative value indicates that parameter number -IFLAG caused the error; a nonnegative 
+          value is an implementation-specific error code.
+ival      the value of parameter number -IFLAG. */
+void BLAS_error(const char *rname, int iflag, int ival, char *form, ...);

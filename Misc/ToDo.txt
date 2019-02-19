@@ -4,7 +4,7 @@ f2c functions that are needed: i_len, s_copy, s_cmp, i_nint
 
 Functions that have to be translated next:
  
-  ilaprec
+  blas_error
 
 Functions that have been translated:
 
@@ -18,7 +18,7 @@ Lapack-Computational:
 
 Lapack-Auxiliary: 
   dlacn2, dlabad, dlacpy, dlangb, dlantb, dlaqgb, dlaswp, dlatbs,  ieeeck, ilaenv, 
-  ilatrans, iparmq, disnan (reimplemented), dlassq, drscl,
+  ilaprec, ilatrans, iparmq, disnan (reimplemented), dlassq, drscl,
 
 Blas Level 1:
   dasum, daxpy, dcopy, ddot, idamax, lsame, dscal, dswap, xerbla

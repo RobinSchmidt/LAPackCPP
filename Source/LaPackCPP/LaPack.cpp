@@ -4633,7 +4633,7 @@ integer ilaprec(char *prec, ftnlen prec_len)
   integer ret_val;
 
   /* Local variables */
-  extern logical lsame_(char *, char *, ftnlen, ftnlen);
+  //extern logical lsame_(char *, char *, ftnlen, ftnlen);
 
   if (lsame(prec, "S", (ftnlen)1, (ftnlen)1)) {
     ret_val = 211;
@@ -4641,7 +4641,7 @@ integer ilaprec(char *prec, ftnlen prec_len)
     ret_val = 212;
   } else if (lsame(prec, "I", (ftnlen)1, (ftnlen)1)) {
     ret_val = 213;
-  } else if (lsame(prec, "X", (ftnlen)1, (ftnlen)1) || lsame_(prec, "E", (
+  } else if (lsame(prec, "X", (ftnlen)1, (ftnlen)1) || lsame(prec, "E", (
     ftnlen)1, (ftnlen)1)) {
     ret_val = 214;
   } else {

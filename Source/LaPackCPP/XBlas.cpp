@@ -1,5 +1,10 @@
 #include "XBlas.hpp"
 
+#include <stdio.h>
+#include <stdarg.h>
+#include <stdlib.h>
+
+
 void blas_dgbmv_x(enum blas_order_type order, enum blas_trans_type trans,
   int m, int n, int kl, int ku, double alpha,
   const double *a, int lda, const double *x, int incx,
@@ -923,3 +928,33 @@ void blas_dgbmv2_x(enum blas_order_type order, enum blas_trans_type trans, int m
   break;
   }
 }				/* end BLAS_dgbmv2_x */
+
+//-------------------------------------------------------------------------------------------------
+
+void BLAS_error(const char *rname, int iflag, int ival, char *form, ...)
+{
+#if !defined(CONFIG_USE_XERBLA)
+{
+  va_list argptr;
+  va_start(argptr, form);
+  fprintf(stderr, "Error #%d from routine %s:\n", iflag, rname);
+  if (form)
+    vfprintf(stderr, form, argptr);
+  else if (iflag < 0)
+    fprintf(stderr,
+      "  Parameter number %d to routine %s had the illegal value %d\n",
+      -iflag, rname, ival);
+  else
+    fprintf(stderr, "  Unknown error code %d from routine %s\n",
+      iflag, rname);
+  exit(iflag);
+}
+#else
+{
+  int ln, argno;
+  ln = strlen(rname);
+  argno = -iflag;
+  xerbla_array(rname, &ln, &argno);
+}
+#endif
+}
