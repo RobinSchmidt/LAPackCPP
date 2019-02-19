@@ -141,6 +141,9 @@
     <ClCompile Include="..\..\Source\libf2c\d_sign.c">
       <Filter>Source Files\libf2c</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\LaPackCPP\XBlas.cpp">
+      <Filter>Source Files\LaPackCPP</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\GeneratedByF2C\f2c.h">
@@ -154,6 +157,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\libf2c\f2c.h">
       <Filter>Source Files\libf2c</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\LaPackCPP\XBlas.hpp">
+      <Filter>Source Files\LaPackCPP</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

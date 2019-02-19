@@ -248,6 +248,7 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\LaPackCPP\Blas.cpp" />
     <ClCompile Include="..\..\Source\LaPackCPP\LaPack.cpp" />
+    <ClCompile Include="..\..\Source\LaPackCPP\XBlas.cpp" />
     <ClCompile Include="..\..\Source\libf2c\d_lg10.c" />
     <ClCompile Include="..\..\Source\libf2c\d_sign.c" />
     <ClCompile Include="..\..\Source\libf2c\i_dnnt.c" />
@@ -262,6 +263,7 @@
     <ClInclude Include="..\..\Source\GeneratedByF2C\f2c.h" />
     <ClInclude Include="..\..\Source\LaPackCPP\Blas.hpp" />
     <ClInclude Include="..\..\Source\LaPackCPP\LaPack.hpp" />
+    <ClInclude Include="..\..\Source\LaPackCPP\XBlas.hpp" />
     <ClInclude Include="..\..\Source\libf2c\f2c.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
