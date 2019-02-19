@@ -33,6 +33,11 @@ Blas Level 3:
 check labad - it has been translated from double precision version and may 
 not be appropriate for single (magic numbers are used) - maybe re-implement
 
+check documentatioj of la_gbrfsx_extended - in the section on ERR_BNDS_NORM,
+it refers to slamch - shouldn't that be dlamch, since this was translated from 
+the double precision version - is this just an error that occured while 
+deriving the double-version from the single-version?
+
 Implement the "lamch" auxiliary routine in a generic way using templates and
 explicit specializations - this is one of the places, where actually some new
 code needs to be written to make it work correctly in a template-based 
