@@ -233,18 +233,18 @@ bool gbsvUnitTest()
   ftnlen trans_len = 0;      // ftnlen is typedef'd as "long" in f2c.h - i don't know, what this is
                              // used for, there's no documentation for that gbmv parameter -> check source 
                              // -> it's actually not used anywhere
-  char trans = 'N';
+  char trans = 'N';          // input matrix is not transposed
 
   // gbmv needs pointers to "integer" which is defined as "long int" in f2c.h:
   long int N_ = N, M_ = M, lda_ = lda, kl_ = kl, ku_ = ku;
-  gbmv(&trans, &M_, &N_, &kl_, &ku_, &alpha, a, &lda_, x, &incX, 
-    &beta, b, &incY, trans_len);  
+  gbmv(&trans, &M_, &N_, &kl_, &ku_, &alpha, a, &lda_, x, &incX, &beta, b, &incY, trans_len);
   double target[N] =  { 74,230,505,931,1489,2179,3001,3055,2930 }; // this is what b should be now
   r &= arraysEqual(b, target, N);
   // can we somehow re-use the ab array to be passed to gbmv with some trickery, too? ...to avoid 
   // storing the a matrix twice? ...maybe later...
 
-  // We have computed b = A*x - now we try to retrieve x by solving the linear system for x
+  // We have computed b = A*x - now we try to retrieve x by solving the linear system for x via the
+  // gbsv routine:
   double x2[N]; // that's where the solver should write the result into
   long iOne = 1;
   copy(&N_, b, &iOne, x2, &iOne); 
@@ -254,6 +254,46 @@ bool gbsvUnitTest()
   // ok, the result i correct but numerically rather imprecise (last 8 decimal digits are wrong) 
   // error = 1.e-9 -> try gbsvx and gbsvxx
 
+
+  // Now the same thing with the gbsvx routine:
+  double x3[N]; //result
+
+
+  // and now the gbsvxx routine:
+  double x4[N];       // result
+  double b2[N];       // tempoary rhs (is overwritten in the routine)
+  copy(&N_, b, &iOne, b2, &iOne);
+  char fact = 'E';    // input matrix is not factored and shall be equilibrated, for no 
+                      // equilibration use 'N'
+  //char trans = 'N';   // input matrix is not transposed
+  char equed = '_';   // returns the form of equlibration that was done
+  double afb[ldab*N]; // factored form of matrix ab ( check, if dimensions are correct)
+  double r__[N];      // row scale factors
+  double c__[N];      // column scale factors
+  double rcond;       // reciprocal condtion number
+  double rpvgrw;      // reciprocal pivot growth
+  double berr[nrhs];  // componentwise relative backward error
+  long n_err_bnds;    // number of error bounds
+
+
+  //int gbsvxx(fact, trans, &N_, &kl_, &ku_, &nrhs1_, ab, &ldab_, 
+  //  afb, &ldab_,   // check, if this is right - has afb the same dimensions as ab?
+  //  ipiv, *equed, r__, c__, b, &ldb_, x4, 
+  //  &ldb,          // check, if ldx == ldb? - should be
+  //  &rcond, 
+  //  &rpvgrw, 
+  //  berr, 
+  //  &n_err_bnds, 
+
+  //  T *err_bnds_norm__, T *err_bnds_comp__, integer *nparams, T *params, T *work, integer *iwork, 
+  //  integer *info, ftnlen fact_len, ftnlen trans_len, ftnlen equed_len);
+
+
+  //int gbsvxx(char *fact, char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, T *ab, 
+  //  integer *ldab, T *afb, integer *ldafb, integer *ipiv, char *equed, T *r__, T *c__, T *b, 
+  //  integer *ldb, T *x, integer *ldx, T *rcond, T *rpvgrw, T *berr, integer *n_err_bnds__, 
+  //  T *err_bnds_norm__, T *err_bnds_comp__, integer *nparams, T *params, T *work, integer *iwork, 
+  //  integer *info, ftnlen fact_len, ftnlen trans_len, ftnlen equed_len);
 
 
 
