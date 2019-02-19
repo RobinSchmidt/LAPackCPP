@@ -4,7 +4,7 @@ f2c functions that are needed: i_len, s_copy, s_cmp, i_nint
 
 Functions that have to be translated next:
  
-  chla_transtype__, blas_dgbmv_x__, dla_wwaddw__, dla_gbamv__,
+  chla_transtype__, dla_wwaddw__, dla_gbamv__,
   dla_lin_berr__
 
 Functions that have been translated:
@@ -27,8 +27,10 @@ Blas Level 2:
   dger, dgbmv, dgemv, dtbsv, 
 
 Blas Level 3:
-  dgemm, dtrsm  
+  dgemm, dtrsm
   
+XBlas:
+  blas_dgbmv_x, blas_dgbmv2_x
   
 we need a routine blas_dgbmv_x__, but there is no .f file with such a name, 
 this: http://icl.cs.utk.edu/lapack-forum/viewtopic.php?f=2&t=1730 says 
