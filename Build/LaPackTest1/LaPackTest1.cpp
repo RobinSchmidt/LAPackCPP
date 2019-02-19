@@ -47,6 +47,14 @@ bool arraysEqual(T* x, T* y, int N, T tolerance = T(0))
   return true;
 }
 
+template<class T>
+void copyArray(long N, T* src, T* dst)
+{
+  for(long i = 0; i < N; i++)
+    dst[i] = src[i];
+}
+
+
 /** Utility class to wrap around an existing flat array of numbers to conveniently access matrix 
 elements via row and column index via the () operator, taking row and column index as arguments. 
 The access operator always takes as first index the row index and as second index the column index, 
@@ -160,7 +168,11 @@ bool gbsvUnitTest()
                                // rename to arb - allocated rows for b
   long int ipiv[N];            // pivot indices
   long int info = 666;         // 0 on exit, if successful
-  double _ = 0.0/sqrt(0.0);    // we init unused storage cells with NaN - why is it -NaN?
+  //double _ = 0.0/sqrt(0.0);    // we init unused storage cells with NaN - why is it -NaN?
+  //double _ = 0.0;  // for test
+  //double _ = 1.0/sqrt(0.0); 
+  //double _ = 1.0; 
+  double _ = -1000.0; 
 
   // matrix A in band storage for gbsv - the banded format is N times 2*kl+ku+1 which is 
   // 9 times 2*3+2+1 = 9 times 8 in this case - because LAPACK uses in general, column-major 
@@ -175,6 +187,8 @@ bool gbsvUnitTest()
      _, _, _,57,67,77,87,97, _,
      _, _, _,68,78,88,98, _, _,
      _, _, _,79,89,99, _, _, _ };  // 9th column
+
+
 
   // the matrix X in A * X = B:
   double X[ldb*nrhs] = {
@@ -245,11 +259,13 @@ bool gbsvUnitTest()
 
   // We have computed b = A*x - now we try to retrieve x by solving the linear system for x via the
   // gbsv routine:
+  double abTmp[ldab*N];         // we need a temporary array for the matrix bcs we still need it
+  copyArray(ldab*N, ab, abTmp);
   double x2[N]; // that's where the solver should write the result into
   long iOne = 1;
   copy(&N_, b, &iOne, x2, &iOne); 
   long nrhs1_ = 1, ldab_ = ldab, ldb_ = ldb; // first, we have just one rhs
-  gbsv(&N_, &kl_, &ku_, &nrhs1_, ab, &ldab_, ipiv, x2, &ldb_, &info);
+  gbsv(&N_, &kl_, &ku_, &nrhs1_, abTmp, &ldab_, ipiv, x2, &ldb_, &info);
   double error = maxDistance(N, x, x2);
   // ok, the result i correct but numerically rather imprecise (last 8 decimal digits are wrong) 
   // error = 1.e-9 -> try gbsvx and gbsvxx
@@ -263,16 +279,19 @@ bool gbsvUnitTest()
   double x4[N];       // result
   double b2[N];       // tempoary rhs (is overwritten in the routine)
   copy(&N_, b, &iOne, b2, &iOne);
+  copyArray(ldab*N, ab, abTmp);
   char fact = 'E';    // input matrix is not factored and shall be equilibrated, for no 
                       // equilibration use 'N'
-  //char trans = 'N';   // input matrix is not transposed
+  //char fact = 'N';    // input matrix is not factored and shall be equilibrated, for no 
+  //                    // equilibration use 'N'
   char equed = '_';    // returns the form of equlibration that was done
   double afb[ldab*N];  // factored form of matrix ab ( check, if dimensions are correct)
   double r__[N];       // row scale factors
   double c__[N];       // column scale factors
   double rcond;        // reciprocal condtion number
   double rpvgrw;       // reciprocal pivot growth
-  double berr[nrhs];   // componentwise relative backward error
+  //double berr[nrhs];   // componentwise relative backward error
+  double berr[1];      // componentwise relative backward error
   long n_err_bnds = 3; // number of error bounds
   double err_bnds_norm[3*nrhs]; // various error bounds (up to 3 for each rhs)
   double err_bnds_comp[3*nrhs];
@@ -287,7 +306,7 @@ bool gbsvUnitTest()
     &kl_, 
     &ku_, 
     &nrhs1_, 
-    ab, 
+    abTmp, 
     &ldab_, 
     afb, 
     &ldab_,        // check, if this is right - has afb the same dimensions as ab?
@@ -317,6 +336,14 @@ bool gbsvUnitTest()
   // indeed the case (maybe we could tell gbsvxx that the input is already in factored form - but 
   // we don't actually want to pass the matrix in factored form - gbsvxx should factor it itself 
   // using equlibration..
+  // using a tmp matrix and restoring it after gbsv does not solve it - could it be that gbsvxx
+  // dereferences more of the passed matrix? - when changinge the dummy variable _ from NaN to 0.0,
+  // we get -9.2559631349317831e+61 for all values in x4 - os it makes a difference, intializing
+  // with inf also gives NaN - using all ones gives finite but wrong values - does gbsvxx use 
+  // another storage format that gbsv?
+  // fact = 'E' or fact = 'N' does not seem to make a difference
+  // maybe try passing in a factored matrix or check if afb is the factored matrix on return 
+  // (compare to the result of the gbsv call)
 
   //int gbsvxx(char *fact, char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, T *ab, 
   //  integer *ldab, T *afb, integer *ldafb, integer *ipiv, char *equed, T *r__, T *c__, T *b, 
