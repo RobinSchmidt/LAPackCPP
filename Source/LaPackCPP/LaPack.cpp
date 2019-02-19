@@ -4626,7 +4626,32 @@ L160:
 
 //-------------------------------------------------------------------------------------------------
 
+//  LAPACK computational routine (version 3.7.0) 
+integer ilatrans(char *trans, ftnlen trans_len)
+{
+  /* System generated locals */
+  integer ret_val;
 
+  /* Local variables */
+  extern logical lsame_(char *, char *, ftnlen, ftnlen);
+
+  /*     .. Executable Statements .. */
+  if (lsame_(trans, "N", (ftnlen)1, (ftnlen)1)) {
+    ret_val = 111;
+  } else if (lsame_(trans, "T", (ftnlen)1, (ftnlen)1)) {
+    ret_val = 112;
+  } else if (lsame_(trans, "C", (ftnlen)1, (ftnlen)1)) {
+    ret_val = 113;
+  } else {
+    ret_val = -1;
+  }
+  return ret_val;
+
+  /*     End of ILATRANS */
+
+} /* ilatrans_ */
+
+//-------------------------------------------------------------------------------------------------
 
 // LAPACK auxiliary routine (version 3.7.1)
 integer iparmq(integer *ispec, char *name__, char *opts, integer *n, integer 
