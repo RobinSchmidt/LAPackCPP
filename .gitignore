@@ -1,5 +1,6 @@
 Resources/lapack-3.8.0
 Resources/clapack-3.2.1-CMAKE
+Resources/xblas-1.0.248
 Build/LapackTest1/x64
 Build/LapackTest1/.vs
 *.sdf
