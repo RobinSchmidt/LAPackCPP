@@ -1013,7 +1013,6 @@ PREC_TYPE: Specifies the intermediate precision to be used in refinement. The va
       = 'D':  Double
       = 'I':  Indigenous
       = 'X', 'E':  Extra
-
 TRANS_TYPE: Specifies the transposition operation on A. The value is defined by ILATRANS(T) where T
   is a CHARACTER and
     T = 'N':  No transpose

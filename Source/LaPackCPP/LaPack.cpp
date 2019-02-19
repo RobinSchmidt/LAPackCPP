@@ -3265,9 +3265,13 @@ int la_gbrfsx_extended(integer *prec_type__, integer *trans_type__, integer *n, 
         //  ab_offset], ldab, &y[j * y_dim1 + 1], &c__1, &c_b8, &
         //    res[1], &c__1, prec_type__);
       } else {
-        blas_dgbmv2_x(trans_type__, n, n, kl, ku, &c_b6, &ab[
-          ab_offset], ldab, &y[j * y_dim1 + 1], &y_tail__[1], &
-            c__1, &c_b8, &res[1], &c__1, prec_type__);
+        // also edited by Robin, original below..
+        blas_dgbmv2_x(blas_colmajor,  // blas_colmajor added by Robin - guess!!!
+          toTransType(trans_type__), *n, *n, *kl, *ku, c_b6, &ab[ab_offset], *ldab, 
+          &y[j * y_dim1 + 1], &y_tail__[1], c__1, c_b8, &res[1], c__1, toPrecType(prec_type__));
+        //blas_dgbmv2_x(trans_type__, n, n, kl, ku, &c_b6, &ab[
+        //  ab_offset], ldab, &y[j * y_dim1 + 1], &y_tail__[1], &
+        //    c__1, &c_b8, &res[1], &c__1, prec_type__);
       }
       /*        XXX: RES is no longer needed. */
       copy(n, &res[1], &c__1, &dy[1], &c__1);
