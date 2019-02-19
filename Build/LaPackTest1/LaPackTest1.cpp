@@ -266,37 +266,59 @@ bool gbsvUnitTest()
   char fact = 'E';    // input matrix is not factored and shall be equilibrated, for no 
                       // equilibration use 'N'
   //char trans = 'N';   // input matrix is not transposed
-  char equed = '_';   // returns the form of equlibration that was done
-  double afb[ldab*N]; // factored form of matrix ab ( check, if dimensions are correct)
-  double r__[N];      // row scale factors
-  double c__[N];      // column scale factors
-  double rcond;       // reciprocal condtion number
-  double rpvgrw;      // reciprocal pivot growth
-  double berr[nrhs];  // componentwise relative backward error
-  long n_err_bnds;    // number of error bounds
+  char equed = '_';    // returns the form of equlibration that was done
+  double afb[ldab*N];  // factored form of matrix ab ( check, if dimensions are correct)
+  double r__[N];       // row scale factors
+  double c__[N];       // column scale factors
+  double rcond;        // reciprocal condtion number
+  double rpvgrw;       // reciprocal pivot growth
+  double berr[nrhs];   // componentwise relative backward error
+  long n_err_bnds = 3; // number of error bounds
+  double err_bnds_norm[3*nrhs]; // various error bounds (up to 3 for each rhs)
+  double err_bnds_comp[3*nrhs];
+  long nparams_ = 0;    // number additional parameters
+  double params[1];    // dummy - not referenced, if nparams == 0
+  double work[4*N];    // workspace
+  long iwork[N];       // integer workspace
 
 
-  //int gbsvxx(fact, trans, &N_, &kl_, &ku_, &nrhs1_, ab, &ldab_, 
-  //  afb, &ldab_,   // check, if this is right - has afb the same dimensions as ab?
-  //  ipiv, *equed, r__, c__, b, &ldb_, x4, 
-  //  &ldb,          // check, if ldx == ldb? - should be
-  //  &rcond, 
-  //  &rpvgrw, 
-  //  berr, 
-  //  &n_err_bnds, 
-
-  //  T *err_bnds_norm__, T *err_bnds_comp__, integer *nparams, T *params, T *work, integer *iwork, 
-  //  integer *info, ftnlen fact_len, ftnlen trans_len, ftnlen equed_len);
-
+  gbsvxx(
+    &fact, 
+    &trans, 
+    &N_, 
+    &kl_, 
+    &ku_, 
+    &nrhs1_, 
+    ab, 
+    &ldab_, 
+    afb, 
+    &ldab_,        // check, if this is right - has afb the same dimensions as ab?
+    ipiv, 
+    &equed, 
+    r__, 
+    c__, 
+    b2, 
+    &ldb_, 
+    x4, 
+    &ldb_,          // check, if ldx == ldb? - should be
+    &rcond, 
+    &rpvgrw, 
+    berr, 
+    &n_err_bnds, 
+    err_bnds_norm, 
+    err_bnds_comp, 
+    &nparams_,
+    params, 
+    work, 
+    iwork, 
+    &info, 
+    0, 0, 0);  // undocumented parametrs: ftnlen fact_len, ftnlen trans_len, ftnlen equed_len
 
   //int gbsvxx(char *fact, char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, T *ab, 
   //  integer *ldab, T *afb, integer *ldafb, integer *ipiv, char *equed, T *r__, T *c__, T *b, 
   //  integer *ldb, T *x, integer *ldx, T *rcond, T *rpvgrw, T *berr, integer *n_err_bnds__, 
   //  T *err_bnds_norm__, T *err_bnds_comp__, integer *nparams, T *params, T *work, integer *iwork, 
   //  integer *info, ftnlen fact_len, ftnlen trans_len, ftnlen equed_len);
-
-
-
 
   return r;
 }
