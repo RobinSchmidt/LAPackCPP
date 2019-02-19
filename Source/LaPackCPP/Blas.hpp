@@ -318,6 +318,12 @@ int gemv(char *trans, integer *m, integer *n, T *alpha, T *a, integer *lda, T *x
 
 
 
+
+
+
+
+
+
 //=================================================================================================
 
 /** \name BLAS level 3 routines (operations involving two matrices) */

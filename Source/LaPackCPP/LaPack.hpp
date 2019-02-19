@@ -951,6 +951,55 @@ int gbtrs(char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, T *a
 
 /**
 Purpose:
+DLA_GBAMV  performs one of the matrix-vector operations
+
+         y := alpha*abs(A)*abs(x) + beta*abs(y),
+    or   y := alpha*abs(A)**T*abs(x) + beta*abs(y),
+
+where alpha and beta are scalars, x and y are vectors and A is an m by n matrix.
+This function is primarily used in calculating error bounds. To protect against underflow during 
+evaluation, components in the resulting vector are perturbed away from zero by (N+1) times the 
+underflow threshold.  To prevent unnecessarily large errors for block-structure embedded in general
+matrices, "symbolically" zero components are not perturbed. A zero entry is considered "symbolic" 
+if all multiplications involved in computing that entry have at least one zero multiplicand.
+
+Arguments:
+TRANS: On entry, TRANS specifies the operation to be performed as follows:
+       BLAS_NO_TRANS      y := alpha*abs(A)*abs(x) + beta*abs(y)
+       BLAS_TRANS         y := alpha*abs(A**T)*abs(x) + beta*abs(y)
+       BLAS_CONJ_TRANS    y := alpha*abs(A**T)*abs(x) + beta*abs(y)
+       Unchanged on exit.
+M:     On entry, M specifies the number of rows of the matrix A. M must be at least zero. Unchanged
+       on exit.
+N:     On entry, N specifies the number of columns of the matrix A. N must be at least zero. 
+       Unchanged on exit.
+KL:    The number of subdiagonals within the band of A.  KL >= 0.
+KU:    The number of superdiagonals within the band of A.  KU >= 0.
+ALPHA: On entry, ALPHA specifies the scalar alpha. Unchanged on exit.
+AB:    array, dimension ( LDAB, n ). Before entry, the leading m by n part of the array AB must 
+       contain the matrix of coefficients. Unchanged on exit.
+LDAB:  On entry, LDA specifies the first dimension of AB as declared in the calling (sub) program.
+       LDAB must be at least max( 1, m ). Unchanged on exit.
+X:     array, dimension. ( 1 + ( n - 1 )*abs( INCX ) ) when TRANS = 'N' or 'n' and at least
+       ( 1 + ( m - 1 )*abs( INCX ) ) otherwise. Before entry, the incremented array X must contain 
+       the vector x. Unchanged on exit.
+INCX:  On entry, INCX specifies the increment for the elements of X. INCX must not be zero. 
+       Unchanged on exit.
+BETA:  On entry, BETA specifies the scalar beta. When BETA is supplied as zero then Y need not be 
+       set on input. Unchanged on exit.
+Y:     array, dimension ( 1 + ( m - 1 )*abs( INCY ) ) when TRANS = 'N' or 'n' and at least
+       ( 1 + ( n - 1 )*abs( INCY ) ) otherwise. Before entry with BETA non-zero, the incremented 
+       array Y must contain the vector y. On exit, Y is overwritten by the updated vector y.
+INCY:  On entry, INCY specifies the increment for the elements of Y. INCY must not be zero.
+       Unchanged on exit. */
+template<class T>
+int la_gbamv(integer *trans, integer *m, integer *n, integer *kl, integer *ku, T *alpha, T *ab, 
+  integer *ldab, T *x, integer *incx, T *beta, T *y, integer *incy);
+
+//-------------------------------------------------------------------------------------------------
+
+/**
+Purpose:
 DLA_GBRCOND Estimates the Skeel condition number of op(A) * op2(C) where op2 is determined by 
 CMODE as follows
   CMODE =  1    op2(C) = C
