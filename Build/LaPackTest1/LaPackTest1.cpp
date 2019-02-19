@@ -186,7 +186,7 @@ bool gbsvUnitTest()
 
   // right-hand-side B in A * X = B, after solving the system, it will comtain the solution, so it
   // should be equal to X up to roundoff errors:
-  double B[ldb*nrhs];
+  //double B[ldb*nrhs];
 
   // let's do a vector-rhs first (instead of a matrix rhs):
   double x[ldb] = { 1,2,3,4,5,6,7,8,9 };
@@ -256,7 +256,7 @@ bool gbsvUnitTest()
 
 
   // Now the same thing with the gbsvx routine:
-  double x3[N]; //result
+  //double x3[N]; //result
 
 
   // and now the gbsvxx routine:
@@ -280,8 +280,6 @@ bool gbsvUnitTest()
   double params[1];    // dummy - not referenced, if nparams == 0
   double work[4*N];    // workspace
   long iwork[N];       // integer workspace
-
-
   gbsvxx(
     &fact, 
     &trans, 
@@ -312,7 +310,13 @@ bool gbsvUnitTest()
     work, 
     iwork, 
     &info, 
-    0, 0, 0);  // undocumented parametrs: ftnlen fact_len, ftnlen trans_len, ftnlen equed_len
+    0, 0, 0);  // undocumented parameters: ftnlen fact_len, ftnlen trans_len, ftnlen equed_len
+
+  // this call to gbsvxx produces NaNs ...could it be that the original matrix is destroyed in the
+  // previous call to gbsv, so it can't be just re-used here in the call to gbsvxx? ..yes, that's 
+  // indeed the case (maybe we could tell gbsvxx that the input is already in factored form - but 
+  // we don't actually want to pass the matrix in factored form - gbsvxx should factor it itself 
+  // using equlibration..
 
   //int gbsvxx(char *fact, char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, T *ab, 
   //  integer *ldab, T *afb, integer *ldafb, integer *ipiv, char *equed, T *r__, T *c__, T *b, 
