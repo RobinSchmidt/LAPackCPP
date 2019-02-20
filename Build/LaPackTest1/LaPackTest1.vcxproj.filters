@@ -28,6 +28,9 @@
     <Filter Include="Source Files\fromCLaPack">
       <UniqueIdentifier>{26db0fe8-777a-4ec1-a397-32d42ac7e0a2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Wrappers">
+      <UniqueIdentifier>{22ff89de-c0b0-4138-b589-585b721fabfd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LaPackTest1.cpp">
@@ -147,6 +150,9 @@
     <ClCompile Include="..\..\Source\libf2c\pow_di.c">
       <Filter>Source Files\libf2c</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Wrappers\BandDiagonalSolver.cpp">
+      <Filter>Source Files\Wrappers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\GeneratedByF2C\f2c.h">
@@ -163,6 +169,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\LaPackCPP\XBlas.hpp">
       <Filter>Source Files\LaPackCPP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Wrappers\BandDiagonalSolver.hpp">
+      <Filter>Source Files\Wrappers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

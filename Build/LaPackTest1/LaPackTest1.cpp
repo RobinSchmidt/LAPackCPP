@@ -168,8 +168,8 @@ bool gbsvUnitTest()
                                // rename to arb - allocated rows for b
   long int ipiv[N];            // pivot indices
   long int info = 666;         // 0 on exit, if successful
-  //double _ = 0.0/sqrt(0.0);    // we init unused storage cells with NaN - why is it -NaN?
-  double _ = 0.0;  // for test
+  double _ = 0.0/sqrt(0.0);    // we init unused storage cells with NaN - why is it -NaN?
+  //double _ = 0.0;  // for test
   //double _ = 1.0/sqrt(0.0); 
   //double _ = 1.0; 
   //double _ = -1000.0; 
@@ -339,37 +339,6 @@ bool gbsvUnitTest()
   double err_bnds_comp[3*nrhs];
   long nparams_ = 0;               // number additional parameters
   double params[1];                // dummy - not referenced, if nparams == 0
-  //gbsvxx(
-  //  &fact, 
-  //  &trans, 
-  //  &N_, 
-  //  &kl_, 
-  //  &ku_, 
-  //  &nrhs1_, 
-  //  abTmp, 
-  //  &ldab_, 
-  //  afb, 
-  //  &ldab_,        // check, if this is right - has afb the same dimensions as ab?
-  //  ipiv, 
-  //  &equed, 
-  //  r__, 
-  //  c__, 
-  //  b2, 
-  //  &ldb_, 
-  //  x4, 
-  //  &ldb_,          // check, if ldx == ldb? - should be
-  //  &rcond, 
-  //  &rpvgrw, 
-  //  berr, 
-  //  &n_err_bnds, 
-  //  err_bnds_norm, 
-  //  err_bnds_comp, 
-  //  &nparams_,
-  //  params, 
-  //  work, 
-  //  iwork, 
-  //  &info, 
-  //  0, 0, 0);  // undocumented parameters: ftnlen fact_len, ftnlen trans_len, ftnlen equed_len
   gbsvxx(
     &fact, 
     &trans, 
@@ -419,6 +388,9 @@ bool gbsvUnitTest()
   // i had to make a guess in one of the calls (something about order_type = col_older vs 
   // row_order or something in a call to blas_dgbmv_x and/or blas_dgbmv2_x - check that - try
   // other options - research what is likely to be meant
+
+  // ...okay, the mistake was passing abTmp/ldab_, correct is to pass a/lda_ instead - now it 
+  // seems to work - check the guesses anyway
 
   //int gbsvxx(char *fact, char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, T *ab, 
   //  integer *ldab, T *afb, integer *ldafb, integer *ipiv, char *equed, T *r__, T *c__, T *b, 

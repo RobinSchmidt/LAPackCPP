@@ -258,6 +258,7 @@
     <ClCompile Include="..\..\Source\libf2c\s_cmp.c" />
     <ClCompile Include="..\..\Source\libf2c\s_copy.c" />
     <ClCompile Include="..\..\Source\Tests\TestUtils.cpp" />
+    <ClCompile Include="..\..\Source\Wrappers\BandDiagonalSolver.cpp" />
     <ClCompile Include="LaPackTest1.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -266,6 +267,7 @@
     <ClInclude Include="..\..\Source\LaPackCPP\LaPack.hpp" />
     <ClInclude Include="..\..\Source\LaPackCPP\XBlas.hpp" />
     <ClInclude Include="..\..\Source\libf2c\f2c.h" />
+    <ClInclude Include="..\..\Source\Wrappers\BandDiagonalSolver.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
