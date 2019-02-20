@@ -271,34 +271,67 @@ bool gbsvUnitTest()
   // error = 1.e-9 -> try gbsvx and gbsvxx
 
 
-  // Now the same thing with the gbsvx routine:
-  //double x3[N]; //result
-
-
-  // and now the gbsvxx routine:
-  double x4[N];       // result
-  double b2[N];       // tempoary rhs (is overwritten in the routine)
+  // ...now the same thing with the gbsvx routine (needs a couple of more parameters):
+  double x3[N]; //result
+  double b2[N];                  // tempoary rhs (is overwritten in the routine  - is this true for gbsvx?)
   copy(&N_, b, &iOne, b2, &iOne);
   copyArray(ldab*N, ab, abTmp);
   char fact = 'E';    // input matrix is not factored and shall be equilibrated, for no 
                       // equilibration use 'N'
   //char fact = 'N';    // input matrix is not factored and shall be equilibrated, for no 
   //                    // equilibration use 'N'
-  char equed = '_';    // returns the form of equlibration that was done
   double afb[ldab*N];  // factored form of matrix ab ( check, if dimensions are correct)
+  char equed = '_';    // returns the form of equlibration that was done
   double r__[N];       // row scale factors
   double c__[N];       // column scale factors
   double rcond;        // reciprocal condtion number
-  double rpvgrw;       // reciprocal pivot growth
   //double berr[nrhs];   // componentwise relative backward error
+  double ferr[1];      // componentwise relative forward error
   double berr[1];      // componentwise relative backward error
-  long n_err_bnds = 3; // number of error bounds
-  double err_bnds_norm[3*nrhs]; // various error bounds (up to 3 for each rhs)
-  double err_bnds_comp[3*nrhs];
-  long nparams_ = 0;    // number additional parameters
-  double params[1];    // dummy - not referenced, if nparams == 0
-  double work[4*N];    // workspace
+  double work[4*N];    // workspace (4*N instead of 3*N for use in gbsvxx later)
   long iwork[N];       // integer workspace
+  gbsvx(
+    &fact,
+    &trans,
+    &N_,
+    &kl_,
+    &ku_,
+    &nrhs1_,
+    abTmp,
+    &ldab_,
+    afb,
+    &ldab_,   // check this
+    ipiv,
+    &equed,
+    r__,
+    c__,
+    b2,
+    &ldb_,
+    x3,
+    &ldb_,
+    &rcond,
+    ferr,
+    berr,
+    work,
+    iwork,
+    &info,
+    0, 0, 0);  // undocumented parameters - check what they do...
+
+
+
+
+
+
+  // and now the gbsvxx routine (with still more parameters):
+  double x4[N];       // result
+  copy(&N_, b, &iOne, b2, &iOne);
+  copyArray(ldab*N, ab, abTmp);
+  double rpvgrw;                   // reciprocal pivot growth
+  long n_err_bnds = 3;             // number of error bounds
+  double err_bnds_norm[3*nrhs];    // various error bounds (up to 3 for each rhs)
+  double err_bnds_comp[3*nrhs];
+  long nparams_ = 0;               // number additional parameters
+  double params[1];                // dummy - not referenced, if nparams == 0
   gbsvxx(
     &fact, 
     &trans, 
@@ -344,6 +377,10 @@ bool gbsvUnitTest()
   // fact = 'E' or fact = 'N' does not seem to make a difference
   // maybe try passing in a factored matrix or check if afb is the factored matrix on return 
   // (compare to the result of the gbsv call)
+  // actually, info == 0 which should indicate that all went well
+  // i had to make a guess in one of the calls (something about order_type = col_older vs 
+  // row_order or something in a call to blas_dgbmv_x and/or blas_dgbmv2_x - check that - try
+  // other options - research what is likely to be meant
 
   //int gbsvxx(char *fact, char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, T *ab, 
   //  integer *ldab, T *afb, integer *ldafb, integer *ipiv, char *equed, T *r__, T *c__, T *b, 
