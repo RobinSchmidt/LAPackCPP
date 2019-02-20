@@ -290,32 +290,6 @@ bool gbsvUnitTest()
   double berr[1];      // componentwise relative backward error
   double work[4*N];    // workspace (4*N instead of 3*N for use in gbsvxx later)
   long iwork[N];       // integer workspace
-  //gbsvx(
-  //  &fact,
-  //  &trans,
-  //  &N_,
-  //  &kl_,
-  //  &ku_,
-  //  &nrhs1_,
-  //  abTmp,
-  //  &ldab_,
-  //  afb,
-  //  &ldab_,   // check this
-  //  ipiv,
-  //  &equed,
-  //  r__,
-  //  c__,
-  //  b2,
-  //  &ldb_,
-  //  x3,
-  //  &ldb_,
-  //  &rcond,
-  //  ferr,
-  //  berr,
-  //  work,
-  //  iwork,
-  //  &info,
-  //  0, 0, 0);  // undocumented parameters - check what they do...
   gbsvx(
     &fact,
     &trans,
@@ -365,6 +339,37 @@ bool gbsvUnitTest()
   double err_bnds_comp[3*nrhs];
   long nparams_ = 0;               // number additional parameters
   double params[1];                // dummy - not referenced, if nparams == 0
+  //gbsvxx(
+  //  &fact, 
+  //  &trans, 
+  //  &N_, 
+  //  &kl_, 
+  //  &ku_, 
+  //  &nrhs1_, 
+  //  abTmp, 
+  //  &ldab_, 
+  //  afb, 
+  //  &ldab_,        // check, if this is right - has afb the same dimensions as ab?
+  //  ipiv, 
+  //  &equed, 
+  //  r__, 
+  //  c__, 
+  //  b2, 
+  //  &ldb_, 
+  //  x4, 
+  //  &ldb_,          // check, if ldx == ldb? - should be
+  //  &rcond, 
+  //  &rpvgrw, 
+  //  berr, 
+  //  &n_err_bnds, 
+  //  err_bnds_norm, 
+  //  err_bnds_comp, 
+  //  &nparams_,
+  //  params, 
+  //  work, 
+  //  iwork, 
+  //  &info, 
+  //  0, 0, 0);  // undocumented parameters: ftnlen fact_len, ftnlen trans_len, ftnlen equed_len
   gbsvxx(
     &fact, 
     &trans, 
@@ -372,8 +377,8 @@ bool gbsvUnitTest()
     &kl_, 
     &ku_, 
     &nrhs1_, 
-    abTmp, 
-    &ldab_, 
+    a, 
+    &lda_, 
     afb, 
     &ldab_,        // check, if this is right - has afb the same dimensions as ab?
     ipiv, 
