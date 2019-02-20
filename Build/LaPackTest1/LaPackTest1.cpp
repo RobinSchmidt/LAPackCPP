@@ -416,6 +416,9 @@ bool gbsvUnitTest()
   //  T *err_bnds_norm__, T *err_bnds_comp__, integer *nparams, T *params, T *work, integer *iwork, 
   //  integer *info, ftnlen fact_len, ftnlen trans_len, ftnlen equed_len);
 
+
+  rsBandDiagonalSolver<double> solver;
+
   return r;
 }
 

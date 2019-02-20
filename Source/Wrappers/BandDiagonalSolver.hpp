@@ -53,16 +53,27 @@ public:
   //-----------------------------------------------------------------------------------------------
   /** \name Inquiry */
 
-  // to be called after solve
-  // getReciprocalPivotGrowth
-  // getConditionNumber
+  /** Returns reciprocal condition number of the matrix. Call it after solve(). */
+  T getReciprocalConditionNumber() { return rcond; }
 
+  /** Returns reciprocal pivot growth factor. Call it after solve(). */
+  T getReciprocalPivotGrowth() { return rpvgrw; }
 
+  //T getMaxErrorBound()
+  // getRowScalers, getColumnScalers,....
+
+  // todo: error-bounds, etc.
+
+  
   //-----------------------------------------------------------------------------------------------
   /** \name Computation */
 
+  /** After the matrix has been set up via a call to setSystemSize and a bunch of calls to 
+  setDiagonalElement, a call to solve will actually solve the system for a given number of right 
+  hand sides and produce an equal number of solution vectors. */
   void solve(int numRightHandSides, T* rightHandSides, T* solutions);
-  // todo: try to make rightHandSides const
+  // todo: try to make rightHandSides const - figure out, if it's allowed that rightHandSides may
+  // point to the same array as solutions
 
 protected:
 
@@ -99,7 +110,7 @@ protected:
   std::vector<long> ipiv;  // pivot indices, size N
 
   // options:
-  Algorithm algo = gbsvxx; // extended expert driver - most precise
+  Algorithm algo = Algorithm::gbsvxx; // extended expert driver - most precise
   char trans = 'N';        // input matrix is not transposed
   char fact  = 'E';        // input matrix is not factored and shall be equilibrated
   long nparams = 0;        // number of additional parameters for gbsvxx (not yet used)
