@@ -200,9 +200,8 @@ INFO:   = 0: successful exit
                     solution can be more accurate than the value of RCOND would suggest. */
 template<class T>
 int gbsvx(char *fact, char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, 
-  doublereal *ab, integer *ldab, doublereal *afb, integer *ldafb, integer *ipiv, char *equed, 
-  doublereal *r__, doublereal *c__, doublereal *b, integer *ldb, doublereal *x, integer *ldx, 
-  doublereal *rcond, doublereal *ferr, doublereal *berr, doublereal *work, integer *iwork, 
+  T *ab, integer *ldab, T *afb, integer *ldafb, integer *ipiv, char *equed, T *r__, T *c__, T *b,
+  integer *ldb, T *x, integer *ldx, T *rcond, T *ferr, T *berr, T *work, integer *iwork, 
   integer *info, ftnlen fact_len, ftnlen trans_len, ftnlen equed_len);
 
 //-------------------------------------------------------------------------------------------------

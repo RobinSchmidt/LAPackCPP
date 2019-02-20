@@ -169,10 +169,10 @@ bool gbsvUnitTest()
   long int ipiv[N];            // pivot indices
   long int info = 666;         // 0 on exit, if successful
   //double _ = 0.0/sqrt(0.0);    // we init unused storage cells with NaN - why is it -NaN?
-  //double _ = 0.0;  // for test
+  double _ = 0.0;  // for test
   //double _ = 1.0/sqrt(0.0); 
   //double _ = 1.0; 
-  double _ = -1000.0; 
+  //double _ = -1000.0; 
 
   // matrix A in band storage for gbsv - the banded format is N times 2*kl+ku+1 which is 
   // 9 times 2*3+2+1 = 9 times 8 in this case - because LAPACK uses in general, column-major 
@@ -276,10 +276,10 @@ bool gbsvUnitTest()
   double b2[N];                  // tempoary rhs (is overwritten in the routine  - is this true for gbsvx?)
   copy(&N_, b, &iOne, b2, &iOne);
   copyArray(ldab*N, ab, abTmp);
-  char fact = 'E';    // input matrix is not factored and shall be equilibrated, for no 
-                      // equilibration use 'N'
-  //char fact = 'N';    // input matrix is not factored and shall be equilibrated, for no 
+  //char fact = 'E';    // input matrix is not factored and shall be equilibrated, for no 
   //                    // equilibration use 'N'
+  char fact = 'N';    // input matrix is not factored and shall be equilibrated, for no 
+                      // equilibration use 'N'
   double afb[ldab*N];  // factored form of matrix ab ( check, if dimensions are correct)
   char equed = '_';    // returns the form of equlibration that was done
   double r__[N];       // row scale factors
@@ -290,6 +290,32 @@ bool gbsvUnitTest()
   double berr[1];      // componentwise relative backward error
   double work[4*N];    // workspace (4*N instead of 3*N for use in gbsvxx later)
   long iwork[N];       // integer workspace
+  //gbsvx(
+  //  &fact,
+  //  &trans,
+  //  &N_,
+  //  &kl_,
+  //  &ku_,
+  //  &nrhs1_,
+  //  abTmp,
+  //  &ldab_,
+  //  afb,
+  //  &ldab_,   // check this
+  //  ipiv,
+  //  &equed,
+  //  r__,
+  //  c__,
+  //  b2,
+  //  &ldb_,
+  //  x3,
+  //  &ldb_,
+  //  &rcond,
+  //  ferr,
+  //  berr,
+  //  work,
+  //  iwork,
+  //  &info,
+  //  0, 0, 0);  // undocumented parameters - check what they do...
   gbsvx(
     &fact,
     &trans,
@@ -297,8 +323,8 @@ bool gbsvUnitTest()
     &kl_,
     &ku_,
     &nrhs1_,
-    abTmp,
-    &ldab_,
+    a,        // test: pass a as used in gbmv...
+    &lda_,    // ...with leading dimension KL+KU+1
     afb,
     &ldab_,   // check this
     ipiv,
@@ -316,6 +342,13 @@ bool gbsvUnitTest()
     iwork,
     &info,
     0, 0, 0);  // undocumented parameters - check what they do...
+
+  // returns a wrong result! damn! what's wrong?! ...maybe ldafb != ldab? it seems, the elements
+  // accessed in the afb matrix are different from those in the ab matrix:
+  // the doc says: LDAB >= KL+KU+1, LDAFB >= 2*KL+KU+1
+  // we have ldab = 2*kl+ku+1
+  // maybe try to pass "a" with leading dimension la as used in gbmv
+  // yep - this looks better! :-)
 
 
 
