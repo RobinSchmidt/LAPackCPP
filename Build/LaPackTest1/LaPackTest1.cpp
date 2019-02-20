@@ -15,6 +15,9 @@ using namespace BlasCPP;
 #include "../../Source/LaPackCPP/LaPack.hpp"
 using namespace LaPackCPP;
 
+#include "../../Source/Wrappers/BandDiagonalSolver.cpp"
+template class rsBandDiagonalSolver<double>;
+
 
 std::vector<double> rangeVector(int N, double start, double inc)
 {
@@ -126,6 +129,21 @@ bool gbsvUnitTest()
   // 00 00 00 74 75 76 77 78 79     7 3 4 0
   // 00 00 00 00 85 86 87 88 89     8 2 0 4
   // 00 00 00 00 00 96 97 98 99     9 1 5 0
+
+
+  //double target[N] =  { 74,230,505,931,1489,2179,3001,3055,2930 }; // this is what b should be now
+
+  // 11 12 13 00 00 00 00 00 00     1     74
+  // 21 22 23 24 00 00 00 00 00     2    230
+  // 31 32 33 34 35 00 00 00 00     3    505
+  // 41 42 43 44 45 46 00 00 00     4    931
+  // 00 52 53 54 55 56 57 00 00  *  5 = 1489
+  // 00 00 63 64 65 66 67 68 00     6   2179
+  // 00 00 00 74 75 76 77 78 79     7   3001
+  // 00 00 00 00 85 86 87 88 89     8   3055
+  // 00 00 00 00 00 96 97 98 99     9   2930
+
+
 
   typedef const long int Int;  // for convenience
   static Int N    = 9;         // size of the system: NxN

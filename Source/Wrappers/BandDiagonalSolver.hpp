@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vector>
 
 /** A convenience wrapper class for LAPACK's routines for solving band-diagonal systems of linear 
 equations. It wraps the routines _gbsv, _gbsvx and _gbsvxx where the underscore is to be understood
@@ -32,8 +33,8 @@ public:
 
   /** Sets up the various size parameters of the system to be solved. The matrixOrder is the number
   of rows and columns of the matrix, the others are self-explanatory */
-  void setSystemSizes(int matrixOrder, int numSubDiagonals, int numSuperDiagonals, 
-    int numRightHandSides);
+  void setSystemSize(int matrixOrder, int numSubDiagonals, int numSuperDiagonals);
+    //int numRightHandSides);
   // maybe don't pass the number of right-hand sides here
 
   /** Sets one of the values in one of the digaonals. The diagIndex indicats which diagonal is 
@@ -46,6 +47,9 @@ public:
   //void setAlgorithm(
 
 
+  /** Select whether or not equilibration should be used (if necessarry). */
+  void setEquilibration(bool shouldEquilibrate);
+
   //-----------------------------------------------------------------------------------------------
   /** \name Inquiry */
 
@@ -57,19 +61,58 @@ public:
   //-----------------------------------------------------------------------------------------------
   /** \name Computation */
 
-  void solve(int numRightHandSides, const T* rightHandSides, T* solutions);
+  void solve(int numRightHandSides, T* rightHandSides, T* solutions);
+  // todo: try to make rightHandSides const
 
 protected:
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Memory allocation */
+
+  /** Allocates the storage memory for the matrix. Called from setSystemSize(). */
+  void allocateMatrix();
+
+  /** Allocates the temporary workspace buffers. Called from solve(). */
+  void allocateBuffers();
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Data */
 
   // system size parameters:
   long N;       // matrix size
   long kl;      // number of subdiagonals
   long ku;      // number of superdiagonals
+  long lda;     // leading dimension of matrix A
+  long ldab;    // ?
+
+  // right-hand-side size parameters:
   long nrhs;    // number of right hand sides
+  long ldb;     // = N, maybe get rid
 
   // workspace buffers:
-  std::vector<T> a;    // the matrix in band-storage
-  std::vector<T> b;    // right hand sides
-  std::vector<T> afb;
+  std::vector<T> A;        // coefficient matrix in band-storage
+  //std::vector<T> B;        // matrix of right hand sides
+  std::vector<T> AF;       // factored form of A
+  std::vector<T> work;     // workspace, size 4*N
+  std::vector<T> R, C;     // row and column scale factors for equilibration, size N
+  std::vector<long> iwork; // integer workspace, size N
+  std::vector<long> ipiv;  // pivot indices, size N
 
+  // options:
+  Algorithm algo = gbsvxx; // extended expert driver - most precise
+  char trans = 'N';        // input matrix is not transposed
+  char fact  = 'E';        // input matrix is not factored and shall be equilibrated
+  long nparams = 0;        // number of additional parameters for gbsvxx (not yet used)
+  T params[1];             // dummy - not referenced, if nparams == 0
+
+  // computed outputs:
+  long info;                     // 0 on exit, if successful
+  char equed;                    // returns the form of equlibration that was done
+  T rcond;                       // reciprocal condition number
+  T rpvgrw;                      // reciprocal pivot growth
+  std::vector<T> ferr;           // componentwise relative forward error, size nrhs (verify)
+  std::vector<T> berr;           // componentwise relative backward error, size nrhs (verify)
+  long n_err_bnds = 3;           // number of error bounds
+  std::vector<T> err_bnds_norm;  // various error bounds (up to 3 for each rhs), size 3*nrhs
+  std::vector<T> err_bnds_comp;  // size 3*nrhs
 };
