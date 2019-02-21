@@ -426,6 +426,7 @@ bool gbsvUnitTest()
         val += -k*10;
       else
         val += k;
+      solver.setDiagonalElement(k, n, val);
       int dummy = 0;
     }
   }

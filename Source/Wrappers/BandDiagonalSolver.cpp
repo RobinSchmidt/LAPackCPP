@@ -17,13 +17,18 @@ void rsBandDiagonalSolver<T>::setSystemSize(int matrixOrder, int numSubDiagonals
 template<class T>
 void rsBandDiagonalSolver<T>::setDiagonalElement(int diagIndex, int elemIndex, T value)
 {
+
   int d = diagIndex;
   int e = elemIndex;
-  int row = d + ku;
+  //int row = d + ku;
+  //int row = d + kl - ku;
+  int row = d - ku;
   int col = e;
   if(d < 0)         // verify this
     col += kl;
   int i = N*col + row;
+
+  // nope - that's wrong!
 
   if(i < 0 || i >= A.size())
   {
