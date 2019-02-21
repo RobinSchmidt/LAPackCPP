@@ -146,10 +146,7 @@ public:
   {
     int col = columnIndex;  // column index in banded and dense storage is the same
     int row = rowIndex;     // the row index must be manipulated according to the column
-    if(col <= ku)
-      row += ku-col;             // shift it down for the first ku columns...
-    else
-      row -= col-ku;             // ...and up for the remaining columns
+    row += ku-col;
     int i = (kl+ku+1)*col + row; // convert band-matrix indices to flat array index
     // maybe raise an error if(i < 0 || i >= A.size())
     return i;

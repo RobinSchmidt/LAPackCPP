@@ -449,7 +449,19 @@ bool gbsvUnitTest()
   r &= solver.rowColToArrayIndex(2, 3) == 19;   // 34
   r &= solver.rowColToArrayIndex(2, 4) == 24;   // 35
 
+  r &= solver.rowColToArrayIndex(3, 0) ==  5;   // 41
+  r &= solver.rowColToArrayIndex(3, 1) == 10;   // 42
+  r &= solver.rowColToArrayIndex(3, 2) == 15;   // 43
+  r &= solver.rowColToArrayIndex(3, 3) == 20;   // 44
+  r &= solver.rowColToArrayIndex(3, 4) == 25;   // 45
 
+  r &= solver.rowColToArrayIndex(4, 1) == 11;   // 52
+  r &= solver.rowColToArrayIndex(4, 2) == 16;   // 53
+  r &= solver.rowColToArrayIndex(4, 3) == 21;   // 54
+  r &= solver.rowColToArrayIndex(4, 4) == 26;   // 55
+  r &= solver.rowColToArrayIndex(4, 5) == 31;   // 56
+  r &= solver.rowColToArrayIndex(4, 6) == 36;   // 57
+  // ok, this seems to work
 
 
 
