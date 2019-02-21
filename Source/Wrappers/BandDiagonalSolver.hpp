@@ -131,29 +131,39 @@ public:
     int col = e;
     if(d > 0) 
       col += d;
-    int i = (kl+ku+1)*col + row;
-    // maybe raise an error if(i < 0 || i >= A.size())
-    return i;
+    return bandedRowColToIndex(row, col, kl, ku);
+
+    //int i = (kl+ku+1)*col + row;
+    //// maybe raise an error if(i < 0 || i >= A.size())
+    //return i;
   }
   // maybe factor this out into a class BandDiagonalMatrixView or something - maybe as static
   // function that takes kl, ku as additional arguments
   // maybe rename to diagIndicesToFlatArrayIndex, diagElemToArrayIndex, maybe move implementation
   // out of class
 
-  /** Converts from regular matrix indices for the row and column to the actual index in the 
-  storage array. */
-  inline int rowColToArrayIndex(int rowIndex, int columnIndex)
+  /** Converts from regular (dense) matrix indices for the row and column to the actual index in 
+  the storage array. */
+  inline int rowColToArrayIndex(int row, int col)
   {
-    int col = columnIndex;  // column index in banded and dense storage is the same
-    int row = rowIndex;     // the row index must be manipulated according to the column
-    row += ku-col;
-    int i = (kl+ku+1)*col + row; // convert band-matrix indices to flat array index
-    // maybe raise an error if(i < 0 || i >= A.size())
-    return i;
+    //row += ku-col;               // row index must be manipulated according to the column
+    //int i = (kl+ku+1)*col + row; // convert band-matrix indices to flat array index
+    //// maybe raise an error if(i < 0 || i >= A.size())
+    //return i;
+
+    return bandedRowColToIndex(row+ku-col, col, kl, ku);
   }
+  // the computation of i from the row- and column indices of the banded storage format is the same
+  // in rowColToArrayIndex and diagElemIndex - maybe factor out into function bandedRowColToIndex
+  // and call this function denseRowColToIndex
 
-    // rowColToArrayIndex
 
+  /** Converts from a row- and column index given in banded storage format to a flat array 
+  index. */
+  static inline int bandedRowColToIndex(int row, int col, int numSubDiags, int numSuperDiags)
+  {
+    return (numSubDiags+numSuperDiags+1)*col + row;
+  }
 
 
 protected:
