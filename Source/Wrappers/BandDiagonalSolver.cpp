@@ -11,12 +11,28 @@ void rsBandDiagonalSolver<T>::setSystemSize(int matrixOrder, int numSubDiagonals
   ku   = numSuperDiagonals;
   lda  = kl+ku+1;
   ldab = 2*kl+ku+1;
+  allocateMatrix();
 }
 
 template<class T>
 void rsBandDiagonalSolver<T>::setDiagonalElement(int diagIndex, int elemIndex, T value)
 {
-  // ...
+  int d = diagIndex;
+  int e = elemIndex;
+  int row = d + ku;
+  int col = e;
+  if(d < 0)         // verify this
+    col += kl;
+  int i = N*col + row;
+
+  if(i < 0 || i >= A.size())
+  {
+    // debug-break/assert
+    return;
+  }
+
+
+  A[i] = value;
 }
 
 template<class T>
@@ -97,7 +113,8 @@ void rsBandDiagonalSolver<T>::solve(int numRightHandSides, T* B, T* X)
 template<class T>
 void rsBandDiagonalSolver<T>::allocateMatrix()
 {
-
+  A.resize(lda*N);
+  AF.resize(ldab*N);
 }
 
 template<class T>

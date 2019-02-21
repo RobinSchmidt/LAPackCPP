@@ -44,6 +44,39 @@ public:
   superdiagonals N-1 elements and so on. */
   void setDiagonalElement(int diagIndex, int elemIndex, T value);
 
+  // AB(KL+KU+1+i-j,j) = A(i,j)
+
+  void setElement(int i, int j, const T& value)
+  {
+
+  }
+  /*
+  storage scheme for gbmv (used for gbsvx and gbsvxx):
+  A:     array, dimension ( LDA, N ). Before entry, the leading ( kl + ku + 1 ) by n part of the 
+  array A must contain the matrix of coefficients, supplied column by column, with the leading
+  diagonal of the matrix in row ( ku + 1 ) of the array, the first super-diagonal starting at 
+  position 2 in row ku, the first sub-diagonal starting at position 1 in row ( ku + 2 ), and 
+  so on. Elements in the array A that do not correspond to elements in the band matrix (such 
+  as the top left ku by ku triangle) are not referenced. The following program segment will 
+  transfer a band matrix from conventional full matrix storage to band storage: 
+  DO 20, J = 1, N 
+  K = KU + 1 - J 
+  DO 10, I = MAX( 1, J - KU ), MIN( M, J + KL ) 
+  A( K + I, J ) = matrix( I, J ) 
+  10    CONTINUE 
+  20 CONTINUE 
+
+
+  storage scheme for gbsv:
+  AB:   array, dimension (LDAB,N). On entry, the matrix A in band storage, in rows KL+1 to 
+  2*KL+KU+1; rows 1 to KL of the array need not be set. The j-th column of A is stored in the 
+  j-th column of the array AB as follows: AB(KL+KU+1+i-j,j) = A(i,j) for 
+  max(1,j-KU)<=i<=min(N,j+KL). On exit, details of the factorization: U is stored as an upper 
+  triangular band matrix with KL+KU superdiagonals in rows 1 to KL+KU+1, and the multipliers 
+  used during the factorization are stored in rows KL+KU+2 to 2*KL+KU+1. See below for further
+  details.
+  */
+
   //void setAlgorithm(
 
 

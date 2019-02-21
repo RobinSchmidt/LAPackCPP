@@ -418,6 +418,19 @@ bool gbsvUnitTest()
 
 
   rsBandDiagonalSolver<double> solver;
+  solver.setSystemSize(N, kl, ku);
+  for(int k = -kl; k <= ku; k++) {
+    for(int n = 0; n < N - abs(k); n++) {
+      double val = (n+1)*10 + n+1;
+      if(k < 0)
+        val += -k*10;
+      else
+        val += k;
+      int dummy = 0;
+    }
+  }
+
+
 
   return r;
 }
