@@ -37,22 +37,25 @@ public:
     //int numRightHandSides);
   // maybe don't pass the number of right-hand sides here
 
-  /** Sets one of the values in one of the digaonals. The diagIndex indicats which diagonal is 
+  /** Sets one of the values in one of the diagonals. The diagIndex indicates which diagonal is 
   meant where 0 is the main diagonal, -1 is the first subdiagonal, +1 the first superdiagonal, 
   -2 the second subdiagonal and so on. Within each diagonal, the elemIndex counts from the 
   top-left to the bottom right, where the main-diagonal has N elements, the first sub- and 
   superdiagonals N-1 elements and so on. */
-  void setDiagonalElement(int diagIndex, int elemIndex, T value)
+  void setDiagonalElement(int diagIndex, int elemIndex, const T& value)
   {
     A[diagElemIndex(diagIndex, elemIndex)] = value;
   }
 
-  // AB(KL+KU+1+i-j,j) = A(i,j)
-
+  /** not yet implemented
+  Accesses matrix elements via regular row- and column indices i, j. Raises an error, if the 
+  index pair is outside the band of nonzero values */
   void setElement(int i, int j, const T& value)
   {
 
   }
+  // 
+  // AB(KL+KU+1+i-j,j) = A(i,j)
   /*
   storage scheme for gbmv (used for gbsvx and gbsvxx):
   A:     array, dimension ( LDA, N ). Before entry, the leading ( kl + ku + 1 ) by n part of the 
@@ -100,6 +103,8 @@ public:
 
   // todo: error-bounds, etc.
 
+  // getDiagonalElement, getElement, operator()(int i, int j)
+
   
   //-----------------------------------------------------------------------------------------------
   /** \name Computation */
@@ -116,7 +121,8 @@ public:
 
   /** Conversion for index of the diagonal (ranging from -kl to ku) and index of element within the 
   diagonal (ranging from 0 to N-abs(diagIndex)) to the flat array index for LAPACK's band storage
-  format. */
+  format. Mainly for internal use in setDiagonalElement, but you can also use it yourself - but 
+  only after setting up setSystemSize appropriately, of course. */
   inline int diagElemIndex(int diagIndex, int elemIndex)
   {
     int d = diagIndex;
@@ -129,6 +135,27 @@ public:
     // maybe raise an error if(i < 0 || i >= A.size())
     return i;
   }
+  // maybe factor this out into a class BandDiagonalMatrixView or something - maybe as static
+  // function that takes kl, ku as additional arguments
+  // maybe rename to diagIndicesToFlatArrayIndex, diagElemToArrayIndex, maybe move implementation
+  // out of class
+
+  /** Converts from regular matrix indices for the row and column to the actual index in the 
+  storage array. */
+  inline int rowColToArrayIndex(int rowIndex, int columnIndex)
+  {
+    int col = columnIndex;  // column index in banded and dense storage is the same
+    int row = rowIndex;     // the row index must be manipulated according to the column
+    if(col <= ku)
+      row += ku-col;             // shift it down for the first ku columns...
+    else
+      row -= col-ku;             // ...and up for the remaining columns
+    int i = (kl+ku+1)*col + row; // convert band-matrix indices to flat array index
+    // maybe raise an error if(i < 0 || i >= A.size())
+    return i;
+  }
+
+    // rowColToArrayIndex
 
 
 

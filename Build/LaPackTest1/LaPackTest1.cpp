@@ -427,11 +427,22 @@ bool gbsvUnitTest()
       else
         val += k;
       solver.setDiagonalElement(k, n, val);
-      int dummy = 0;
     }
   }
+  // todo: implement setting up elements via regular matrix indices i,j as well - may be more 
+  // convenient in some situations - maybe that function should issue a warning/error, when the 
+  // indices point to an invalid position, i.e. a position outside the nonzero band of the matrix
+
+  // test conversion from regular dense matrix row/column indices to flat storage array index
+  r &= solver.rowColToArrayIndex(0, 0) ==  2;   // 11
+  r &= solver.rowColToArrayIndex(0, 1) ==  7;   // 12
+  r &= solver.rowColToArrayIndex(0, 2) == 12;   // 13
+  r &= solver.rowColToArrayIndex(1, 0) ==  3;   // 21
+  r &= solver.rowColToArrayIndex(1, 1) ==  8;   // 22
 
 
+  double x5[N];  // result
+  //solver.solve(1, b, x5); // access violation - not yet implemented fully
 
   return r;
 }
