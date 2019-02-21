@@ -14,31 +14,27 @@ void rsBandDiagonalSolver<T>::setSystemSize(int matrixOrder, int numSubDiagonals
   allocateMatrix();
 }
 
+/*
 template<class T>
 void rsBandDiagonalSolver<T>::setDiagonalElement(int diagIndex, int elemIndex, T value)
 {
+  //A[diagElemIndex(diagIndex, elemIndex)] = value;
 
   int d = diagIndex;
   int e = elemIndex;
-  //int row = d + ku;
-  //int row = d + kl - ku;
-  int row = d - ku;
+  int row = ku - d; 
   int col = e;
-  if(d < 0)         // verify this
-    col += kl;
-  int i = N*col + row;
-
-  // nope - that's wrong!
-
+  if(d > 0) 
+    col += d;
+  int i = (kl+ku+1)*col + row;
   if(i < 0 || i >= A.size())
   {
     // debug-break/assert
     return;
   }
-
-
   A[i] = value;
 }
+*/
 
 template<class T>
 void rsBandDiagonalSolver<T>::setEquilibration(bool shouldEquilibrate)

@@ -42,7 +42,10 @@ public:
   -2 the second subdiagonal and so on. Within each diagonal, the elemIndex counts from the 
   top-left to the bottom right, where the main-diagonal has N elements, the first sub- and 
   superdiagonals N-1 elements and so on. */
-  void setDiagonalElement(int diagIndex, int elemIndex, T value);
+  void setDiagonalElement(int diagIndex, int elemIndex, T value)
+  {
+    A[diagElemIndex(diagIndex, elemIndex)] = value;
+  }
 
   // AB(KL+KU+1+i-j,j) = A(i,j)
 
@@ -107,6 +110,27 @@ public:
   void solve(int numRightHandSides, T* rightHandSides, T* solutions);
   // todo: try to make rightHandSides const - figure out, if it's allowed that rightHandSides may
   // point to the same array as solutions
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Misc */
+
+  /** Conversion for index of the diagonal (ranging from -kl to ku) and index of element within the 
+  diagonal (ranging from 0 to N-abs(diagIndex)) to the flat array index for LAPACK's band storage
+  format. */
+  inline int diagElemIndex(int diagIndex, int elemIndex)
+  {
+    int d = diagIndex;
+    int e = elemIndex;
+    int row = ku - d; 
+    int col = e;
+    if(d > 0) 
+      col += d;
+    int i = (kl+ku+1)*col + row;
+    // maybe raise an error if(i < 0 || i >= A.size())
+    return i;
+  }
+
+
 
 protected:
 
