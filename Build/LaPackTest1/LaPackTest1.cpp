@@ -437,8 +437,20 @@ bool gbsvUnitTest()
   r &= solver.rowColToArrayIndex(0, 0) ==  2;   // 11
   r &= solver.rowColToArrayIndex(0, 1) ==  7;   // 12
   r &= solver.rowColToArrayIndex(0, 2) == 12;   // 13
+
   r &= solver.rowColToArrayIndex(1, 0) ==  3;   // 21
   r &= solver.rowColToArrayIndex(1, 1) ==  8;   // 22
+  r &= solver.rowColToArrayIndex(1, 2) == 13;   // 23
+  r &= solver.rowColToArrayIndex(1, 3) == 18;   // 24
+  
+  r &= solver.rowColToArrayIndex(2, 0) ==  4;   // 31
+  r &= solver.rowColToArrayIndex(2, 1) ==  9;   // 32
+  r &= solver.rowColToArrayIndex(2, 2) == 14;   // 33
+  r &= solver.rowColToArrayIndex(2, 3) == 19;   // 34
+  r &= solver.rowColToArrayIndex(2, 4) == 24;   // 35
+
+
+
 
 
   double x5[N];  // result
