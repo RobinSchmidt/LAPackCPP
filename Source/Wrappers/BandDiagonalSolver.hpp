@@ -64,20 +64,31 @@ public:
   //-----------------------------------------------------------------------------------------------
   /** \name Inquiry */
 
-  /** Returns reciprocal condition number of the matrix. Call it after solve(). */
-  T getReciprocalConditionNumber() { return rcond; }
+  /** Returns information about the computations in the most recent call to solve(). A zero value 
+  indicates successful exit. For the meaning of other values, refer to the documentation of "INFO" 
+  parameter of the lapack routines gbvsv, gbsvx and gbsvxx. */
+  long getInfo() { return info; }
 
-  /** Returns reciprocal pivot growth factor. Call it after solve(). */
-  T getReciprocalPivotGrowth() { return rpvgrw; }
+  /** Returns reciprocal condition number of the matrix in the most recent call to solve() where 
+  gbsvx or gbsvxx has been used. */
+  T getReciprocalConditionNumber() const { return rcond; }
+
+  /** Returns reciprocal pivot growth factor in the most recent call to solve() where gbsvxx has 
+  been used. */
+  T getReciprocalPivotGrowth() const { return rpvgrw; }
+
+  /** Returns the row scaling factors that have been used to equilibrate the matrix in the most 
+  recent call to solve() where gbsvx or gbsvxx has been used. */
+  std::vector<T> getRowScaleFactors() const { return R; }
+
+  /** Returns the column scaling factors that have been used to equilibrate the matrix in the most 
+  recent call to solve() where gbsvx or gbsvxx has been used. */
+  std::vector<T> getColumnScaleFactors() const { return C; }
 
   //T getMaxErrorBound()
-  // getRowScalers, getColumnScalers,....
-
   // todo: error-bounds, etc.
-
   // getDiagonalElement, getElement, operator()(int i, int j)
 
-  
   //-----------------------------------------------------------------------------------------------
   /** \name Computation */
 
