@@ -104,6 +104,7 @@ public:
   void solve(T* rightHandSides, T* solutions, int numRightHandSides);
   // todo: try to make rightHandSides const - figure out, if it's allowed that rightHandSides may
   // point to the same array as solutions
+  // check, how we handle the ordering of solution and rhs in rapt - make it consistent
 
   //-----------------------------------------------------------------------------------------------
   /** \name Index conversion */

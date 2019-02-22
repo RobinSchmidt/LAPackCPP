@@ -289,7 +289,6 @@ bool gbsvUnitTest()
   // ok, the result i correct but numerically rather imprecise (last 8 decimal digits are wrong) 
   // error = 1.e-9 -> try gbsvx and gbsvxx
 
-
   // ...now the same thing with the gbsvx routine (needs a couple of more parameters):
   double x3[N]; //result
   double b2[N];                  // tempoary rhs (is overwritten in the routine  - is this true for gbsvx?)
@@ -309,44 +308,8 @@ bool gbsvUnitTest()
   double berr[1];      // componentwise relative backward error
   double work[4*N];    // workspace (4*N instead of 3*N for use in gbsvxx later)
   long iwork[N];       // integer workspace
-  gbsvx(
-    &fact,
-    &trans,
-    &N_,
-    &kl_,
-    &ku_,
-    &nrhs1_,
-    a,        // test: pass a as used in gbmv...
-    &lda_,    // ...with leading dimension KL+KU+1
-    afb,
-    &ldab_,   // check this
-    ipiv,
-    &equed,
-    r__,
-    c__,
-    b2,
-    &ldb_,
-    x3,
-    &ldb_,
-    &rcond,
-    ferr,
-    berr,
-    work,
-    iwork,
-    &info,
-    0, 0, 0);  // undocumented parameters - check what they do...
-
-  // returns a wrong result! damn! what's wrong?! ...maybe ldafb != ldab? it seems, the elements
-  // accessed in the afb matrix are different from those in the ab matrix:
-  // the doc says: LDAB >= KL+KU+1, LDAFB >= 2*KL+KU+1
-  // we have ldab = 2*kl+ku+1
-  // maybe try to pass "a" with leading dimension la as used in gbmv
-  // yep - this looks better! :-)
-
-
-
-
-
+  gbsvx(&fact, &trans, &N_, &kl_, &ku_, &nrhs1_, a, &lda_, afb, &ldab_, ipiv, &equed, r__, c__,
+    b2, &ldb_, x3, &ldb_, &rcond, ferr, berr, work, iwork, &info, 0, 0, 0);
 
   // and now the gbsvxx routine (with still more parameters):
   double x4[N];       // result
@@ -358,65 +321,13 @@ bool gbsvUnitTest()
   double err_bnds_comp[3*nrhs];
   long nparams_ = 0;               // number additional parameters
   double params[1];                // dummy - not referenced, if nparams == 0
-  gbsvxx(
-    &fact, 
-    &trans, 
-    &N_, 
-    &kl_, 
-    &ku_, 
-    &nrhs1_, 
-    a, 
-    &lda_, 
-    afb, 
-    &ldab_,        // check, if this is right - has afb the same dimensions as ab?
-    ipiv, 
-    &equed, 
-    r__, 
-    c__, 
-    b2, 
-    &ldb_, 
-    x4, 
-    &ldb_,          // check, if ldx == ldb? - should be
-    &rcond, 
-    &rpvgrw, 
-    berr, 
-    &n_err_bnds, 
-    err_bnds_norm, 
-    err_bnds_comp, 
-    &nparams_,
-    params, 
-    work, 
-    iwork, 
-    &info, 
-    0, 0, 0);  // undocumented parameters: ftnlen fact_len, ftnlen trans_len, ftnlen equed_len
+  gbsvxx(&fact, &trans, &N_, &kl_, &ku_, &nrhs1_, a, &lda_, afb, &ldab_, ipiv, &equed, r__,  c__, 
+    b2, &ldb_, x4, &ldb_, &rcond, &rpvgrw, berr, &n_err_bnds, err_bnds_norm, err_bnds_comp, 
+    &nparams_, params, work, iwork, &info, 0, 0, 0);
 
-  // this call to gbsvxx produces NaNs ...could it be that the original matrix is destroyed in the
-  // previous call to gbsv, so it can't be just re-used here in the call to gbsvxx? ..yes, that's 
-  // indeed the case (maybe we could tell gbsvxx that the input is already in factored form - but 
-  // we don't actually want to pass the matrix in factored form - gbsvxx should factor it itself 
-  // using equlibration..
-  // using a tmp matrix and restoring it after gbsv does not solve it - could it be that gbsvxx
-  // dereferences more of the passed matrix? - when changinge the dummy variable _ from NaN to 0.0,
-  // we get -9.2559631349317831e+61 for all values in x4 - os it makes a difference, intializing
-  // with inf also gives NaN - using all ones gives finite but wrong values - does gbsvxx use 
-  // another storage format that gbsv?
-  // fact = 'E' or fact = 'N' does not seem to make a difference
-  // maybe try passing in a factored matrix or check if afb is the factored matrix on return 
-  // (compare to the result of the gbsv call)
-  // actually, info == 0 which should indicate that all went well
-  // i had to make a guess in one of the calls (something about order_type = col_older vs 
-  // row_order or something in a call to blas_dgbmv_x and/or blas_dgbmv2_x - check that - try
-  // other options - research what is likely to be meant
 
-  // ...okay, the mistake was passing abTmp/ldab_, correct is to pass a/lda_ instead - now it 
-  // seems to work - check the guesses anyway
-
-  //int gbsvxx(char *fact, char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, T *ab, 
-  //  integer *ldab, T *afb, integer *ldafb, integer *ipiv, char *equed, T *r__, T *c__, T *b, 
-  //  integer *ldb, T *x, integer *ldx, T *rcond, T *rpvgrw, T *berr, integer *n_err_bnds__, 
-  //  T *err_bnds_norm__, T *err_bnds_comp__, integer *nparams, T *params, T *work, integer *iwork, 
-  //  integer *info, ftnlen fact_len, ftnlen trans_len, ftnlen equed_len);
-
+  // maybe remove the code above calling gbsv/x/x - it's now redundant with the calls to the solver
+  // class
 
   rsBandDiagonalSolver<double> solver(N, kl, ku);
   //solver.setSystemSize(N, kl, ku);
@@ -430,9 +341,6 @@ bool gbsvUnitTest()
       solver.setDiagonalElement(k, n, val);
     }
   }
-  // todo: implement setting up elements via regular matrix indices i,j as well - may be more 
-  // convenient in some situations - maybe that function should issue a warning/error, when the 
-  // indices point to an invalid position, i.e. a position outside the nonzero band of the matrix
 
   // test conversion from regular dense matrix row/column indices to flat storage array index
   r &= solver.rowColToArrayIndex(0, 0) ==  2;   // 11
@@ -464,14 +372,23 @@ bool gbsvUnitTest()
   r &= solver.rowColToArrayIndex(4, 6) == 36;   // 57
   // ok, this seems to work
 
+  // solve the linear system with the 3 different driver routines gbsv, gbsvx, gbsvxx:
   typedef rsBandDiagonalSolver<double>::Algorithm ALGO;
-  double x5[N], x6[N], x7[N];  // results
-  solver.setAlgorithm(ALGO::gbsvxx);
-  solver.solve(b, x5, 1);
-  solver.setAlgorithm(ALGO::gbsvx);
-  solver.solve(b, x6, 1);
+  double xGbsvxx[N], xGbsvx[N], xGbsv[N];  // results
   solver.setAlgorithm(ALGO::gbsv);
-  solver.solve(b, x7, 1);
+  solver.solve(b, xGbsv, 1);
+  solver.setAlgorithm(ALGO::gbsvx);
+  solver.solve(b, xGbsvx, 1);
+  solver.setAlgorithm(ALGO::gbsvxx);
+  solver.solve(b, xGbsvxx, 1);
+
+  // compute maximum errors in the 3 solutions and check if it is below some thresholds:
+  double errGbsv   = maxDistance(N, x, xGbsv);
+  double errGbsvx  = maxDistance(N, x, xGbsvx);
+  double errGbsvxx = maxDistance(N, x, xGbsvxx);
+  r &= errGbsv    < 2e-9;
+  r &= errGbsvx   < 3e-10;
+  r &= errGbsvxx == 0.0;
 
 
   return r;
