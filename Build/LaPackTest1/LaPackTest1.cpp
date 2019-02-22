@@ -15,6 +15,7 @@ using namespace BlasCPP;
 #include "../../Source/LaPackCPP/LaPack.hpp"
 using namespace LaPackCPP;
 
+#include "../../Source/Wrappers/BandDiagonalSolver.hpp"
 #include "../../Source/Wrappers/BandDiagonalSolver.cpp"
 template class rsBandDiagonalSolver<double>;
 
@@ -417,8 +418,8 @@ bool gbsvUnitTest()
   //  integer *info, ftnlen fact_len, ftnlen trans_len, ftnlen equed_len);
 
 
-  rsBandDiagonalSolver<double> solver;
-  solver.setSystemSize(N, kl, ku);
+  rsBandDiagonalSolver<double> solver(N, kl, ku);
+  //solver.setSystemSize(N, kl, ku);
   for(int k = -kl; k <= ku; k++) {
     for(int n = 0; n < N - abs(k); n++) {
       double val = (n+1)*10 + n+1;
@@ -464,9 +465,9 @@ bool gbsvUnitTest()
   // ok, this seems to work
 
 
-
   double x5[N];  // result
-  solver.solve(1, b, x5); // access violation - not yet implemented fully
+  solver.solve(1, b, x5);
+
 
   return r;
 }

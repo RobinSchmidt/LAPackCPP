@@ -258,7 +258,10 @@
     <ClCompile Include="..\..\Source\libf2c\s_cmp.c" />
     <ClCompile Include="..\..\Source\libf2c\s_copy.c" />
     <ClCompile Include="..\..\Source\Tests\TestUtils.cpp" />
-    <ClCompile Include="..\..\Source\Wrappers\BandDiagonalSolver.cpp" />
+    <ClCompile Include="..\..\Source\Wrappers\BandDiagonalSolver.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="LaPackTest1.cpp" />
   </ItemGroup>
   <ItemGroup>

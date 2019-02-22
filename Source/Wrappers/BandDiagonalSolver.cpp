@@ -1,16 +1,15 @@
-#include "BandDiagonalSolver.hpp"
-
 // setup:
 
 template<class T>
-void rsBandDiagonalSolver<T>::setSystemSize(int matrixOrder, int numSubDiagonals,
+void rsBandDiagonalSolver<T>::setSystemSize(int matrixSize, int numSubDiagonals,
   int numSuperDiagonals)
 {
-  N    = matrixOrder;
+  N    = matrixSize;
   kl   = numSubDiagonals;
   ku   = numSuperDiagonals;
   lda  = kl+ku+1;
   ldab = 2*kl+ku+1;
+  ldb  = N;          // redundant - maybe get rid
   allocateMatrix();
 }
 
@@ -31,14 +30,9 @@ void rsBandDiagonalSolver<T>::setEquilibration(bool shouldEquilibrate)
 template<class T>
 void rsBandDiagonalSolver<T>::solve(int numRightHandSides, T* B, T* X)
 {
-  // todo: set up nrhs, etc.
-   
   nrhs = numRightHandSides;
-  ldb  = N;  // maybe get rid
+
   allocateBuffers();
-
-
-
   if(algo == Algorithm::gbsv)
   {
 
@@ -47,39 +41,10 @@ void rsBandDiagonalSolver<T>::solve(int numRightHandSides, T* B, T* X)
   {
 
   }
-  else if(algo == Algorithm::gbsvxx)
-  {
-    gbsvxx(
-      &fact, 
-      &trans, 
-      &N, 
-      &kl, 
-      &ku, 
-      &nrhs, 
-      &A[0], 
-      &lda, 
-      &AF[0], 
-      &ldab,
-      &ipiv[0], 
-      &equed, 
-      &R[0], 
-      &C[0], 
-      &B[0], 
-      &ldb, 
-      &X[0], 
-      &ldb,          // check, if ldx == ldb? - should be
-      &rcond, 
-      &rpvgrw, 
-      &berr[0], 
-      &n_err_bnds, 
-      &err_bnds_norm[0], 
-      &err_bnds_comp[0], 
-      &nparams,
-      &params[0], 
-      &work[0], 
-      &iwork[0], 
-      &info, 
-      0, 0, 0); 
+  else if(algo == Algorithm::gbsvxx) {
+    gbsvxx(&fact, &trans, &N, &kl, &ku, &nrhs, &A[0], &lda, &AF[0], &ldab, &ipiv[0], &equed, &R[0], 
+      &C[0], &B[0], &ldb, &X[0], &ldb, &rcond, &rpvgrw, &berr[0], &n_err_bnds, &err_bnds_norm[0], 
+      &err_bnds_comp[0], &nparams, &params[0], &work[0], &iwork[0], &info, 0, 0, 0); 
   }
   else
   {
