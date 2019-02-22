@@ -31,7 +31,11 @@ public:
     gbsvxx   // LAPACK's extended expert driver 
   };
 
-  //void setAlgorithm(
+  /** Selects the algorithm to be used for computing the solution. In effect, this switches between
+  different lapack driver routines that have different levels of algorithmic sophistication. The 
+  simplest choice is gbsv (simple driver), gbsvx is intermediate (expert driver) and the most 
+  sophisticated is gbsvxx (extended expert driver). gbsvxx has the highest numerical precision. */
+  void setAlgorithm(Algorithm algorithm) { algo = algorithm; }
 
   /** Sets up the various size parameters of the system to be solved. The matrixOrder is the number
   of rows and columns of the matrix, the others are self-explanatory */

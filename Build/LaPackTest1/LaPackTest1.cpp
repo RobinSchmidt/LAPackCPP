@@ -464,9 +464,13 @@ bool gbsvUnitTest()
   r &= solver.rowColToArrayIndex(4, 6) == 36;   // 57
   // ok, this seems to work
 
-
-  double x5[N];  // result
+  typedef rsBandDiagonalSolver<double>::Algorithm ALGO;
+  double x5[N], x6[N], x7[N];  // results
+  solver.setAlgorithm(ALGO::gbsvxx);
   solver.solve(1, b, x5);
+  solver.setAlgorithm(ALGO::gbsvx);
+  solver.solve(1, b, x6);
+
 
 
   return r;

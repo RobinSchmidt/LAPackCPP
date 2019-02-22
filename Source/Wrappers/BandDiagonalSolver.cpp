@@ -31,15 +31,15 @@ template<class T>
 void rsBandDiagonalSolver<T>::solve(int numRightHandSides, T* B, T* X)
 {
   nrhs = numRightHandSides;
-
   allocateBuffers();
   if(algo == Algorithm::gbsv)
   {
 
   }
-  else if(algo == Algorithm::gbsvx)
-  {
-
+  else if(algo == Algorithm::gbsvx) {
+    gbsvx(&fact, &trans, &N, &kl, &ku, &nrhs, &A[0], &lda, &AF[0], &ldab, &ipiv[0], &equed, &R[0],
+      &C[0], &B[0], &ldb, &X[0], &ldb, &rcond, &ferr[0], &berr[0], &work[0], &iwork[0], &info,
+      0, 0, 0); 
   }
   else if(algo == Algorithm::gbsvxx) {
     gbsvxx(&fact, &trans, &N, &kl, &ku, &nrhs, &A[0], &lda, &AF[0], &ldab, &ipiv[0], &equed, &R[0], 
