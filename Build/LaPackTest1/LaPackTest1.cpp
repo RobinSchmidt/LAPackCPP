@@ -466,7 +466,7 @@ bool gbsvUnitTest()
 
 
   double x5[N];  // result
-  //solver.solve(1, b, x5); // access violation - not yet implemented fully
+  solver.solve(1, b, x5); // access violation - not yet implemented fully
 
   return r;
 }

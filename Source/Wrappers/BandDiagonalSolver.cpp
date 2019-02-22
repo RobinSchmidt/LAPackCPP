@@ -99,5 +99,16 @@ void rsBandDiagonalSolver<T>::allocateMatrix()
 template<class T>
 void rsBandDiagonalSolver<T>::allocateBuffers()
 {
-
+  // todo: maybe re-allocate only those buffers that are needed for the selected routine - gbsv 
+  // needs less buffers than gbsvxx, for example
+                                          // used in routines (verify, if this is complete):
+  ipiv.resize(N);                         // all
+  R.resize(N);                            // gbsvx, gbsvxx 
+  C.resize(N);                            // gbsvx, gbsvxx 
+  ferr.resize(nrhs);                      // gbsvx only (i think)
+  berr.resize(nrhs);                      // gbsvx, gbsvxx
+  err_bnds_norm.resize(n_err_bnds*nrhs);  // gbsvxx
+  err_bnds_comp.resize(n_err_bnds*nrhs);  // gbsvxx
+  work.resize(4*N);                       // gbsvxx: 4*N, gbsvx: 3*N
+  iwork.resize(N);                        // gbsvx, gbsvxx
 }

@@ -214,7 +214,7 @@ protected:
   T rpvgrw;                      // reciprocal pivot growth
   std::vector<T> ferr;           // componentwise relative forward error, size nrhs (verify)
   std::vector<T> berr;           // componentwise relative backward error, size nrhs (verify)
-  long n_err_bnds = 3;           // number of error bounds
-  std::vector<T> err_bnds_norm;  // various error bounds (up to 3 for each rhs), size 3*nrhs
-  std::vector<T> err_bnds_comp;  // size 3*nrhs
+  long n_err_bnds = 3;           // number of error bounds 
+  std::vector<T> err_bnds_norm;  // norm-wise error bounds, size n_err_bnds*nrhs
+  std::vector<T> err_bnds_comp;  // component-wise error bounds, size n_err_bnds*nrhs
 };
