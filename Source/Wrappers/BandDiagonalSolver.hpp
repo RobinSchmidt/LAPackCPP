@@ -1,10 +1,10 @@
 #pragma once
 
 /** A convenience wrapper class for LAPACK's routines for solving band-diagonal systems of linear 
-equations. It wraps the routines _gbsv, _gbsvx and _gbsvxx where the underscore is to be understood
-as a placeholdder for the datatype, i.e. s,d,c,z for single/double/single-complex/double-complex 
-numbers. So far, it has been tested only for double real numbers...todo: check, if it actually 
-works for all these 4 datatypes... */
+equations. It wraps the driver routines _gbsv, _gbsvx and _gbsvxx where the underscore is to be 
+understood as a placeholdder for the datatype, i.e. s,d,c,z for single, double, single-complex or 
+double-complex numbers. So far, it has been tested only for double real numbers...todo: check, if 
+it actually works for all these 4 datatypes... */
 
 template<class T>
 class rsBandDiagonalSolver
@@ -37,7 +37,7 @@ public:
   sophisticated is gbsvxx (extended expert driver). gbsvxx has the highest numerical precision. */
   void setAlgorithm(Algorithm algorithm) { algo = algorithm; }
 
-  /** Sets up the various size parameters of the system to be solved. The matrixOrder is the number
+  /** Sets up the various size parameters of the system to be solved. The matrixSize is the number
   of rows and columns of the matrix, the others are self-explanatory */
   void setSystemSize(int matrixSize, int numSubDiagonals, int numSuperDiagonals);
 
@@ -54,7 +54,7 @@ public:
   }
 
   /** Accesses matrix elements via regular dense-matrix row- and column indices. 
-  todo: raises an error, if the index pair is outside the band of nonzero values */
+  todo: raise an error, if the index pair is outside the band of nonzero values */
   void setElement(int rowIndex, int columnIndex, const T& value)
   {
     int i = rowColToArrayIndex(rowIndex, columnIndex);
@@ -62,7 +62,8 @@ public:
     A[i] = value;
   }
 
-  /** Select whether or not equilibration should be used (if necessarry). */
+  /** Selects whether or not equilibration should be used (if necessarry). Affects computations 
+  only when gbsvx or gbsvxx is selected for the algorithm - gbsv never equilibrates. */
   void setEquilibration(bool shouldEquilibrate);
 
   //-----------------------------------------------------------------------------------------------
@@ -112,12 +113,10 @@ public:
   only after setting up setSystemSize appropriately, of course. */
   inline int diagElemIndex(int diagIndex, int elemIndex)
   {
-    int d = diagIndex;
-    int e = elemIndex;
-    int row = ku - d; 
-    int col = e;
-    if(d > 0) 
-      col += d;
+    int row = ku - diagIndex; 
+    int col = elemIndex;
+    if(diagIndex > 0) 
+      col += diagIndex;
     return bandedRowColToIndex(row, col, kl, ku);
   }
 
@@ -139,13 +138,18 @@ public:
 protected:
 
   //-----------------------------------------------------------------------------------------------
-  /** \name Memory allocation */
+  /** \name Buffering */
 
   /** Allocates the storage memory for the matrix. Called from setSystemSize(). */
   void allocateMatrix();
 
   /** Allocates the temporary workspace buffers. Called from solve(). */
   void allocateBuffers();
+
+  /** Prepares for a call to the simple driver routine gbsv by copying the matrix A into AF (with 
+  appropriate offsets to leave space for the factored form) and B into X because gbsv replaces the
+  right-hand side B with the solution X. */
+  void prepareForGbsv(T* B, T* X);
 
   //-----------------------------------------------------------------------------------------------
   /** \name Data */

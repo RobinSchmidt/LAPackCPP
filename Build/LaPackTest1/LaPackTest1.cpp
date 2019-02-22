@@ -470,7 +470,8 @@ bool gbsvUnitTest()
   solver.solve(1, b, x5);
   solver.setAlgorithm(ALGO::gbsvx);
   solver.solve(1, b, x6);
-
+  solver.setAlgorithm(ALGO::gbsv);
+  solver.solve(1, b, x7);
 
 
   return r;

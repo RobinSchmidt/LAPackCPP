@@ -34,7 +34,8 @@ void rsBandDiagonalSolver<T>::solve(int numRightHandSides, T* B, T* X)
   allocateBuffers();
   if(algo == Algorithm::gbsv)
   {
-
+    prepareForGbsv(B, X); // should copy A into AF (with appropriate offsets) and B into X
+    gbsv(&N, &kl, &ku, &nrhs, &AF[0], &ldab, &ipiv[0], &X[0], &ldb, &info);
   }
   else if(algo == Algorithm::gbsvx) {
     gbsvx(&fact, &trans, &N, &kl, &ku, &nrhs, &A[0], &lda, &AF[0], &ldab, &ipiv[0], &equed, &R[0],
@@ -76,4 +77,12 @@ void rsBandDiagonalSolver<T>::allocateBuffers()
   err_bnds_comp.resize(n_err_bnds*nrhs);  // gbsvxx
   work.resize(4*N);                       // gbsvxx: 4*N, gbsvx: 3*N
   iwork.resize(N);                        // gbsvx, gbsvxx
+}
+
+template<class T>
+void rsBandDiagonalSolver<T>::prepareForGbsv(T* B, T* X)
+{
+
+
+  int dummy = 0;
 }
