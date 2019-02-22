@@ -49,7 +49,8 @@ public:
   void setDiagonalElement(int diagIndex, int elemIndex, const T& value)
   {
     int i = diagElemIndex(diagIndex, elemIndex);
-    // check, if i is valid, else raise error
+    if(i < 0 || i >= (int)A.size())
+      xerbla("invalid index in rsBandDiagonalSolver::setDiagonalElement", 0, 0);
     A[i] = value;
   }
 
@@ -58,7 +59,8 @@ public:
   void setElement(int rowIndex, int columnIndex, const T& value)
   {
     int i = rowColToArrayIndex(rowIndex, columnIndex);
-    // check, if i is valid, else raise error
+    if(i < 0 || i >= (int)A.size())
+      xerbla("invalid index in rsBandDiagonalSolver::setElement", 0, 0);
     A[i] = value;
   }
 
