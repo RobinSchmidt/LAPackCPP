@@ -467,11 +467,11 @@ bool gbsvUnitTest()
   typedef rsBandDiagonalSolver<double>::Algorithm ALGO;
   double x5[N], x6[N], x7[N];  // results
   solver.setAlgorithm(ALGO::gbsvxx);
-  solver.solve(1, b, x5);
+  solver.solve(b, x5, 1);
   solver.setAlgorithm(ALGO::gbsvx);
-  solver.solve(1, b, x6);
+  solver.solve(b, x6, 1);
   solver.setAlgorithm(ALGO::gbsv);
-  solver.solve(1, b, x7);
+  solver.solve(b, x7, 1);
 
 
   return r;

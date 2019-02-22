@@ -25,7 +25,7 @@ void rsBandDiagonalSolver<T>::setEquilibration(bool shouldEquilibrate)
 // computation:
 
 template<class T>
-void rsBandDiagonalSolver<T>::solve(int numRightHandSides, T* B, T* X)
+void rsBandDiagonalSolver<T>::solve(T* B, T* X, int numRightHandSides)
 {
   nrhs = numRightHandSides;
   allocateBuffers();
@@ -137,9 +137,9 @@ the matrix passed in a format that can hold the additional entries that are requ
 the LU-factored form of the matrix which means, it needs kl additional free rows on the top. In 
 this case, we need to store the matrix in the form:
 
-  ** ** ** ** ** ++ ++ ++ ++
-  ** ** ** ** ++ ++ ++ ++ ++   fields with ++ are used internally by the algorithm, fields
-  ** ** ** ++ ++ ++ ++ ++ ++   with ** are not accessed
+  ** ** ** ** ** ++ ++ ++ ++   fields with ++ are used internally by the algorithm, fields
+  ** ** ** ** ++ ++ ++ ++ ++   with ** are not accessed
+  ** ** ** ++ ++ ++ ++ ++ ++
   ** ** 13 24 35 46 57 68 79   upper diagonal 2
   ** 12 23 34 45 56 67 78 89   upper diagonal 1
   11 22 33 44 55 66 77 88 99   main diagonal

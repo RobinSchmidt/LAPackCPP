@@ -54,8 +54,7 @@ public:
     A[i] = value;
   }
 
-  /** Accesses matrix elements via regular dense-matrix row- and column indices. 
-  todo: raise an error, if the index pair is outside the band of nonzero values */
+  /** Sets matrix elements via regular dense-matrix row- and column indices. */
   void setElement(int rowIndex, int columnIndex, const T& value)
   {
     int i = rowColToArrayIndex(rowIndex, columnIndex);
@@ -102,7 +101,7 @@ public:
   /** After the matrix has been set up via a call to setSystemSize and a bunch of calls to 
   setDiagonalElement, a call to solve will actually solve the system for a given number of right 
   hand sides and produce an equal number of solution vectors. */
-  void solve(int numRightHandSides, T* rightHandSides, T* solutions);
+  void solve(T* rightHandSides, T* solutions, int numRightHandSides);
   // todo: try to make rightHandSides const - figure out, if it's allowed that rightHandSides may
   // point to the same array as solutions
 
