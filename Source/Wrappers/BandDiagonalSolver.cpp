@@ -82,7 +82,11 @@ void rsBandDiagonalSolver<T>::allocateBuffers()
 template<class T>
 void rsBandDiagonalSolver<T>::prepareForGbsv(T* B, T* X)
 {
-
-
-  int dummy = 0;
+  for(int i = 0; i < N*nrhs; i++)        // copy B into X for being replaced by gbsv
+    X[i] = B[i];
+  int nra  =   kl+ku+1;                  // number of rows in A
+  int nraf = 2*kl+ku+1;                  // number of rows in factored version of A
+  for(int c = 0; c < N; c++)             // loop over columns
+    for(int r = 0; r < nra; r++)         // loop over rows
+      AF[c*nraf + kl+r] = A[c*nra + r];
 }
