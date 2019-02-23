@@ -28,9 +28,6 @@
     <Filter Include="Source Files\Wrappers">
       <UniqueIdentifier>{22ff89de-c0b0-4138-b589-585b721fabfd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\LaPackCPP\LibF2C">
-      <UniqueIdentifier>{13f2fd1c-a776-43ad-9b4d-fd6eddc3b29d}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LaPackTest1.cpp">
@@ -129,30 +126,6 @@
     <ClCompile Include="..\..\Source\Wrappers\BandDiagonalSolver.cpp">
       <Filter>Source Files\Wrappers</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\LaPackCPP\LibF2C\d_lg10.c">
-      <Filter>Source Files\LaPackCPP\LibF2C</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\LaPackCPP\LibF2C\d_sign.c">
-      <Filter>Source Files\LaPackCPP\LibF2C</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\LaPackCPP\LibF2C\i_dnnt.c">
-      <Filter>Source Files\LaPackCPP\LibF2C</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\LaPackCPP\LibF2C\i_len.c">
-      <Filter>Source Files\LaPackCPP\LibF2C</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\LaPackCPP\LibF2C\i_nint.c">
-      <Filter>Source Files\LaPackCPP\LibF2C</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\LaPackCPP\LibF2C\pow_di.c">
-      <Filter>Source Files\LaPackCPP\LibF2C</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\LaPackCPP\LibF2C\s_cmp.c">
-      <Filter>Source Files\LaPackCPP\LibF2C</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\LaPackCPP\LibF2C\s_copy.c">
-      <Filter>Source Files\LaPackCPP\LibF2C</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\LaPackCPP\LibF2C.cpp">
       <Filter>Source Files\LaPackCPP</Filter>
     </ClCompile>
@@ -172,9 +145,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\Wrappers\BandDiagonalSolver.hpp">
       <Filter>Source Files\Wrappers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\LaPackCPP\LibF2C\f2c.h">
-      <Filter>Source Files\LaPackCPP\LibF2C</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\LaPackCPP\LibF2C.hpp">
       <Filter>Source Files\LaPackCPP</Filter>

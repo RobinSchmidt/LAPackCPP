@@ -2,12 +2,13 @@
 #include "Blas.hpp"
 #include "XBlas.hpp"
 #include "LaPack.hpp"
-#include <cmath>       // maybe move elsewhere
+//#include <cmath>       // maybe move elsewhere
 #include <limits>      // uses in lamch to inquire numeric parameters
 #include <algorithm>   // for min/max
 
 
 using namespace BlasCPP;
+using namespace XBlasCPP;
 
 namespace LaPackCPP {
 

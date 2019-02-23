@@ -4,6 +4,7 @@
 #include <stdarg.h>
 #include <stdlib.h>
 
+namespace XBlasCPP {
 
 void blas_dgbmv_x(enum blas_order_type order, enum blas_trans_type trans,
   int m, int n, int kl, int ku, double alpha,
@@ -34,7 +35,7 @@ void blas_dgbmv_x(enum blas_order_type order, enum blas_trans_type trans,
 
   static const char routine_name[] = "BLAS_dgbmv_x";
 
-  switch (prec) {
+  switch(prec) {
   case blas_prec_single:
   case blas_prec_double:
   case blas_prec_indigenous:
@@ -55,52 +56,55 @@ void blas_dgbmv_x(enum blas_order_type order, enum blas_trans_type trans,
     double x_elem;
     double y_elem;
 
-    if (order != blas_colmajor && order != blas_rowmajor)
+    if(order != blas_colmajor && order != blas_rowmajor)
       BLAS_error(routine_name, -1, order, NULL);
-    if (trans != blas_no_trans &&
+    if(trans != blas_no_trans &&
       trans != blas_trans && trans != blas_conj_trans) {
       BLAS_error(routine_name, -2, trans, NULL);
     }
-    if (m < 0)
+    if(m < 0)
       BLAS_error(routine_name, -3, m, NULL);
-    if (n < 0)
+    if(n < 0)
       BLAS_error(routine_name, -4, n, NULL);
-    if (kl < 0 || kl >= m)
+    if(kl < 0 || kl >= m)
       BLAS_error(routine_name, -5, kl, NULL);
-    if (ku < 0 || ku >= n)
+    if(ku < 0 || ku >= n)
       BLAS_error(routine_name, -6, ku, NULL);
-    if (lda < kl + ku + 1)
+    if(lda < kl + ku + 1)
       BLAS_error(routine_name, -9, lda, NULL);
-    if (incx == 0)
+    if(incx == 0)
       BLAS_error(routine_name, -11, incx, NULL);
-    if (incy == 0)
+    if(incy == 0)
       BLAS_error(routine_name, -14, incy, NULL);
 
-    if ((m == 0) || (n == 0) || (((alpha_i == 0.0) && (beta_i == 1.0))))
+    if((m == 0) || (n == 0) || (((alpha_i == 0.0) && (beta_i == 1.0))))
       return;
 
-    if (trans == blas_no_trans) {
+    if(trans == blas_no_trans) {
       lenx = n;
       leny = m;
-    } else {			/* change back */
+    }
+    else {			/* change back */
       lenx = m;
       leny = n;
     }
 
-    if (incx < 0) {
+    if(incx < 0) {
       kx = -(lenx - 1) * incx;
-    } else {
+    }
+    else {
       kx = 0;
     }
 
-    if (incy < 0) {
+    if(incy < 0) {
       ky = -(leny - 1) * incy;
-    } else {
+    }
+    else {
       ky = 0;
     }
 
     /* if alpha = 0, return y = y*beta */
-    if ((order == blas_colmajor) && (trans == blas_no_trans)) {
+    if((order == blas_colmajor) && (trans == blas_no_trans)) {
       astart = ku;
       incai1 = 1;
       incai2 = lda;
@@ -108,7 +112,8 @@ void blas_dgbmv_x(enum blas_order_type order, enum blas_trans_type trans,
       lbound = kl;
       rbound = n - ku - 1;
       ra = ku;
-    } else if ((order == blas_colmajor) && (trans != blas_no_trans)) {
+    }
+    else if((order == blas_colmajor) && (trans != blas_no_trans)) {
       astart = ku;
       incai1 = lda - 1;
       incai2 = lda;
@@ -116,7 +121,8 @@ void blas_dgbmv_x(enum blas_order_type order, enum blas_trans_type trans,
       lbound = ku;
       rbound = m - kl - 1;
       ra = kl;
-    } else if ((order == blas_rowmajor) && (trans == blas_no_trans)) {
+    }
+    else if((order == blas_rowmajor) && (trans == blas_no_trans)) {
       astart = kl;
       incai1 = lda - 1;
       incai2 = lda;
@@ -124,7 +130,8 @@ void blas_dgbmv_x(enum blas_order_type order, enum blas_trans_type trans,
       lbound = kl;
       rbound = n - ku - 1;
       ra = ku;
-    } else {			/* rowmajor and blas_trans */
+    }
+    else {			/* rowmajor and blas_trans */
       astart = kl;
       incai1 = 1;
       incai2 = lda;
@@ -137,12 +144,12 @@ void blas_dgbmv_x(enum blas_order_type order, enum blas_trans_type trans,
     la = 0;
     ai = astart;
     iy = ky;
-    for (i = 0; i < leny; i++) {
+    for(i = 0; i < leny; i++) {
       sum = 0.0;
       aij = ai;
       jx = kx;
 
-      for (j = ra - la; j >= 0; j--) {
+      for(j = ra - la; j >= 0; j--) {
         x_elem = x_i[jx];
         a_elem = a_i[aij];
         prod = x_elem * a_elem;
@@ -158,14 +165,15 @@ void blas_dgbmv_x(enum blas_order_type order, enum blas_trans_type trans,
       result = tmp1 + tmp2;
       y_i[iy] = result;
       iy += incy;
-      if (i >= lbound) {
+      if(i >= lbound) {
         kx += incx;
         ai += incai2;
         la++;
-      } else {
+      }
+      else {
         ai += incai1;
       }
-      if (i < rbound) {
+      if(i < rbound) {
         ra++;
       }
     }
@@ -192,54 +200,57 @@ void blas_dgbmv_x(enum blas_order_type order, enum blas_trans_type trans,
     double y_elem;
     FPU_FIX_DECL;
 
-    if (order != blas_colmajor && order != blas_rowmajor)
+    if(order != blas_colmajor && order != blas_rowmajor)
       BLAS_error(routine_name, -1, order, NULL);
-    if (trans != blas_no_trans &&
+    if(trans != blas_no_trans &&
       trans != blas_trans && trans != blas_conj_trans) {
       BLAS_error(routine_name, -2, trans, NULL);
     }
-    if (m < 0)
+    if(m < 0)
       BLAS_error(routine_name, -3, m, NULL);
-    if (n < 0)
+    if(n < 0)
       BLAS_error(routine_name, -4, n, NULL);
-    if (kl < 0 || kl >= m)
+    if(kl < 0 || kl >= m)
       BLAS_error(routine_name, -5, kl, NULL);
-    if (ku < 0 || ku >= n)
+    if(ku < 0 || ku >= n)
       BLAS_error(routine_name, -6, ku, NULL);
-    if (lda < kl + ku + 1)
+    if(lda < kl + ku + 1)
       BLAS_error(routine_name, -9, lda, NULL);
-    if (incx == 0)
+    if(incx == 0)
       BLAS_error(routine_name, -11, incx, NULL);
-    if (incy == 0)
+    if(incy == 0)
       BLAS_error(routine_name, -14, incy, NULL);
 
-    if ((m == 0) || (n == 0) || (((alpha_i == 0.0) && (beta_i == 1.0))))
+    if((m == 0) || (n == 0) || (((alpha_i == 0.0) && (beta_i == 1.0))))
       return;
 
-    if (trans == blas_no_trans) {
+    if(trans == blas_no_trans) {
       lenx = n;
       leny = m;
-    } else {			/* change back */
+    }
+    else {			/* change back */
       lenx = m;
       leny = n;
     }
 
-    if (incx < 0) {
+    if(incx < 0) {
       kx = -(lenx - 1) * incx;
-    } else {
+    }
+    else {
       kx = 0;
     }
 
-    if (incy < 0) {
+    if(incy < 0) {
       ky = -(leny - 1) * incy;
-    } else {
+    }
+    else {
       ky = 0;
     }
 
     FPU_FIX_START;
 
     /* if alpha = 0, return y = y*beta */
-    if ((order == blas_colmajor) && (trans == blas_no_trans)) {
+    if((order == blas_colmajor) && (trans == blas_no_trans)) {
       astart = ku;
       incai1 = 1;
       incai2 = lda;
@@ -247,7 +258,8 @@ void blas_dgbmv_x(enum blas_order_type order, enum blas_trans_type trans,
       lbound = kl;
       rbound = n - ku - 1;
       ra = ku;
-    } else if ((order == blas_colmajor) && (trans != blas_no_trans)) {
+    }
+    else if((order == blas_colmajor) && (trans != blas_no_trans)) {
       astart = ku;
       incai1 = lda - 1;
       incai2 = lda;
@@ -255,7 +267,8 @@ void blas_dgbmv_x(enum blas_order_type order, enum blas_trans_type trans,
       lbound = ku;
       rbound = m - kl - 1;
       ra = kl;
-    } else if ((order == blas_rowmajor) && (trans == blas_no_trans)) {
+    }
+    else if((order == blas_rowmajor) && (trans == blas_no_trans)) {
       astart = kl;
       incai1 = lda - 1;
       incai2 = lda;
@@ -263,7 +276,8 @@ void blas_dgbmv_x(enum blas_order_type order, enum blas_trans_type trans,
       lbound = kl;
       rbound = n - ku - 1;
       ra = ku;
-    } else {			/* rowmajor and blas_trans */
+    }
+    else {			/* rowmajor and blas_trans */
       astart = kl;
       incai1 = 1;
       incai2 = lda;
@@ -276,12 +290,12 @@ void blas_dgbmv_x(enum blas_order_type order, enum blas_trans_type trans,
     la = 0;
     ai = astart;
     iy = ky;
-    for (i = 0; i < leny; i++) {
+    for(i = 0; i < leny; i++) {
       head_sum = tail_sum = 0.0;
       aij = ai;
       jx = kx;
 
-      for (j = ra - la; j >= 0; j--) {
+      for(j = ra - la; j >= 0; j--) {
         x_elem = x_i[jx];
         a_elem = a_i[aij];
         {
@@ -401,14 +415,15 @@ void blas_dgbmv_x(enum blas_order_type order, enum blas_trans_type trans,
       }
       y_i[iy] = result;
       iy += incy;
-      if (i >= lbound) {
+      if(i >= lbound) {
         kx += incx;
         ai += incai2;
         la++;
-      } else {
+      }
+      else {
         ai += incai1;
       }
-      if (i < rbound) {
+      if(i < rbound) {
         ra++;
       }
     }
@@ -421,13 +436,13 @@ void blas_dgbmv_x(enum blas_order_type order, enum blas_trans_type trans,
 
 //-------------------------------------------------------------------------------------------------
 
-void blas_dgbmv2_x(enum blas_order_type order, enum blas_trans_type trans, int m, int n, int kl, 
-  int ku, double alpha, const double *a, int lda, const double *head_x, const double *tail_x, 
+void blas_dgbmv2_x(enum blas_order_type order, enum blas_trans_type trans, int m, int n, int kl,
+  int ku, double alpha, const double *a, int lda, const double *head_x, const double *tail_x,
   int incx, double beta, double *y, int incy, enum blas_prec_type prec)
 {
   static const char routine_name[] = "BLAS_dgbmv2_x";
 
-  switch (prec) {
+  switch(prec) {
   case blas_prec_single:
   case blas_prec_double:
   case blas_prec_indigenous:
@@ -453,36 +468,37 @@ void blas_dgbmv2_x(enum blas_order_type order, enum blas_trans_type trans, int m
     double y_elem;
 
 
-    if (order != blas_colmajor && order != blas_rowmajor)
+    if(order != blas_colmajor && order != blas_rowmajor)
       BLAS_error(routine_name, -1, order, NULL);
-    if (trans != blas_no_trans &&
+    if(trans != blas_no_trans &&
       trans != blas_trans && trans != blas_conj_trans) {
       BLAS_error(routine_name, -2, trans, NULL);
     }
-    if (m < 0)
+    if(m < 0)
       BLAS_error(routine_name, -3, m, NULL);
-    if (n < 0)
+    if(n < 0)
       BLAS_error(routine_name, -4, n, NULL);
-    if (kl < 0 || kl >= m)
+    if(kl < 0 || kl >= m)
       BLAS_error(routine_name, -5, kl, NULL);
-    if (ku < 0 || ku >= n)
+    if(ku < 0 || ku >= n)
       BLAS_error(routine_name, -6, ku, NULL);
-    if (lda < kl + ku + 1)
+    if(lda < kl + ku + 1)
       BLAS_error(routine_name, -9, lda, NULL);
-    if (incx == 0)
+    if(incx == 0)
       BLAS_error(routine_name, -12, incx, NULL);
-    if (incy == 0)
+    if(incy == 0)
       BLAS_error(routine_name, -15, incy, NULL);
 
-    if (m == 0 || n == 0)
+    if(m == 0 || n == 0)
       return;
-    if ((alpha_i == 0.0) && (beta_i == 1.0))
+    if((alpha_i == 0.0) && (beta_i == 1.0))
       return;
 
-    if (trans == blas_no_trans) {
+    if(trans == blas_no_trans) {
       lenx = n;
       leny = m;
-    } else {
+    }
+    else {
       lenx = m;
       leny = n;
     }
@@ -493,7 +509,7 @@ void blas_dgbmv2_x(enum blas_order_type order, enum blas_trans_type trans, int m
 
 
     /* if alpha = 0, return y = y*beta */
-    if ((order == blas_colmajor) && (trans == blas_no_trans)) {
+    if((order == blas_colmajor) && (trans == blas_no_trans)) {
       astart = ku;
       incai1 = 1;
       incai2 = lda;
@@ -501,7 +517,8 @@ void blas_dgbmv2_x(enum blas_order_type order, enum blas_trans_type trans, int m
       lbound = kl;
       rbound = n - ku - 1;
       ra = ku;
-    } else if ((order == blas_colmajor) && (trans != blas_no_trans)) {
+    }
+    else if((order == blas_colmajor) && (trans != blas_no_trans)) {
       astart = ku;
       incai1 = lda - 1;
       incai2 = lda;
@@ -509,7 +526,8 @@ void blas_dgbmv2_x(enum blas_order_type order, enum blas_trans_type trans, int m
       lbound = ku;
       rbound = m - kl - 1;
       ra = kl;
-    } else if ((order == blas_rowmajor) && (trans == blas_no_trans)) {
+    }
+    else if((order == blas_rowmajor) && (trans == blas_no_trans)) {
       astart = kl;
       incai1 = lda - 1;
       incai2 = lda;
@@ -517,7 +535,8 @@ void blas_dgbmv2_x(enum blas_order_type order, enum blas_trans_type trans, int m
       lbound = kl;
       rbound = n - ku - 1;
       ra = ku;
-    } else {			/* rowmajor and blas_trans */
+    }
+    else {			/* rowmajor and blas_trans */
       astart = kl;
       incai1 = 1;
       incai2 = lda;
@@ -538,13 +557,13 @@ void blas_dgbmv2_x(enum blas_order_type order, enum blas_trans_type trans, int m
     la = 0;
     ai = astart;
     iy = iy0;
-    for (i = 0; i < leny; i++) {
+    for(i = 0; i < leny; i++) {
       sum1 = 0.0;
       sum2 = 0.0;
       aij = ai;
       jx = ix0;
 
-      for (j = ra - la; j >= 0; j--) {
+      for(j = ra - la; j >= 0; j--) {
         x_elem = head_x_i[jx];
         a_elem = a_i[aij];
         prod = x_elem * a_elem;
@@ -566,14 +585,15 @@ void blas_dgbmv2_x(enum blas_order_type order, enum blas_trans_type trans, int m
       y_i[iy] = result;
 
       iy += incy;
-      if (i >= lbound) {
+      if(i >= lbound) {
         ix0 += incx;
         ai += incai2;
         la++;
-      } else {
+      }
+      else {
         ai += incai1;
       }
-      if (i < rbound) {
+      if(i < rbound) {
         ra++;
       }
     }
@@ -604,36 +624,37 @@ void blas_dgbmv2_x(enum blas_order_type order, enum blas_trans_type trans, int m
     double y_elem;
     FPU_FIX_DECL;
 
-    if (order != blas_colmajor && order != blas_rowmajor)
+    if(order != blas_colmajor && order != blas_rowmajor)
       BLAS_error(routine_name, -1, order, NULL);
-    if (trans != blas_no_trans &&
+    if(trans != blas_no_trans &&
       trans != blas_trans && trans != blas_conj_trans) {
       BLAS_error(routine_name, -2, trans, NULL);
     }
-    if (m < 0)
+    if(m < 0)
       BLAS_error(routine_name, -3, m, NULL);
-    if (n < 0)
+    if(n < 0)
       BLAS_error(routine_name, -4, n, NULL);
-    if (kl < 0 || kl >= m)
+    if(kl < 0 || kl >= m)
       BLAS_error(routine_name, -5, kl, NULL);
-    if (ku < 0 || ku >= n)
+    if(ku < 0 || ku >= n)
       BLAS_error(routine_name, -6, ku, NULL);
-    if (lda < kl + ku + 1)
+    if(lda < kl + ku + 1)
       BLAS_error(routine_name, -9, lda, NULL);
-    if (incx == 0)
+    if(incx == 0)
       BLAS_error(routine_name, -12, incx, NULL);
-    if (incy == 0)
+    if(incy == 0)
       BLAS_error(routine_name, -15, incy, NULL);
 
-    if (m == 0 || n == 0)
+    if(m == 0 || n == 0)
       return;
-    if ((alpha_i == 0.0) && (beta_i == 1.0))
+    if((alpha_i == 0.0) && (beta_i == 1.0))
       return;
 
-    if (trans == blas_no_trans) {
+    if(trans == blas_no_trans) {
       lenx = n;
       leny = m;
-    } else {
+    }
+    else {
       lenx = m;
       leny = n;
     }
@@ -644,7 +665,7 @@ void blas_dgbmv2_x(enum blas_order_type order, enum blas_trans_type trans, int m
     FPU_FIX_START;
 
     /* if alpha = 0, return y = y*beta */
-    if ((order == blas_colmajor) && (trans == blas_no_trans)) {
+    if((order == blas_colmajor) && (trans == blas_no_trans)) {
       astart = ku;
       incai1 = 1;
       incai2 = lda;
@@ -652,7 +673,8 @@ void blas_dgbmv2_x(enum blas_order_type order, enum blas_trans_type trans, int m
       lbound = kl;
       rbound = n - ku - 1;
       ra = ku;
-    } else if ((order == blas_colmajor) && (trans != blas_no_trans)) {
+    }
+    else if((order == blas_colmajor) && (trans != blas_no_trans)) {
       astart = ku;
       incai1 = lda - 1;
       incai2 = lda;
@@ -660,7 +682,8 @@ void blas_dgbmv2_x(enum blas_order_type order, enum blas_trans_type trans, int m
       lbound = ku;
       rbound = m - kl - 1;
       ra = kl;
-    } else if ((order == blas_rowmajor) && (trans == blas_no_trans)) {
+    }
+    else if((order == blas_rowmajor) && (trans == blas_no_trans)) {
       astart = kl;
       incai1 = lda - 1;
       incai2 = lda;
@@ -668,7 +691,8 @@ void blas_dgbmv2_x(enum blas_order_type order, enum blas_trans_type trans, int m
       lbound = kl;
       rbound = n - ku - 1;
       ra = ku;
-    } else {			/* rowmajor and blas_trans */
+    }
+    else {			/* rowmajor and blas_trans */
       astart = kl;
       incai1 = 1;
       incai2 = lda;
@@ -689,13 +713,13 @@ void blas_dgbmv2_x(enum blas_order_type order, enum blas_trans_type trans, int m
     la = 0;
     ai = astart;
     iy = iy0;
-    for (i = 0; i < leny; i++) {
+    for(i = 0; i < leny; i++) {
       head_sum1 = tail_sum1 = 0.0;
       head_sum2 = tail_sum2 = 0.0;
       aij = ai;
       jx = ix0;
 
-      for (j = ra - la; j >= 0; j--) {
+      for(j = ra - la; j >= 0; j--) {
         x_elem = head_x_i[jx];
         a_elem = a_i[aij];
         {
@@ -911,14 +935,15 @@ void blas_dgbmv2_x(enum blas_order_type order, enum blas_trans_type trans, int m
       y_i[iy] = result;
 
       iy += incy;
-      if (i >= lbound) {
+      if(i >= lbound) {
         ix0 += incx;
         ai += incai2;
         la++;
-      } else {
+      }
+      else {
         ai += incai1;
       }
-      if (i < rbound) {
+      if(i < rbound) {
         ra++;
       }
     }
@@ -938,9 +963,9 @@ void BLAS_error(const char *rname, int iflag, int ival, char *form, ...)
   va_list argptr;
   va_start(argptr, form);
   fprintf(stderr, "Error #%d from routine %s:\n", iflag, rname);
-  if (form)
+  if(form)
     vfprintf(stderr, form, argptr);
-  else if (iflag < 0)
+  else if(iflag < 0)
     fprintf(stderr,
       "  Parameter number %d to routine %s had the illegal value %d\n",
       -iflag, rname, ival);
@@ -957,4 +982,7 @@ void BLAS_error(const char *rname, int iflag, int ival, char *form, ...)
   xerbla_array(rname, &ln, &argno);
 }
 #endif
+}
+
+
 }
