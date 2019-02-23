@@ -1,10 +1,7 @@
-//#include <cmath>
-//#include "LibF2C.hpp"
-
-
-#define log10e 0.43429448190325182765
 
 namespace LaPackCPP {
+
+static const double log10e = 0.43429448190325182765;
 
 // todo: templatize all these functions
 

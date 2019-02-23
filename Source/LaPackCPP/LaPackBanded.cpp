@@ -1,15 +1,4 @@
 
-//#include "Blas.hpp"
-//#include "XBlas.hpp"
-#include "LaPackBanded.hpp"
-//#include <cmath>       // maybe move elsewhere
-//#include <limits>      // uses in lamch to inquire numeric parameters
-//#include <algorithm>   // for min/max
-
-
-//using namespace BlasCPP;
-//using namespace XBlasCPP;
-
 namespace LaPackCPP {
 
 // some fiddling to make it compile and link - those functions are defined outside the LaPackCPP

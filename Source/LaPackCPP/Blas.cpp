@@ -1,6 +1,3 @@
-//#include <cmath> 
-//#include "Blas.hpp"
-
 
 namespace LaPackCPP {
 

@@ -6,13 +6,6 @@
 
 #include "../../Source/Tests/TestUtils.cpp"
 
-// todo: make a unity build and include file for all converted c code:
-//#include "../../Source/GeneratedByF2C/daxpy.c" // maybe get rid...
-
-//#include "../../Source/LaPackCPP/Blas.hpp"
-//using namespace BlasCPP;
-
-//#include "../../Source/LaPackCPP/LaPackBanded.hpp"
 #include "../../Source/LaPackCPP/LaPack.hpp"
 using namespace LaPackCPP;
 
