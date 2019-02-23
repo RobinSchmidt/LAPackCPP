@@ -1,10 +1,6 @@
 #pragma once
 
-//#include "LibF2C/f2c.h"
-
 #include "LibF2C.hpp"
-//using namespace LibF2C;  // try to get rid
-
 
 namespace LaPackCPP {
 

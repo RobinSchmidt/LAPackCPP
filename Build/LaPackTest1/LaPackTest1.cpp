@@ -12,7 +12,7 @@
 #include "../../Source/LaPackCPP/Blas.hpp"
 //using namespace BlasCPP;
 
-#include "../../Source/LaPackCPP/LaPack.hpp"
+#include "../../Source/LaPackCPP/LaPackBanded.hpp"
 using namespace LaPackCPP;
 
 #include "../../Source/Wrappers/BandDiagonalSolver.hpp"

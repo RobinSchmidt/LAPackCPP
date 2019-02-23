@@ -1,7 +1,7 @@
 
 #include "Blas.hpp"
 #include "XBlas.hpp"
-#include "LaPack.hpp"
+#include "LaPackBanded.hpp"
 //#include <cmath>       // maybe move elsewhere
 #include <limits>      // uses in lamch to inquire numeric parameters
 #include <algorithm>   // for min/max

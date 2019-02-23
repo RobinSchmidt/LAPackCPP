@@ -2,7 +2,6 @@
 
 namespace LaPackCPP {
 
-
 // Contains code to set up the FPU control registers on x86 systems. The current double-double code
 // requires that all arithmetic is done in double precision (as opposed to double-extended).
 
