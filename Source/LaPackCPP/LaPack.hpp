@@ -1,7 +1,10 @@
 #pragma once
 
 // maybe we will later need to include Blas.hpp
-#include "LibF2C/f2c.h"
+//#include "LibF2C/f2c.h"
+
+#include "LibF2C.hpp"
+using namespace LibF2C;  // get rid of that in the header file
 
 namespace LaPackCPP {
 

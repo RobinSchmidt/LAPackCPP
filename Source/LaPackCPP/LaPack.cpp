@@ -35,20 +35,21 @@ double log(doublereal x)
 
 integer i_len(char *s, ftnlen n)
 {
-  return ::i_len(s, n);
+  //return ::i_len(s, n);
+  return LibF2C::i_len(s, n);
 }
 integer s_cmp(char *a0, char *b0, ftnlen la, ftnlen lb)
 {
-  return ::s_cmp(a0, b0, la, lb);
+  return LibF2C::s_cmp(a0, b0, la, lb);
 }
 int s_copy(register char *a, register char *b, ftnlen la, ftnlen lb)
 {
-  ::s_copy(a, b, la, lb);
+  LibF2C::s_copy(a, b, la, lb);
   return 0;
 }
 integer i_nint(f2c_real *x)
 {
-  return ::i_nint(x);
+  return LibF2C::i_nint(x);
 }
 
 blas_trans_type toTransType(integer* value)
