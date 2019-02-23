@@ -327,7 +327,7 @@ bool gbsvUnitTest()
 
 
   // maybe remove the code above calling gbsv/x/x - it's now redundant with the calls to the solver
-  // class
+  // class - maybe use more right-hand-sides
 
   rsBandDiagonalSolver<double> solver(N, kl, ku);
   //solver.setSystemSize(N, kl, ku);
