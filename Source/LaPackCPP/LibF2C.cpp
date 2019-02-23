@@ -4,7 +4,7 @@
 
 #define log10e 0.43429448190325182765
 
-namespace LibF2C {
+namespace LaPackCPP {
 
 // todo: templatize all these functions
 

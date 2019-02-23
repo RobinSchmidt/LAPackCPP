@@ -2,7 +2,7 @@
 #include "Blas.hpp"
 
 
-namespace BlasCPP {
+namespace LaPackCPP {
 
 //=================================================================================================
 // BLAS level 1 routines

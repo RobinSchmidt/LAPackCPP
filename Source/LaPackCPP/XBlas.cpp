@@ -4,7 +4,7 @@
 #include <stdarg.h>
 #include <stdlib.h>
 
-namespace XBlasCPP {
+namespace LaPackCPP {
 
 void blas_dgbmv_x(enum blas_order_type order, enum blas_trans_type trans,
   int m, int n, int kl, int ku, double alpha,

@@ -10,7 +10,7 @@
 //#include "../../Source/GeneratedByF2C/daxpy.c" // maybe get rid...
 
 #include "../../Source/LaPackCPP/Blas.hpp"
-using namespace BlasCPP;
+//using namespace BlasCPP;
 
 #include "../../Source/LaPackCPP/LaPack.hpp"
 using namespace LaPackCPP;

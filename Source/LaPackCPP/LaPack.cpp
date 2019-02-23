@@ -7,8 +7,8 @@
 #include <algorithm>   // for min/max
 
 
-using namespace BlasCPP;
-using namespace XBlasCPP;
+//using namespace BlasCPP;
+//using namespace XBlasCPP;
 
 namespace LaPackCPP {
 
@@ -33,7 +33,7 @@ double log(doublereal x)
   return ::log((double)x); 
 }
 
-
+/*
 integer i_len(char *s, ftnlen n)
 {
   //return ::i_len(s, n);
@@ -52,6 +52,8 @@ integer i_nint(f2c_real *x)
 {
   return LibF2C::i_nint(x);
 }
+*/
+
 
 blas_trans_type toTransType(integer* value)
 {
@@ -4027,8 +4029,8 @@ integer ilaenv(integer *ispec, char *name__, char *opts, integer *n1,
   integer ret_val;
 
   /* Builtin functions */
-  /* Subroutine */ int s_copy(char *, char *, ftnlen, ftnlen);
-  integer i_len(char *, ftnlen), s_cmp(char *, char *, ftnlen, ftnlen);
+  ///* Subroutine */ int s_copy(char *, char *, ftnlen, ftnlen);
+  //integer i_len(char *, ftnlen), s_cmp(char *, char *, ftnlen, ftnlen);
 
   /* Local variables */
   static logical twostage;
@@ -4694,10 +4696,10 @@ integer iparmq(integer *ispec, char *name__, char *opts, integer *n, integer
   f2c_real r__1;
 
   /* Builtin functions */
-  double log(doublereal);
-  integer i_nint(f2c_real *);
-  /* Subroutine */ int s_copy(char *, char *, ftnlen, ftnlen);
-  integer s_cmp(char *, char *, ftnlen, ftnlen);
+  //double log(doublereal);
+  //integer i_nint(f2c_real *);
+  ///* Subroutine */ int s_copy(char *, char *, ftnlen, ftnlen);
+  //integer s_cmp(char *, char *, ftnlen, ftnlen);
 
   /* Local variables */
   static integer i__, ic, nh, ns, iz;

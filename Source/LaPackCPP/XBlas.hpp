@@ -1,10 +1,6 @@
 #pragma once
 
-// try to get rid:
-//#include "XBlas/blas_extended.h"
-//#include "XBlas/blas_extended_private.h"
-
-namespace XBlasCPP {
+namespace LaPackCPP {
 
 
 // Contains code to set up the FPU control registers on x86 systems. The current double-double code

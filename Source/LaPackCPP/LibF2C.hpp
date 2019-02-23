@@ -1,6 +1,6 @@
 #pragma once
 
-namespace LibF2C {
+namespace LaPackCPP {
 
 typedef long int integer;
 //typedef unsigned long int uinteger; // added by Robin Schmidt (guesswork!!)

@@ -3,10 +3,10 @@
 //#include "LibF2C/f2c.h"
 
 #include "LibF2C.hpp"
-using namespace LibF2C;  // try to get rid
+//using namespace LibF2C;  // try to get rid
 
 
-namespace BlasCPP {
+namespace LaPackCPP {
 
 
 // How can we make sure, that client code can use a drop-in replacement for these (unoptimized)
