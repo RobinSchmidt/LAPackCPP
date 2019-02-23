@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../libf2c/f2c.h"
+#include "LibF2C/f2c.h"
 
 namespace BlasCPP {
 

@@ -22,14 +22,14 @@
     <Filter Include="Source Files\LaPackCPP">
       <UniqueIdentifier>{6fc650a3-f17c-4fee-b8b6-ce8b61de8a57}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\libf2c">
-      <UniqueIdentifier>{b19ea29b-904d-4ab3-9d80-8ab32a4b511f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\fromCLaPack">
       <UniqueIdentifier>{26db0fe8-777a-4ec1-a397-32d42ac7e0a2}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Wrappers">
       <UniqueIdentifier>{22ff89de-c0b0-4138-b589-585b721fabfd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\LaPackCPP\LibF2C">
+      <UniqueIdentifier>{13f2fd1c-a776-43ad-9b4d-fd6eddc3b29d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -123,35 +123,35 @@
     <ClCompile Include="..\..\Source\GeneratedByF2C\iparmq.c">
       <Filter>Source Files\GeneratedByF2C</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\libf2c\i_nint.c">
-      <Filter>Source Files\libf2c</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\libf2c\s_cmp.c">
-      <Filter>Source Files\libf2c</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\libf2c\s_copy.c">
-      <Filter>Source Files\libf2c</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\libf2c\i_len.c">
-      <Filter>Source Files\libf2c</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\libf2c\d_lg10.c">
-      <Filter>Source Files\libf2c</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\libf2c\i_dnnt.c">
-      <Filter>Source Files\libf2c</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\libf2c\d_sign.c">
-      <Filter>Source Files\libf2c</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\LaPackCPP\XBlas.cpp">
       <Filter>Source Files\LaPackCPP</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\libf2c\pow_di.c">
-      <Filter>Source Files\libf2c</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\Wrappers\BandDiagonalSolver.cpp">
       <Filter>Source Files\Wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\LaPackCPP\LibF2C\d_lg10.c">
+      <Filter>Source Files\LaPackCPP\LibF2C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\LaPackCPP\LibF2C\d_sign.c">
+      <Filter>Source Files\LaPackCPP\LibF2C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\LaPackCPP\LibF2C\i_dnnt.c">
+      <Filter>Source Files\LaPackCPP\LibF2C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\LaPackCPP\LibF2C\i_len.c">
+      <Filter>Source Files\LaPackCPP\LibF2C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\LaPackCPP\LibF2C\i_nint.c">
+      <Filter>Source Files\LaPackCPP\LibF2C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\LaPackCPP\LibF2C\pow_di.c">
+      <Filter>Source Files\LaPackCPP\LibF2C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\LaPackCPP\LibF2C\s_cmp.c">
+      <Filter>Source Files\LaPackCPP\LibF2C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\LaPackCPP\LibF2C\s_copy.c">
+      <Filter>Source Files\LaPackCPP\LibF2C</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -164,14 +164,14 @@
     <ClInclude Include="..\..\Source\LaPackCPP\LaPack.hpp">
       <Filter>Source Files\LaPackCPP</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\libf2c\f2c.h">
-      <Filter>Source Files\libf2c</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\LaPackCPP\XBlas.hpp">
       <Filter>Source Files\LaPackCPP</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Wrappers\BandDiagonalSolver.hpp">
       <Filter>Source Files\Wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\LaPackCPP\LibF2C\f2c.h">
+      <Filter>Source Files\LaPackCPP\LibF2C</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

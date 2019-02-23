@@ -248,15 +248,15 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\LaPackCPP\Blas.cpp" />
     <ClCompile Include="..\..\Source\LaPackCPP\LaPack.cpp" />
+    <ClCompile Include="..\..\Source\LaPackCPP\LibF2C\d_lg10.c" />
+    <ClCompile Include="..\..\Source\LaPackCPP\LibF2C\d_sign.c" />
+    <ClCompile Include="..\..\Source\LaPackCPP\LibF2C\i_dnnt.c" />
+    <ClCompile Include="..\..\Source\LaPackCPP\LibF2C\i_len.c" />
+    <ClCompile Include="..\..\Source\LaPackCPP\LibF2C\i_nint.c" />
+    <ClCompile Include="..\..\Source\LaPackCPP\LibF2C\pow_di.c" />
+    <ClCompile Include="..\..\Source\LaPackCPP\LibF2C\s_cmp.c" />
+    <ClCompile Include="..\..\Source\LaPackCPP\LibF2C\s_copy.c" />
     <ClCompile Include="..\..\Source\LaPackCPP\XBlas.cpp" />
-    <ClCompile Include="..\..\Source\libf2c\d_lg10.c" />
-    <ClCompile Include="..\..\Source\libf2c\d_sign.c" />
-    <ClCompile Include="..\..\Source\libf2c\i_dnnt.c" />
-    <ClCompile Include="..\..\Source\libf2c\i_len.c" />
-    <ClCompile Include="..\..\Source\libf2c\i_nint.c" />
-    <ClCompile Include="..\..\Source\libf2c\pow_di.c" />
-    <ClCompile Include="..\..\Source\libf2c\s_cmp.c" />
-    <ClCompile Include="..\..\Source\libf2c\s_copy.c" />
     <ClCompile Include="..\..\Source\Tests\TestUtils.cpp" />
     <ClCompile Include="..\..\Source\Wrappers\BandDiagonalSolver.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -268,8 +268,8 @@
     <ClInclude Include="..\..\Source\GeneratedByF2C\f2c.h" />
     <ClInclude Include="..\..\Source\LaPackCPP\Blas.hpp" />
     <ClInclude Include="..\..\Source\LaPackCPP\LaPack.hpp" />
+    <ClInclude Include="..\..\Source\LaPackCPP\LibF2C\f2c.h" />
     <ClInclude Include="..\..\Source\LaPackCPP\XBlas.hpp" />
-    <ClInclude Include="..\..\Source\libf2c\f2c.h" />
     <ClInclude Include="..\..\Source\Wrappers\BandDiagonalSolver.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
