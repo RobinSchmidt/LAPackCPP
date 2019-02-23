@@ -129,6 +129,9 @@
     <ClCompile Include="..\..\Source\LaPackCPP\LaPackBanded.cpp">
       <Filter>Source Files\LaPackCPP</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\LaPackCPP\LaPack.cpp">
+      <Filter>Source Files\LaPackCPP</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\GeneratedByF2C\f2c.h">
@@ -147,6 +150,9 @@
       <Filter>Source Files\LaPackCPP</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\LaPackCPP\LaPackBanded.hpp">
+      <Filter>Source Files\LaPackCPP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\LaPackCPP\LaPack.hpp">
       <Filter>Source Files\LaPackCPP</Filter>
     </ClInclude>
   </ItemGroup>

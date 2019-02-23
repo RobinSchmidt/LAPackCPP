@@ -247,6 +247,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\Source\LaPackCPP\Blas.cpp" />
+    <ClCompile Include="..\..\Source\LaPackCPP\LaPack.cpp" />
     <ClCompile Include="..\..\Source\LaPackCPP\LaPackBanded.cpp" />
     <ClCompile Include="..\..\Source\LaPackCPP\LibF2C.cpp" />
     <ClCompile Include="..\..\Source\LaPackCPP\XBlas.cpp" />
@@ -260,6 +261,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\Source\GeneratedByF2C\f2c.h" />
     <ClInclude Include="..\..\Source\LaPackCPP\Blas.hpp" />
+    <ClInclude Include="..\..\Source\LaPackCPP\LaPack.hpp" />
     <ClInclude Include="..\..\Source\LaPackCPP\LaPackBanded.hpp" />
     <ClInclude Include="..\..\Source\LaPackCPP\LibF2C.hpp" />
     <ClInclude Include="..\..\Source\LaPackCPP\XBlas.hpp" />
