@@ -23,14 +23,14 @@ typedef long ftnlen;
 #define max(a,b) ((a) >= (b) ? (a) : (b))
 
 
-extern double d_lg10(double *);
-extern double d_sign(double *, double *);
-extern integer i_dnnt(double *);
-extern integer i_len(char *, ftnlen);
-extern integer i_nint(float *);
-extern double pow_di(double *, integer *);
-extern integer s_cmp(char *, char *, ftnlen, ftnlen);
-extern void s_copy(char *, char *, ftnlen, ftnlen);
+template<class T> T d_lg10(T *);
+template<class T> T d_sign(T *, T *);
+template<class T> integer i_dnnt(T *);
+integer i_len(char *, ftnlen);
+template<class T> integer i_nint(T *);
+template<class T> T pow_di(T *, integer *);
+integer s_cmp(char *, char *, ftnlen, ftnlen);
+void s_copy(char *, char *, ftnlen, ftnlen);
 
 
 }

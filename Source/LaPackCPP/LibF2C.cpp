@@ -5,19 +5,22 @@ static const double log10e = 0.43429448190325182765;
 
 // todo: templatize all these functions
 
-double d_lg10(doublereal *x)
+template<class T>
+T d_lg10(T *x)
 {
   return( log10e * log(*x) );
 }
 
-double d_sign(doublereal *a, doublereal *b)
+template<class T>
+T d_sign(T *a, T *b)
 {
-  double x;
+  T x;
   x = (*a >= 0 ? *a : - *a);
   return( *b >= 0 ? x : -x);
 }
 
-integer i_dnnt(doublereal *x)
+template<class T>
+integer i_dnnt(T *x)
 {
   return (integer)(*x >= 0. ? floor(*x + .5) : -floor(.5 - *x));
 }
@@ -27,14 +30,17 @@ integer i_len(char *s, ftnlen n)
   return(n);
 }
 
-integer i_nint(f2c_real *x)
+template<class T>
+integer i_nint(T *x)
 {
   return (integer)(*x >= 0 ? floor(*x + .5) : -floor(.5 - *x));
 }
 
-double pow_di(doublereal *ap, integer *bp)
+
+template<class T>
+T pow_di(T *ap, integer *bp)
 {
-  double pow, x;
+  T pow, x;
   integer n;
   unsigned long u;
 
