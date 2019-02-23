@@ -153,6 +153,9 @@
     <ClCompile Include="..\..\Source\LaPackCPP\LibF2C\s_copy.c">
       <Filter>Source Files\LaPackCPP\LibF2C</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\LaPackCPP\LibF2C.cpp">
+      <Filter>Source Files\LaPackCPP</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\GeneratedByF2C\f2c.h">
@@ -172,6 +175,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\LaPackCPP\LibF2C\f2c.h">
       <Filter>Source Files\LaPackCPP\LibF2C</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\LaPackCPP\LibF2C.hpp">
+      <Filter>Source Files\LaPackCPP</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

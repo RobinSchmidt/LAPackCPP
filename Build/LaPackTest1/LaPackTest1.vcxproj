@@ -248,6 +248,7 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\LaPackCPP\Blas.cpp" />
     <ClCompile Include="..\..\Source\LaPackCPP\LaPack.cpp" />
+    <ClCompile Include="..\..\Source\LaPackCPP\LibF2C.cpp" />
     <ClCompile Include="..\..\Source\LaPackCPP\LibF2C\d_lg10.c" />
     <ClCompile Include="..\..\Source\LaPackCPP\LibF2C\d_sign.c" />
     <ClCompile Include="..\..\Source\LaPackCPP\LibF2C\i_dnnt.c" />
@@ -268,6 +269,7 @@
     <ClInclude Include="..\..\Source\GeneratedByF2C\f2c.h" />
     <ClInclude Include="..\..\Source\LaPackCPP\Blas.hpp" />
     <ClInclude Include="..\..\Source\LaPackCPP\LaPack.hpp" />
+    <ClInclude Include="..\..\Source\LaPackCPP\LibF2C.hpp" />
     <ClInclude Include="..\..\Source\LaPackCPP\LibF2C\f2c.h" />
     <ClInclude Include="..\..\Source\LaPackCPP\XBlas.hpp" />
     <ClInclude Include="..\..\Source\Wrappers\BandDiagonalSolver.hpp" />
