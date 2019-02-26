@@ -952,7 +952,7 @@ void blas_gbmv2_x(enum blas_order_type order, enum blas_trans_type trans, int m,
 }				/* end BLAS_dgbmv2_x */
 
 //-------------------------------------------------------------------------------------------------
-
+/*
 void BLAS_error(const char *rname, int iflag, int ival, char *form, ...)
 {
 #if !defined(CONFIG_USE_XERBLA)
@@ -980,6 +980,6 @@ void BLAS_error(const char *rname, int iflag, int ival, char *form, ...)
 }
 #endif
 }
-
+*/
 
 }

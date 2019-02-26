@@ -24,12 +24,12 @@ integer i_dnnt(T *x)
 {
   return (integer)(*x >= 0. ? floor(*x + .5) : -floor(.5 - *x));
 }
-
+/*
 integer i_len(char *s, ftnlen n)
 {
   return(n);
 }
-
+*/
 template<class T>
 integer i_nint(T *x)
 {
@@ -68,7 +68,7 @@ T pow_di(T *ap, integer *bp)
   return(pow);
 }
 
-
+/*
 integer s_cmp(char *a0, char *b0, ftnlen la, ftnlen lb)
 {
   register unsigned char *a, *aend, *b, *bend;
@@ -143,6 +143,7 @@ void s_copy(register char *a, register char *b, ftnlen la, ftnlen lb)
       *a++ = ' ';
   }
 }
+*/
 
 
 
