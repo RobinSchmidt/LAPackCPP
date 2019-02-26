@@ -1,10 +1,19 @@
+-templatize xblas functions
+-move instantiations  out of the LaPackBanded, etc. files
+
+maybe move functions that don't have a template parameter into an extra cpp
+file in order to be able to separate their code into a different compilation 
+unit. these functions are:
+LibF2C: i_len, s_cmp, s_copy
+blas: lsame, xerbla
+xblas: BLAS_error
+LapackBanded: chla_transtype, ieeeck, ilaenv, ilaprec, ilatrans, iparmq, lamch
 
 
-f2c functions that are needed: i_len, s_copy, s_cmp, i_nint
+
 
 Functions that have to be translated next:
  
-  blas_error
 
 Functions that have been translated:
 
