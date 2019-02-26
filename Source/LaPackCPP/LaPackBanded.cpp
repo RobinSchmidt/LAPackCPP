@@ -6670,6 +6670,7 @@ L10:
 
 
 
+/*
 
 //=================================================================================================
 // Template instantiations (todo: move to another file)
@@ -6723,7 +6724,7 @@ template int latbs(char *uplo, char *trans, char *diag, char *normin, integer *n
   ftnlen uplo_len, ftnlen trans_len, ftnlen diag_len, ftnlen normin_len);
   
 
-
+*/
 
 
 

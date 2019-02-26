@@ -4,7 +4,6 @@ namespace LaPackCPP {
 
 
 //=================================================================================================
-
 // Blas
 
 // explicit template instantiations - todo: move them into separate files, one file per
@@ -58,5 +57,55 @@ template int gemm(char *transa, char *transb, integer *m, integer *n, integer *k
 template int trsm(char *side, char *uplo, char *transa, char *diag, integer *m, integer *n,
   double *alpha, double *a, integer *lda, double *b, integer *ldb, ftnlen side_len,
   ftnlen uplo_len, ftnlen transa_len, ftnlen diag_len);
+
+
+//=================================================================================================
+// LaPack
+
+
+// Driver routines:
+
+template int gbsv(long int *n, long int *kl, long int *ku, long int *nrhs, double *ab, 
+  long int *ldab, long int *ipiv, double *b, long int *ldb, long int *info);
+
+template int gbsvx(char *fact, char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, 
+  doublereal *ab, integer *ldab, doublereal *afb, integer *ldafb, integer *ipiv, char *equed, 
+  doublereal *r__, doublereal *c__, doublereal *b, integer *ldb, doublereal *x, integer *ldx, 
+  doublereal *rcond, doublereal *ferr, doublereal *berr, doublereal *work, integer *iwork, 
+  integer *info, ftnlen fact_len, ftnlen trans_len, ftnlen equed_len);
+
+template int gbsvxx(char *fact, char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, 
+  doublereal *ab, integer *ldab, doublereal *afb, integer *ldafb, integer *ipiv, char *equed, 
+  doublereal *r__, doublereal *c__, doublereal *b, integer *ldb, doublereal *x, integer *ldx, 
+  doublereal *rcond, doublereal *rpvgrw, doublereal *berr, integer *n_err_bnds__, 
+  doublereal *err_bnds_norm__, doublereal *err_bnds_comp__, integer *nparams, doublereal *params, 
+  doublereal *work, integer *iwork, integer *info, ftnlen fact_len, ftnlen trans_len, 
+  ftnlen equed_len);
+
+
+// Computational routines:
+
+template int gbequb(integer *m, integer *n, integer *kl, integer *ku, double *ab, integer *ldab, 
+  double *r__, double *c__, double *rowcnd, double *colcnd, double *amax, integer *info);
+
+template int gbrfsx(char *trans, char *equed, integer *n, integer *kl, integer *ku, integer *nrhs, 
+  double *ab, integer *ldab, double *afb, integer *ldafb, integer *ipiv, double *r__, double *c__, 
+  double *b, integer *ldb, double *x, integer *ldx, double *rcond, double *berr, 
+  integer *n_err_bnds__, double *err_bnds_norm__, double *err_bnds_comp__, integer *nparams, 
+  double *params, double *work, integer *iwork, integer *info, ftnlen trans_len, ftnlen equed_len);
+
+template int gbtrf(integer *m, integer *n, integer *kl, integer *ku, double *ab, integer *ldab, 
+  integer *ipiv, integer *info);
+
+template int gbtrs(char *trans, integer *n, integer *kl, integer *ku, integer *nrhs, double *ab,
+  integer *ldab, integer *ipiv, double *b, integer *ldb, integer *info, ftnlen trans_len);
+
+
+// Auxiliary routines:
+
+template int latbs(char *uplo, char *trans, char *diag, char *normin, integer *n, integer *kd, 
+  double *ab, integer *ldab, double *x, double *scale, double *cnorm, integer *info, 
+  ftnlen uplo_len, ftnlen trans_len, ftnlen diag_len, ftnlen normin_len);
+
 
 }
