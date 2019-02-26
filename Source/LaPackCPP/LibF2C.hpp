@@ -19,7 +19,7 @@ typedef long ftnlen;        // replace with int
 //#define VOID void
 
 static const logical TRUE_ = 1;
-static const logical FALSE_ = 1;
+static const logical FALSE_ = 0;
 
 
 //// try to get rid of them:

@@ -158,7 +158,18 @@ bool gbsvUnitTest()
   // result with the banded one (gbmv)
 
 
+  static Int kl   = 3;         // number of lower diagonals
+  static Int ku   = 2;         // number of upper diagonals
+  static Int nrhs = 4;         // number of right hand sides
+  static Int ldab = 2*kl+ku+1; // leading dimension of ab >= 2*kl+ku+1 
+  static Int ldb  = N;         // leading dimension of b >= max(1,N). ...is N correct?
+                               // rename to arb - allocated rows for b
+  //long int ipiv[N];            // pivot indices
+  long int info = 666;         // 0 on exit, if successful
+  double _ = 0.0/sqrt(0.0);    // we init unused storage cells with NaN - why is it -NaN?
 
+
+  /*
   // the banded storage format suitable for gbsv looks in this case like below, where column-major 
   // indexing is assumed (as always in LAPACK):
 
@@ -171,21 +182,6 @@ bool gbsvUnitTest()
   // 21 32 43 54 65 76 87 98 **   lower diagonal 1
   // 31 42 53 64 75 86 97 ** **   lower diagonal 2
   // 41 52 63 74 85 96 ** ** **   lower diagonal 3
-
-  static Int kl   = 3;         // number of lower diagonals
-  static Int ku   = 2;         // number of upper diagonals
-  static Int nrhs = 4;         // number of right hand sides
-  static Int ldab = 2*kl+ku+1; // leading dimension of ab >= 2*kl+ku+1 
-  //static Int arab = 2*kl+ku+1; // allocated rows matrix ab
-  static Int ldb  = N;         // leading dimension of b >= max(1,N). ...is N correct?
-                               // rename to arb - allocated rows for b
-  long int ipiv[N];            // pivot indices
-  long int info = 666;         // 0 on exit, if successful
-  double _ = 0.0/sqrt(0.0);    // we init unused storage cells with NaN - why is it -NaN?
-  //double _ = 0.0;  // for test
-  //double _ = 1.0/sqrt(0.0); 
-  //double _ = 1.0; 
-  //double _ = -1000.0; 
 
   // matrix A in band storage for gbsv - the banded format is N times 2*kl+ku+1 which is 
   // 9 times 2*3+2+1 = 9 times 8 in this case - because LAPACK uses in general, column-major 
@@ -200,6 +196,7 @@ bool gbsvUnitTest()
      _, _, _,57,67,77,87,97, _,
      _, _, _,68,78,88,98, _, _,
      _, _, _,79,89,99, _, _, _ };  // 9th column
+  */
 
 
 
@@ -218,15 +215,6 @@ bool gbsvUnitTest()
   // let's do a vector-rhs first (instead of a matrix rhs):
   double x[ldb] = { 1,2,3,4,5,6,7,8,9 };
   double b[ldb] = { _,_,_,_,_,_,_,_,_ };  // the right hand side in A * x = b
-
-  // to obtain the target values for b:
-  //for(int i = 0; i < N; i++) {
-  //  b[i] = 0;
-  //  for(int j = 0; j < N; j++)
-  //    b[i] += refMat[j][i] * x[j];
-  //}
-  //// b is 74,230,505,931,1489,2179,3001,3055,2930
-
 
 
   // for the banded storage used by gbmv, we need to store the matrix in the format:
@@ -271,57 +259,9 @@ bool gbsvUnitTest()
   // storing the a matrix twice? ...maybe later...
 
   // We have computed b = A*x - now we try to retrieve x by solving the linear system for x via the
-  // gbsv routine:
-  double abTmp[ldab*N];         // we need a temporary array for the matrix bcs we still need it
-  copyArray(ldab*N, ab, abTmp);
-  double x2[N]; // that's where the solver should write the result into
-  long iOne = 1;
-  copy(&N_, b, &iOne, x2, &iOne); 
-  long nrhs1_ = 1, ldab_ = ldab, ldb_ = ldb; // first, we have just one rhs
-  gbsv(&N_, &kl_, &ku_, &nrhs1_, abTmp, &ldab_, ipiv, x2, &ldb_, &info);
-  double error = maxDistance(N, x, x2);
-  // ok, the result i correct but numerically rather imprecise (last 8 decimal digits are wrong) 
-  // error = 1.e-9 -> try gbsvx and gbsvxx
-
-  // ...now the same thing with the gbsvx routine (needs a couple of more parameters):
-  double x3[N]; //result
-  double b2[N];                  // tempoary rhs (is overwritten in the routine  - is this true for gbsvx?)
-  copy(&N_, b, &iOne, b2, &iOne);
-  copyArray(ldab*N, ab, abTmp);
-  //char fact = 'E';    // input matrix is not factored and shall be equilibrated, for no 
-  //                    // equilibration use 'N'
-  char fact = 'N';    // input matrix is not factored and shall be equilibrated, for no 
-                      // equilibration use 'N'
-  double afb[ldab*N];  // factored form of matrix ab ( check, if dimensions are correct)
-  char equed = '_';    // returns the form of equlibration that was done
-  double r__[N];       // row scale factors
-  double c__[N];       // column scale factors
-  double rcond;        // reciprocal condtion number
-  //double berr[nrhs];   // componentwise relative backward error
-  double ferr[1];      // componentwise relative forward error
-  double berr[1];      // componentwise relative backward error
-  double work[4*N];    // workspace (4*N instead of 3*N for use in gbsvxx later)
-  long iwork[N];       // integer workspace
-  gbsvx(&fact, &trans, &N_, &kl_, &ku_, &nrhs1_, a, &lda_, afb, &ldab_, ipiv, &equed, r__, c__,
-    b2, &ldb_, x3, &ldb_, &rcond, ferr, berr, work, iwork, &info, 0, 0, 0);
-
-  // and now the gbsvxx routine (with still more parameters):
-  double x4[N];       // result
-  copy(&N_, b, &iOne, b2, &iOne);
-  copyArray(ldab*N, ab, abTmp);
-  double rpvgrw;                   // reciprocal pivot growth
-  long n_err_bnds = 3;             // number of error bounds
-  double err_bnds_norm[3*nrhs];    // various error bounds (up to 3 for each rhs)
-  double err_bnds_comp[3*nrhs];
-  long nparams_ = 0;               // number additional parameters
-  double params[1];                // dummy - not referenced, if nparams == 0
-  gbsvxx(&fact, &trans, &N_, &kl_, &ku_, &nrhs1_, a, &lda_, afb, &ldab_, ipiv, &equed, r__,  c__, 
-    b2, &ldb_, x4, &ldb_, &rcond, &rpvgrw, berr, &n_err_bnds, err_bnds_norm, err_bnds_comp, 
-    &nparams_, params, work, iwork, &info, 0, 0, 0);
 
 
-  // maybe remove the code above calling gbsv/x/x - it's now redundant with the calls to the solver
-  // class - maybe use more right-hand-sides
+
 
   rsBandDiagonalSolver<double> solver(N, kl, ku);
   //solver.setSystemSize(N, kl, ku);

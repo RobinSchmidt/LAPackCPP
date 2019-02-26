@@ -1,5 +1,7 @@
 -templatize xblas functions
 -move instantiations  out of the LaPackBanded, etc. files
+-add setCoefficientMatrix function to BandDiagonalSolver, move explanantion of
+ band-storage tio its declaration
 
 maybe move functions that don't have a template parameter into an extra cpp
 file in order to be able to separate their code into a different compilation 
