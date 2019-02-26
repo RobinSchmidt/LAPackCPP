@@ -132,6 +132,12 @@
     <ClCompile Include="..\..\Source\LaPackCPP\LaPack.cpp">
       <Filter>Source Files\LaPackCPP</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\LaPackCPP\TemplateInstantiations.cpp">
+      <Filter>Source Files\LaPackCPP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\LaPackCPP\TypedFunctions.cpp">
+      <Filter>Source Files\LaPackCPP</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\GeneratedByF2C\f2c.h">

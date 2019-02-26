@@ -111,7 +111,6 @@ template<class T>
 void blas_gbmv_x(enum blas_order_type order, enum blas_trans_type trans, int m, int n, int kl,
   int ku, T alpha, const T *a, int lda, const T *x, int incx, T beta, T *y, int incy, 
   enum blas_prec_type prec);
-// todo: templatize! ...if possible, get rid of the "d"
 
 //-------------------------------------------------------------------------------------------------
 

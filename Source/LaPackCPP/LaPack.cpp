@@ -15,3 +15,6 @@
 #include "Blas.cpp"
 #include "XBlas.cpp"
 #include "LapackBanded.cpp"
+
+#include "TemplateInstantiations.cpp"
+#include "TypedFunctions.cpp"
