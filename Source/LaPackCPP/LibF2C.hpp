@@ -18,9 +18,9 @@ typedef long ftnlen;
 #define FALSE_ (0)
 #define VOID void
 
-// try to get rid of them:
-#define min(a,b) ((a) <= (b) ? (a) : (b))
-#define max(a,b) ((a) >= (b) ? (a) : (b))
+//// try to get rid of them:
+//#define min(a,b) ((a) <= (b) ? (a) : (b))
+//#define max(a,b) ((a) >= (b) ? (a) : (b))
 
 
 template<class T> T d_lg10(T *);

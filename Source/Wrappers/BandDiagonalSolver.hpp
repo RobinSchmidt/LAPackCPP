@@ -3,8 +3,8 @@
 /** A convenience wrapper class for LAPACK's routines for solving band-diagonal systems of linear 
 equations. It wraps the driver routines _gbsv, _gbsvx and _gbsvxx where the underscore is to be 
 understood as a placeholdder for the datatype, i.e. s,d,c,z for single, double, single-complex or 
-double-complex numbers. So far, it has been tested only for double real numbers...todo: check, if 
-it actually works for all these 4 datatypes... */
+double-complex numbers. So far, it has been tested only for double precision real numbers...
+todo: check, if it actually works for all these 4 datatypes (and maybe more)... */
 
 template<class T>
 class rsBandDiagonalSolver
