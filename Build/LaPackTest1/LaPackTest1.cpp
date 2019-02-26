@@ -143,6 +143,7 @@ bool gbsvUnitTest()
   typedef const long int Int;  // for convenience
   static Int N    = 9;         // size of the system: NxN
 
+  /*
   // the matrix itself for reference (lapack uses column-major indexing, so do we here):
   double refMat[N][N] =
   { { 11,21,31,41, 0, 0, 0, 0, 0 },    // 1st column (index 0)
@@ -156,48 +157,16 @@ bool gbsvUnitTest()
     {  0, 0, 0, 0, 0, 0,79,89,99 } };  // 9th column (index 8)
   // maybe later store the matrix in LAPACK format to compare the general matrix multiply (gemv) 
   // result with the banded one (gbmv)
+  */
 
 
   static Int kl   = 3;         // number of lower diagonals
   static Int ku   = 2;         // number of upper diagonals
   static Int nrhs = 4;         // number of right hand sides
   static Int ldab = 2*kl+ku+1; // leading dimension of ab >= 2*kl+ku+1 
-  static Int ldb  = N;         // leading dimension of b >= max(1,N). ...is N correct?
-                               // rename to arb - allocated rows for b
-  //long int ipiv[N];            // pivot indices
+  static Int ldb  = N;         // leading dimension of b >= max(1,N).
   long int info = 666;         // 0 on exit, if successful
   double _ = 0.0/sqrt(0.0);    // we init unused storage cells with NaN - why is it -NaN?
-
-
-  /*
-  // the banded storage format suitable for gbsv looks in this case like below, where column-major 
-  // indexing is assumed (as always in LAPACK):
-
-  // ** ** ** ** ** ++ ++ ++ ++
-  // ** ** ** ** ++ ++ ++ ++ ++   fields with ++ are used internally by the algorithm, fields
-  // ** ** ** ++ ++ ++ ++ ++ ++   with ** are not accessed
-  // ** ** 13 24 35 46 57 68 79   upper diagonal 2
-  // ** 12 23 34 45 56 67 78 89   upper diagonal 1
-  // 11 22 33 44 55 66 77 88 99   main diagonal
-  // 21 32 43 54 65 76 87 98 **   lower diagonal 1
-  // 31 42 53 64 75 86 97 ** **   lower diagonal 2
-  // 41 52 63 74 85 96 ** ** **   lower diagonal 3
-
-  // matrix A in band storage for gbsv - the banded format is N times 2*kl+ku+1 which is 
-  // 9 times 2*3+2+1 = 9 times 8 in this case - because LAPACK uses in general, column-major 
-  // indexing, our matrix looks transposed to the one in the comment above:
-  double ab[ldab*N] = 
-  {  _, _, _, _, _,11,21,31,41,     // 1st column of banded format
-     _, _, _, _,12,22,32,42,52,     // 2nd column
-     _, _, _,13,23,33,43,53,63,
-     _, _, _,24,34,44,54,64,74,
-     _, _, _,35,45,55,65,75,85,
-     _, _, _,46,56,66,76,86,96,
-     _, _, _,57,67,77,87,97, _,
-     _, _, _,68,78,88,98, _, _,
-     _, _, _,79,89,99, _, _, _ };  // 9th column
-  */
-
 
 
   // the matrix X in A * X = B:
@@ -255,16 +224,11 @@ bool gbsvUnitTest()
   gbmv(&trans, &M_, &N_, &kl_, &ku_, &alpha, a, &lda_, x, &incX, &beta, b, &incY, trans_len);
   double target[N] =  { 74,230,505,931,1489,2179,3001,3055,2930 }; // this is what b should be now
   r &= arraysEqual(b, target, N);
-  // can we somehow re-use the ab array to be passed to gbmv with some trickery, too? ...to avoid 
-  // storing the a matrix twice? ...maybe later...
 
-  // We have computed b = A*x - now we try to retrieve x by solving the linear system for x via the
-
-
-
+  // We have computed b = A*x - now we try to retrieve x by solving the linear system for x via 
+  // rsBandDiagonalSolver using 3 different driver routines gbsv, gbsvx, gbsvxx:
 
   rsBandDiagonalSolver<double> solver(N, kl, ku);
-  //solver.setSystemSize(N, kl, ku);
   for(int k = -kl; k <= ku; k++) {
     for(int n = 0; n < N - abs(k); n++) {
       double val = (n+1)*10 + n+1;
@@ -272,9 +236,28 @@ bool gbsvUnitTest()
         val += -k*10;
       else
         val += k;
-      solver.setDiagonalElement(k, n, val);
+      solver.setDiagonalElement(k, n, val); // sets up the coeff matrix
     }
   }
+  typedef rsBandDiagonalSolver<double>::Algorithm ALGO;
+  double xGbsvxx[N], xGbsvx[N], xGbsv[N];  // results
+  solver.setAlgorithm(ALGO::gbsv);
+  solver.solve(b, xGbsv, 1);
+  solver.setAlgorithm(ALGO::gbsvx);
+  solver.solve(b, xGbsvx, 1);
+  solver.setAlgorithm(ALGO::gbsvxx);
+  solver.solve(b, xGbsvxx, 1);
+
+  // compute maximum errors in the 3 solutions and check if it is below some thresholds:
+  double errGbsv   = maxDistance(N, x, xGbsv);
+  double errGbsvx  = maxDistance(N, x, xGbsvx);
+  double errGbsvxx = maxDistance(N, x, xGbsvxx);
+  r &= errGbsv    < 2e-9;
+  r &= errGbsvx   < 3e-10;
+  r &= errGbsvxx == 0.0;
+
+
+
 
   // test conversion from regular dense matrix row/column indices to flat storage array index
   r &= solver.rowColToArrayIndex(0, 0) ==  2;   // 11
@@ -305,25 +288,6 @@ bool gbsvUnitTest()
   r &= solver.rowColToArrayIndex(4, 5) == 31;   // 56
   r &= solver.rowColToArrayIndex(4, 6) == 36;   // 57
   // ok, this seems to work
-
-  // solve the linear system with the 3 different driver routines gbsv, gbsvx, gbsvxx:
-  typedef rsBandDiagonalSolver<double>::Algorithm ALGO;
-  double xGbsvxx[N], xGbsvx[N], xGbsv[N];  // results
-  solver.setAlgorithm(ALGO::gbsv);
-  solver.solve(b, xGbsv, 1);
-  solver.setAlgorithm(ALGO::gbsvx);
-  solver.solve(b, xGbsvx, 1);
-  solver.setAlgorithm(ALGO::gbsvxx);
-  solver.solve(b, xGbsvxx, 1);
-
-  // compute maximum errors in the 3 solutions and check if it is below some thresholds:
-  double errGbsv   = maxDistance(N, x, xGbsv);
-  double errGbsvx  = maxDistance(N, x, xGbsvx);
-  double errGbsvxx = maxDistance(N, x, xGbsvxx);
-  r &= errGbsv    < 2e-9;
-  r &= errGbsvx   < 3e-10;
-  r &= errGbsvxx == 0.0;
-
 
   return r;
 }
