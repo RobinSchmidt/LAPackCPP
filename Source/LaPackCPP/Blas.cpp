@@ -1930,7 +1930,7 @@ int trsm(char *side, char *uplo, char *transa, char *diag, integer *m, integer *
 } // trsm 
 
 
-
+/*
 
 //=================================================================================================
 
@@ -1986,7 +1986,7 @@ template int trsm(char *side, char *uplo, char *transa, char *diag, integer *m, 
   double *alpha, double *a, integer *lda, double *b, integer *ldb, ftnlen side_len, 
   ftnlen uplo_len, ftnlen transa_len,  ftnlen diag_len);
 
+*/
 
 
-
-} // namespace BlasCPP
+}
