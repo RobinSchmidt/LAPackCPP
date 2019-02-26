@@ -4006,7 +4006,7 @@ integer ieeeck(integer *ispec, f2c_real *zero, f2c_real *one)
 //-------------------------------------------------------------------------------------------------
 
 
-
+/*
 // LAPACK auxiliary routine (version 3.8.0) 
 integer ilaenv(integer *ispec, char *name__, char *opts, integer *n1, 
   integer *n2, integer *n3, integer *n4, ftnlen name_len, ftnlen opts_len)
@@ -4612,17 +4612,16 @@ L160:
   // End of ILAENV 
 
 } // ilaenv
-
+*/
+/*
 //-------------------------------------------------------------------------------------------------
 
 // LAPACK computational routine (version 3.7.0) 
 integer ilaprec(char *prec, ftnlen prec_len)
 {
-  /* System generated locals */
+  // System generated locals 
   integer ret_val;
 
-  /* Local variables */
-  //extern logical lsame_(char *, char *, ftnlen, ftnlen);
 
   if (lsame(prec, "S", (ftnlen)1, (ftnlen)1)) {
     ret_val = 211;
@@ -4638,10 +4637,10 @@ integer ilaprec(char *prec, ftnlen prec_len)
   }
   return ret_val;
 
-  /*     End of ILAPREC */
+  // End of ILAPREC 
 
-} /* ilaprec_ */
-
+} // ilaprec
+*/
 
 //-------------------------------------------------------------------------------------------------
 
