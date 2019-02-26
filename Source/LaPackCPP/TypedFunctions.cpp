@@ -1177,5 +1177,119 @@ integer iparmq(integer *ispec, char *name__, char *opts, integer *n, integer
   return ret_val;
 } // iparmq
 
+//-------------------------------------------------------------------------------------------------
+
+// todo: in some cases, i guessed what function should map to a particular member of 
+// numeric_limits - verify everything! ..also in smach.c the functions also return double precision
+// values - check that - maybe we should return double here, too instead of T
+
+template<class T>
+integer minexponent_(T *dummy)
+{
+  return std::numeric_limits<T>::min_exponent; // there's also a min_exponent10, but they probably mean that
+}
+template<class T>
+integer maxexponent_(T *dummy)
+{
+  return std::numeric_limits<T>::max_exponent; // dito
+}
+template<class T>
+T huge_(T *dummy)
+{
+  return std::numeric_limits<T>::max();  // guessed!!
+}
+template<class T>
+T tiny_(T *dummy)
+{
+  return std::numeric_limits<T>::min();  // guessed!!
+}
+template<class T>
+T radix_(T *dummy)
+{
+  return std::numeric_limits<T>::radix;  // this is probably right
+}
+template<class T>
+T digits_(T *dummy)
+{
+  return std::numeric_limits<T>::digits;  // this probably too
+}
+template<class T>
+T epsilon_(T *dummy)
+{
+  return std::numeric_limits<T>::epsilon(); // this is very probably right
+}
+
+// DLAMC3 is intended to force A and B to be stored prior to doing the addition of A and B, for use
+// in situations where optimizers might hold one of these in a register.
+// from dlamch.f - LAPACK auxiliary routine (version 3.7.0)
+// templatize!
+doublereal lamc3(doublereal *a, doublereal *b)
+{
+  doublereal ret_val;
+  ret_val = *a + *b;
+  return ret_val;
+}
+
+// from dlamch - LAPACK auxiliary routine (version 3.7.0) --
+doublereal lamch(char *cmach, ftnlen cmach_len)
+{
+  static double c_b2 = 0.;  // hmm..it seems, this is the dummy in the original code
+
+  // System generated locals
+  doublereal ret_val;
+
+  // Local variables 
+  static double rnd, eps;
+  static double rmach;
+  static double small, sfmin;
+
+  // Assume rounding, not chopping. Always.
+  rnd = 1.;
+
+  if (1. == rnd) {
+    eps = epsilon_(&c_b2) * .5f;
+  } else {
+    eps = epsilon_(&c_b2);
+  }
+
+  if (lsame(cmach, "E", (ftnlen)1, (ftnlen)1)) {
+    rmach = eps;
+  } else if (lsame(cmach, "S", (ftnlen)1, (ftnlen)1)) {
+    sfmin = tiny_(&c_b2);
+    small = 1. / huge_(&c_b2);
+    if (small >= sfmin) {
+
+      // Use SMALL plus a bit, to avoid the possibility of rounding 
+      // causing overflow when computing  1/sfmin. 
+
+      sfmin = small * (eps + 1.);
+    }
+    rmach = sfmin;
+  } else if (lsame(cmach, "B", (ftnlen)1, (ftnlen)1)) {
+    rmach = radix_(&c_b2);
+  } else if (lsame(cmach, "P", (ftnlen)1, (ftnlen)1)) {
+    rmach = eps * radix_(&c_b2);
+  } else if (lsame(cmach, "N", (ftnlen)1, (ftnlen)1)) {
+    rmach = digits_(&c_b2);
+  } else if (lsame(cmach, "R", (ftnlen)1, (ftnlen)1)) {
+    rmach = rnd;
+  } else if (lsame(cmach, "M", (ftnlen)1, (ftnlen)1)) {
+    rmach = (doublereal) minexponent_(&c_b2);
+  } else if (lsame(cmach, "U", (ftnlen)1, (ftnlen)1)) {
+    rmach = tiny_(&c_b2);
+  } else if (lsame(cmach, "L", (ftnlen)1, (ftnlen)1)) {
+    rmach = (doublereal) maxexponent_(&c_b2);
+  } else if (lsame(cmach, "O", (ftnlen)1, (ftnlen)1)) {
+    rmach = huge_(&c_b2);
+  } else {
+    rmach = 0.;
+  }
+
+  ret_val = rmach;
+  return ret_val;
+
+} // dlamch
+
+
 
 }
