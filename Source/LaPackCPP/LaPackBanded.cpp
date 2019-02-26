@@ -23,10 +23,9 @@ inline double max(double x, double y) {  return std::max(x, y); }
 
 inline double sqrt(double x)  { return ::sqrt(x); }
 
-double log(doublereal x)  
-{
-  return ::log((double)x); 
-}
+template<class T>
+inline T log(T x)  {  return ::log((T)x); }
+// do we need this?
 
 /*
 integer i_len(char *s, ftnlen n)
@@ -3873,6 +3872,7 @@ int la_wwaddw(integer *n, T *x, T *y, T *w)
 //=================================================================================================
 // Auxiliary routines:
 
+/*
 // LAPACK computational routine (version 3.7.0)
 void chla_transtype(char *ret_val, ftnlen ret_val_len, integer *trans)
 {
@@ -3887,16 +3887,17 @@ void chla_transtype(char *ret_val, ftnlen ret_val_len, integer *trans)
   }
   return ;
 } 
-
+*/
 //-------------------------------------------------------------------------------------------------
 
+/*
 // LAPACK auxiliary routine (version 3.7.0) 
 integer ieeeck(integer *ispec, f2c_real *zero, f2c_real *one)
 {
-  /* System generated locals */
+  // System generated locals
   integer ret_val;
 
-  /* Local variables */
+  // Local variables
   static f2c_real nan1, nan2, nan3, nan4, nan5, nan6, neginf, posinf, negzro, 
     newzro;
 
@@ -3950,7 +3951,7 @@ integer ieeeck(integer *ispec, f2c_real *zero, f2c_real *one)
     return ret_val;
   }
 
-  /*     Return if we were only asked to check infinity arithmetic */
+  // Return if we were only asked to check infinity arithmetic
   if (*ispec == 0) {
     return ret_val;
   }
@@ -3998,13 +3999,11 @@ integer ieeeck(integer *ispec, f2c_real *zero, f2c_real *one)
   }
 
   return ret_val;
-} /* ieeeck_ */
+} // ieeeck_
+*/
+
 
 //-------------------------------------------------------------------------------------------------
-
-
-
-
 
 
 
@@ -4012,22 +4011,16 @@ integer ieeeck(integer *ispec, f2c_real *zero, f2c_real *one)
 integer ilaenv(integer *ispec, char *name__, char *opts, integer *n1, 
   integer *n2, integer *n3, integer *n4, ftnlen name_len, ftnlen opts_len)
 {
-  /* Table of constant values */
-
+  // Table of constant values
   static integer c__1 = 1;
   static f2c_real c_b173 = 0.f;
   static f2c_real c_b174 = 1.f;
   static integer c__0 = 0;
 
-
-  /* System generated locals */
+  // System generated locals
   integer ret_val;
 
-  /* Builtin functions */
-  ///* Subroutine */ int s_copy(char *, char *, ftnlen, ftnlen);
-  //integer i_len(char *, ftnlen), s_cmp(char *, char *, ftnlen, ftnlen);
-
-  /* Local variables */
+  // Local variables 
   static logical twostage;
   static integer i__;
   static char c1[1], c2[2], c3[3], c4[2];
@@ -4039,7 +4032,6 @@ integer ilaenv(integer *ispec, char *name__, char *opts, integer *n1,
   static char subnam[16];
   extern integer iparmq(integer *, char *, char *, integer *, integer *, 
     integer *, integer *, ftnlen, ftnlen);
-
 
   switch (*ispec) {
   case 1:  goto L10;
@@ -4060,23 +4052,21 @@ integer ilaenv(integer *ispec, char *name__, char *opts, integer *n1,
   case 16:  goto L160;
   }
 
-  /*     Invalid value for ISPEC */
+  // Invalid value for ISPEC
 
   ret_val = -1;
   return ret_val;
 
 L10:
 
-  /*     Convert NAME to upper case if the first character is lower case. */
-
+  // Convert NAME to upper case if the first character is lower case
   ret_val = 1;
   s_copy(subnam, name__, (ftnlen)16, name_len);
   ic = *(unsigned char *)subnam;
   iz = 'Z';
   if (iz == 90 || iz == 122) {
 
-    /*        ASCII character set */
-
+    // ASCII character set
     if (ic >= 97 && ic <= 122) {
       *(unsigned char *)subnam = (char) (ic - 32);
       for (i__ = 2; i__ <= 6; ++i__) {
@@ -4084,13 +4074,13 @@ L10:
         if (ic >= 97 && ic <= 122) {
           *(unsigned char *)&subnam[i__ - 1] = (char) (ic - 32);
         }
-        /* L20: */
+        // L20: 
       }
     }
 
   } else if (iz == 233 || iz == 169) {
 
-    /*        EBCDIC character set */
+    // EBCDIC character set 
 
     if (ic >= 129 && ic <= 137 || ic >= 145 && ic <= 153 || ic >= 162 && 
       ic <= 169) {
@@ -4101,13 +4091,13 @@ L10:
           162 && ic <= 169) {
           *(unsigned char *)&subnam[i__ - 1] = (char) (ic + 64);
         }
-        /* L30: */
+        // L30:
       }
     }
 
   } else if (iz == 218 || iz == 250) {
 
-    /*        Prime machines:  ASCII+128 */
+    // Prime machines:  ASCII+128
 
     if (ic >= 225 && ic <= 250) {
       *(unsigned char *)subnam = (char) (ic - 32);
@@ -4116,7 +4106,7 @@ L10:
         if (ic >= 225 && ic <= 250) {
           *(unsigned char *)&subnam[i__ - 1] = (char) (ic - 32);
         }
-        /* L40: */
+        // L40:
       }
     }
   }
@@ -4141,11 +4131,11 @@ L10:
 
 L50:
 
-  /*     ISPEC = 1:  block size */
+  // ISPEC = 1:  block size
 
-  /*     In these examples, separate code is provided for setting NB for */
-  /*     real and complex.  We assume that NB will take the same value in */
-  /*     single or double precision. */
+  // In these examples, separate code is provided for setting NB for 
+  // real and complex.  We assume that NB will take the same value in 
+  // single or double precision. 
 
   nb = 1;
 
@@ -4168,7 +4158,7 @@ L50:
     } else if (s_cmp(c3, "QR ", (ftnlen)3, (ftnlen)3) == 0) {
       if (*n3 == 1) {
         if (sname) {
-          /*     M*N */
+          //  M*N 
           if (*n1 * *n2 <= 131072 || *n1 <= 8192) {
             nb = *n1;
           } else {
@@ -4191,7 +4181,7 @@ L50:
     } else if (s_cmp(c3, "LQ ", (ftnlen)3, (ftnlen)3) == 0) {
       if (*n3 == 2) {
         if (sname) {
-          /*     M*N */
+          // M*N 
           if (*n1 * *n2 <= 131072 || *n1 <= 8192) {
             nb = *n1;
           } else {
@@ -4383,7 +4373,7 @@ L50:
 
 L60:
 
-  /*     ISPEC = 2:  minimum block size */
+  // ISPEC = 2:  minimum block size 
 
   nbmin = 2;
   if (s_cmp(c2, "GE", (ftnlen)2, (ftnlen)2) == 0) {
@@ -4480,7 +4470,7 @@ L60:
 
 L70:
 
-  /*     ISPEC = 3:  crossover point */
+  // ISPEC = 3:  crossover point 
 
   nx = 0;
   if (s_cmp(c2, "GE", (ftnlen)2, (ftnlen)2) == 0) {
@@ -4547,53 +4537,53 @@ L70:
 
 L80:
 
-  /*     ISPEC = 4:  number of shifts (used by xHSEQR) */
+  // ISPEC = 4:  number of shifts (used by xHSEQR)
 
   ret_val = 6;
   return ret_val;
 
 L90:
 
-  /*     ISPEC = 5:  minimum column dimension (not used) */
+  // ISPEC = 5:  minimum column dimension (not used)
 
   ret_val = 2;
   return ret_val;
 
 L100:
 
-  /*     ISPEC = 6:  crossover point for SVD (used by xGELSS and xGESVD) */
+  // ISPEC = 6:  crossover point for SVD (used by xGELSS and xGESVD)
 
   ret_val = (integer) ((f2c_real) min(*n1,*n2) * 1.6f);
   return ret_val;
 
 L110:
 
-  /*     ISPEC = 7:  number of processors (not used) */
+  // ISPEC = 7:  number of processors (not used) 
 
   ret_val = 1;
   return ret_val;
 
 L120:
 
-  /*     ISPEC = 8:  crossover point for multishift (used by xHSEQR) */
+  // ISPEC = 8:  crossover point for multishift (used by xHSEQR)
 
   ret_val = 50;
   return ret_val;
 
 L130:
 
-  /*     ISPEC = 9:  maximum size of the subproblems at the bottom of the */
-  /*                 computation tree in the divide-and-conquer algorithm */
-  /*                 (used by xGELSD and xGESDD) */
+  // ISPEC = 9:  maximum size of the subproblems at the bottom of the 
+  //             computation tree in the divide-and-conquer algorithm 
+  //             (used by xGELSD and xGESDD) 
 
   ret_val = 25;
   return ret_val;
 
 L140:
 
-  /*     ISPEC = 10: ieee NaN arithmetic can be trusted not to trap */
+  // ISPEC = 10: ieee NaN arithmetic can be trusted not to trap 
 
-  /*     ILAENV = 0 */
+  // ILAENV = 0 
   ret_val = 1;
   if (ret_val == 1) {
     ret_val = ieeeck(&c__1, &c_b173, &c_b174);
@@ -4602,9 +4592,9 @@ L140:
 
 L150:
 
-  /*     ISPEC = 11: infinity arithmetic can be trusted not to trap */
+  // ISPEC = 11: infinity arithmetic can be trusted not to trap 
 
-  /*     ILAENV = 0 */
+  // ILAENV = 0 
   ret_val = 1;
   if (ret_val == 1) {
     ret_val = ieeeck(&c__0, &c_b173, &c_b174);
@@ -4613,15 +4603,15 @@ L150:
 
 L160:
 
-  /*     12 <= ISPEC <= 16: xHSEQR or related subroutines. */
+  // 12 <= ISPEC <= 16: xHSEQR or related subroutines.
 
   ret_val = iparmq(ispec, name__, opts, n1, n2, n3, n4, name_len, opts_len)
     ;
   return ret_val;
 
-  /*     End of ILAENV */
+  // End of ILAENV 
 
-} /* ilaenv_ */
+} // ilaenv
 
 //-------------------------------------------------------------------------------------------------
 
