@@ -1,12 +1,9 @@
 #pragma once
 
 
-//#include "Blas.hpp"
 #include "LaPack.hpp"
 
-//#include <stdio.h>
 #include <stdarg.h>
-//#include <stdlib.h>
 
 #include <cmath> 
 #include <limits>      // uses in lamch to inquire numeric parameters
