@@ -4642,18 +4642,14 @@ integer ilaprec(char *prec, ftnlen prec_len)
 } // ilaprec
 */
 
+
 //-------------------------------------------------------------------------------------------------
 
+/*
 //  LAPACK computational routine (version 3.7.0) 
 integer ilatrans(char *trans, ftnlen trans_len)
 {
-  /* System generated locals */
   integer ret_val;
-
-  /* Local variables */
-  //extern logical lsame_(char *, char *, ftnlen, ftnlen);
-
-  /*     .. Executable Statements .. */
   if (lsame(trans, "N", (ftnlen)1, (ftnlen)1)) {
     ret_val = 111;
   } else if (lsame(trans, "T", (ftnlen)1, (ftnlen)1)) {
@@ -4664,34 +4660,26 @@ integer ilatrans(char *trans, ftnlen trans_len)
     ret_val = -1;
   }
   return ret_val;
-
-  /*     End of ILATRANS */
-
-} /* ilatrans_ */
-
+} 
+*/
 //-------------------------------------------------------------------------------------------------
 
+/*
 // LAPACK auxiliary routine (version 3.7.1)
 integer iparmq(integer *ispec, char *name__, char *opts, integer *n, integer 
   *ilo, integer *ihi, integer *lwork, ftnlen name_len, ftnlen opts_len)
 {
-  /* System generated locals */
+  // System generated locals 
   integer ret_val, i__1, i__2;
   f2c_real r__1;
 
-  /* Builtin functions */
-  //double log(doublereal);
-  //integer i_nint(f2c_real *);
-  ///* Subroutine */ int s_copy(char *, char *, ftnlen, ftnlen);
-  //integer s_cmp(char *, char *, ftnlen, ftnlen);
-
-  /* Local variables */
+  // Local variables 
   static integer i__, ic, nh, ns, iz;
   static char subnam[6];
 
   if (*ispec == 15 || *ispec == 13 || *ispec == 16) {
 
-    /*        ==== Set the number simultaneous shifts ==== */
+    // ==== Set the number simultaneous shifts ==== 
 
     nh = *ihi - *ilo + 1;
     ns = 2;
@@ -4702,7 +4690,7 @@ integer iparmq(integer *ispec, char *name__, char *opts, integer *n, integer
       ns = 10;
     }
     if (nh >= 150) {
-      /* Computing MAX */
+      // Computing MAX
       r__1 = (f2c_real) (log((f2c_real) nh) / log(2.f)); // outer cast to f2c_real added by Robin Schmidt
       i__1 = 10, i__2 = nh / i_nint(&r__1);
       ns = max(i__1,i__2);
@@ -4716,7 +4704,7 @@ integer iparmq(integer *ispec, char *name__, char *opts, integer *n, integer
     if (nh >= 6000) {
       ns = 256;
     }
-    /* Computing MAX */
+    // Computing MAX 
     i__1 = 2, i__2 = ns - ns % 2;
     ns = max(i__1,i__2);
   }
@@ -4724,29 +4712,29 @@ integer iparmq(integer *ispec, char *name__, char *opts, integer *n, integer
   if (*ispec == 12) {
 
 
-    /*        ===== Matrices of order smaller than NMIN get sent */
-    /*        .     to xLAHQR, the classic double shift algorithm. */
-    /*        .     This must be at least 11. ==== */
+    // ===== Matrices of order smaller than NMIN get sent 
+    // .     to xLAHQR, the classic double shift algorithm.
+    // .     This must be at least 11. ==== 
 
     ret_val = 75;
 
   } else if (*ispec == 14) {
 
-    /*        ==== INIBL: skip a multi-shift qr iteration and */
-    /*        .    whenever aggressive early deflation finds */
-    /*        .    at least (NIBBLE*(window size)/100) deflations. ==== */
+    // ==== INIBL: skip a multi-shift qr iteration and 
+    // .    whenever aggressive early deflation finds 
+    // .    at least (NIBBLE*(window size)/100) deflations. ==== 
 
     ret_val = 14;
 
   } else if (*ispec == 15) {
 
-    /*        ==== NSHFTS: The number of simultaneous shifts ===== */
+    // ==== NSHFTS: The number of simultaneous shifts =====
 
     ret_val = ns;
 
   } else if (*ispec == 13) {
 
-    /*        ==== NW: deflation window size.  ==== */
+    // ==== NW: deflation window size.  ==== 
 
     if (nh <= 500) {
       ret_val = ns;
@@ -4756,23 +4744,21 @@ integer iparmq(integer *ispec, char *name__, char *opts, integer *n, integer
 
   } else if (*ispec == 16) {
 
-    /*        ==== IACC22: Whether to accumulate reflections */
-    /*        .     before updating the far-from-diagonal elements */
-    /*        .     and whether to use 2-by-2 block structure while */
-    /*        .     doing it.  A small amount of work could be saved */
-    /*        .     by making this choice dependent also upon the */
-    /*        .     NH=IHI-ILO+1. */
+    // ==== IACC22: Whether to accumulate reflections 
+    // .     before updating the far-from-diagonal elements 
+    // .     and whether to use 2-by-2 block structure while 
+    // .     doing it.  A small amount of work could be saved 
+    // .     by making this choice dependent also upon the 
+    // .     NH=IHI-ILO+1. 
 
-
-    /*        Convert NAME to upper case if the first character is lower case. */
-
+    // Convert NAME to upper case if the first character is lower case.
     ret_val = 0;
     s_copy(subnam, name__, (ftnlen)6, name_len);
     ic = *(unsigned char *)subnam;
     iz = 'Z';
     if (iz == 90 || iz == 122) {
 
-      /*           ASCII character set */
+      // ASCII character set 
 
       if (ic >= 97 && ic <= 122) {
         *(unsigned char *)subnam = (char) (ic - 32);
@@ -4786,8 +4772,7 @@ integer iparmq(integer *ispec, char *name__, char *opts, integer *n, integer
 
     } else if (iz == 233 || iz == 169) {
 
-      /*           EBCDIC character set */
-
+      // EBCDIC character set 
       if (ic >= 129 && ic <= 137 || ic >= 145 && ic <= 153 || ic >= 162 
         && ic <= 169) {
         *(unsigned char *)subnam = (char) (ic + 64);
@@ -4802,8 +4787,7 @@ integer iparmq(integer *ispec, char *name__, char *opts, integer *n, integer
 
     } else if (iz == 218 || iz == 250) {
 
-      /*           Prime machines:  ASCII+128 */
-
+      // Prime machines:  ASCII+128
       if (ic >= 225 && ic <= 250) {
         *(unsigned char *)subnam = (char) (ic - 32);
         for (i__ = 2; i__ <= 6; ++i__) {
@@ -4839,16 +4823,16 @@ integer iparmq(integer *ispec, char *name__, char *opts, integer *n, integer
     }
 
   } else {
-    /*        ===== invalid value of ispec ===== */
+    // ===== invalid value of ispec ===== 
     ret_val = -1;
 
   }
 
-  /*     ==== End of IPARMQ ==== */
+  // ==== End of IPARMQ ==== 
 
   return ret_val;
-} /* iparmq_ */
-
+} // iparmq
+*/
 
 //-------------------------------------------------------------------------------------------------
 
