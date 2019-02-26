@@ -32,17 +32,9 @@ template<class T> T d_sign(T *, T *);
 template<class T> integer i_dnnt(T *);
 template<class T> integer i_nint(T *);
 template<class T> T pow_di(T *, integer *);
+
 integer i_len(char *, ftnlen);
-//inline integer i_len(char *s, ftnlen n)
-//{
-//  return(n);
-//}
-
-
-
-
 integer s_cmp(char *, char *, ftnlen, ftnlen);
-
 void s_copy(char *, char *, ftnlen, ftnlen);
 
 

@@ -97,6 +97,120 @@ void s_copy(register char *a, register char *b, ftnlen la, ftnlen lb)
 //=================================================================================================
 // Blas
 
+// translated from lsame, Reference BLAS level1 routine (version 3.1)
+logical lsame(char *ca, char *cb, ftnlen ca_len, ftnlen cb_len)
+{
+  // System generated locals
+  logical ret_val;
+
+  // Local variables 
+  static integer inta, intb, zcode;
+
+  // Test if the characters are equal
+  ret_val = *(unsigned char *)ca == *(unsigned char *)cb;
+  if(ret_val) {
+    return ret_val;
+  }
+
+  // Now test for equivalence if both characters are alphabetic.
+  zcode = 'Z';
+
+  // Use 'Z' rather than 'A' so that ASCII can be detected on Prime 
+  // machines, on which ICHAR returns a value with bit 8 set. 
+  // ICHAR('A') on Prime machines returns 193 which is the same as 
+  // ICHAR('A') on an EBCDIC machine.
+
+  inta = *(unsigned char *)ca;
+  intb = *(unsigned char *)cb;
+
+  if(zcode == 90 || zcode == 122) {
+
+    // ASCII is assumed - ZCODE is the ASCII code of either lower or upper case 'Z'. 
+    if(inta >= 97 && inta <= 122) {
+      inta += -32;
+    }
+    if(intb >= 97 && intb <= 122) {
+      intb += -32;
+    }
+
+  }
+  else if(zcode == 233 || zcode == 169) {
+
+    // EBCDIC is assumed - ZCODE is the EBCDIC code of either lower or 
+    // upper case 'Z'.
+    if(inta >= 129 && inta <= 137 || inta >= 145 && inta <= 153 || inta
+      >= 162 && inta <= 169) {
+      inta += 64;
+    }
+    if(intb >= 129 && intb <= 137 || intb >= 145 && intb <= 153 || intb
+      >= 162 && intb <= 169) {
+      intb += 64;
+    }
+
+  }
+  else if(zcode == 218 || zcode == 250) {
+
+    // ASCII is assumed, on Prime machines - ZCODE is the ASCII code
+    // plus 128 of either lower or upper case 'Z'. 
+
+    if(inta >= 225 && inta <= 250) {
+      inta += -32;
+    }
+    if(intb >= 225 && intb <= 250) {
+      intb += -32;
+    }
+  }
+  ret_val = inta == intb;
+
+  // End of LSAME
+
+  return ret_val;
+}
+
+
+int xerbla(char *srname, integer *info, ftnlen srname_len)
+{
+  // Code of the function has been commented out by Robin Schmidt - at the moment, xerbla is just
+  // a dummy function - i should probably set a debug-breakpoint here and re-implement it 
+  // completely - it deals with some weird I/O functions from the f2c library which seems to be 
+  // useless clutter...
+
+  /*
+  // Table of constant values
+  static integer c__1 = 1;
+
+  // Format strings 
+  static char fmt_9999[] = "(\002 ** On entry to \002,a,\002 parameter num"
+    "ber \002,i2,\002 had \002,\002an illegal value\002)";
+
+  // Builtin functions 
+  integer s_wsfe(cilist *), do_fio(integer *, char *, ftnlen), e_wsfe(void);
+  int s_stop(char *, ftnlen);
+
+  // Local variables
+  extern integer len_trim__(char *, ftnlen);
+  // Note by Robin Schmidt:
+  // this was declared as an intrinsic function in the original xerbla.f file, but it stumped the 
+  // f2c translator, giving an error about an unknown intrinsic function, so i changed the 
+  // "INTRINSIC" keyword to "EXTERNAL" - that allowed the translation, but i'm not sure, if it 
+  // gives the correct behavior 
+
+  // Fortran I/O blocks
+  static cilist io___1 = { 0, 6, 0, fmt_9999, 0 };
+
+  s_wsfe(&io___1);
+  do_fio(&c__1, srname, len_trim__(srname, srname_len));
+  do_fio(&c__1, (char *)&(*info), (ftnlen)sizeof(integer));
+  e_wsfe();
+
+  s_stop("", (ftnlen)0);
+
+  // End of XERBLA
+  */
+
+  return 0;
+} // xerbla
+
 
 //=================================================================================================
 // XBlas
