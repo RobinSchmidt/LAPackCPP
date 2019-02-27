@@ -242,11 +242,11 @@ bool gbsvUnitTest()
   typedef rsBandDiagonalSolver<double>::Algorithm ALGO;
   double xGbsvxx[N], xGbsvx[N], xGbsv[N];  // results
   solver.setAlgorithm(ALGO::gbsv);
-  solver.solve(b, xGbsv, 1);
+  solver.solve(xGbsv, b, 1);
   solver.setAlgorithm(ALGO::gbsvx);
-  solver.solve(b, xGbsvx, 1);
+  solver.solve(xGbsvx, b, 1);
   solver.setAlgorithm(ALGO::gbsvxx);
-  solver.solve(b, xGbsvxx, 1);
+  solver.solve(xGbsvxx, b, 1);
 
   // compute maximum errors in the 3 solutions and check if it is below some thresholds:
   double errGbsv   = maxDistance(N, x, xGbsv);

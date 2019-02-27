@@ -13,7 +13,7 @@
 #include "XBlas.cpp"
 #include "LapackBanded.cpp"
 
-//#include "TypedFunctions.cpp"
+#include "TypedFunctions.cpp"
 #include "TemplateInstantiations.cpp"  
 // remove - it should be compiled by itself...but then *it* must include the implementation files
 // above - not good
