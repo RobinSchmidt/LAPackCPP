@@ -1,5 +1,12 @@
 #pragma once // this should avoid multiple definition errors...hopefully
 
+
+#include <stdarg.h>
+#include <stdio.h>
+#include <algorithm> // min/max
+
+#include "LaPack.hpp"
+
 /** For some of the functions in LibF2C, Blas and LaPack, it didn't make sense to templatize them.
 These are all put into this file because it may be problematic in certain contexts to have mixed 
 templated and typed code in a single implementation file - if you include the same implementation
@@ -9,6 +16,9 @@ these compilation units instantiate different templates or the same template for
 datatypes. I know - it's a mess :-( */
 
 namespace LaPackCPP {
+
+template<class T> inline T min(T x, T y) {  return std::min(x, y); }
+template<class T> inline T max(T x, T y) {  return std::max(x, y); }
 
 //=================================================================================================
 // LibF2C

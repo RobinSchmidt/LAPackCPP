@@ -30,7 +30,14 @@ static const logical FALSE_ = 0;
 template<class T> T d_lg10(T *);
 template<class T> T d_sign(T *, T *);
 template<class T> integer i_dnnt(T *);
-template<class T> integer i_nint(T *);
+
+//template<class T> integer i_nint(T *)
+template<class T>
+inline integer i_nint(T *x)
+{
+  return (integer)(*x >= 0 ? floor(*x + .5) : -floor(.5 - *x));
+}
+
 template<class T> T pow_di(T *, integer *);
 
 integer i_len(char *, ftnlen);

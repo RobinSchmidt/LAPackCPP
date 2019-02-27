@@ -15,6 +15,11 @@ namespace LaPackCPP {
 #undef max
 #undef small
 
+//template<class T> inline T min(T x, T y) {  return std::min(x, y); }
+//template<class T> inline T max(T x, T y) {  return std::max(x, y); }
+
+
+// maybe move to Blas.cpp
 inline long min(long x, long y) {  return std::min(x, y); }
 inline long max(long x, long y) {  return std::max(x, y); }
 
@@ -23,8 +28,7 @@ inline double max(double x, double y) {  return std::max(x, y); }
 
 inline double sqrt(double x)  { return ::sqrt(x); }
 
-template<class T>
-inline T log(T x)  {  return ::log((T)x); }
+template<class T> inline T log(T x)  {  return ::log((T)x); }
 // do we need this?
 
 /*

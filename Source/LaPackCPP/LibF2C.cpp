@@ -25,11 +25,11 @@ integer i_dnnt(T *x)
   return (integer)(*x >= 0. ? floor(*x + .5) : -floor(.5 - *x));
 }
 
-template<class T>
-integer i_nint(T *x)
-{
-  return (integer)(*x >= 0 ? floor(*x + .5) : -floor(.5 - *x));
-}
+//template<class T>
+//integer i_nint(T *x)
+//{
+//  return (integer)(*x >= 0 ? floor(*x + .5) : -floor(.5 - *x));
+//}
 
 
 template<class T>
