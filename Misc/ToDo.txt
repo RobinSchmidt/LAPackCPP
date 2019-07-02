@@ -75,3 +75,8 @@ For the naming conventions: We have currently retained the l and i prefixes
 (for example in iamax, lsame) for routines that work with integers and 
 logicals (mostly they return values of the respective type). Maybe get rid
 of these prefixes, too - or maybe not.
+
+
+
+check out this - this seems to be something very similar:
+https://github.com/michael-lehn/FLENS
